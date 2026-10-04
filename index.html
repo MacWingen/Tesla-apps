@@ -134,7 +134,6 @@
             { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png" }
         ];
 
-        // Alphabetisch sortieren
         apps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
         const grid = document.getElementById('appGrid');
