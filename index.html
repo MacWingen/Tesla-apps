@@ -98,3 +98,60 @@
             color: var(--name-color);
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
+    </style>
+</head>
+<body>
+
+    <div class="app-grid" id="appGrid"></div>
+
+    <script>
+        const apps = [
+            { name: "ABRP", url: "https://www.youtube.com/redirect?q=https://abetterrouteplanner.com", image: "icons/abrp.png" },
+            { name: "Apple Music", url: "https://www.youtube.com/redirect?q=https://music.apple.com", image: "icons/applemusic.png" },
+            { name: "Apple TV", url: "https://www.youtube.com/redirect?q=https://tv.apple.com", image: "icons/appletv.png" },
+            { name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png" },
+            { name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com", image: "icons/dazn.png" },
+            { name: "Disney+", url: "https://www.youtube.com/redirect?q=https://www.disneyplus.com", image: "icons/disneyplus.png" },
+            { name: "GeForce NOW", url: "https://www.youtube.com/redirect?q=https://play.geforcenow.com", image: "icons/geforcenow.png" },
+            { name: "Gemini", url: "https://www.youtube.com/redirect?q=https://gemini.google.com", image: "icons/gemini.png" },
+            { name: "Google", url: "https://www.youtube.com/redirect?q=https://www.google.com", image: "icons/google.png" },
+            { name: "Google Maps", url: "https://www.youtube.com/redirect?q=https://www.google.com/maps", image: "icons/googlemaps.png" },
+            { name: "HBO Max", url: "https://www.youtube.com/redirect?q=https://www.max.com", image: "icons/hbomax.png" },
+            { name: "iCloud", url: "https://www.youtube.com/redirect?q=https://www.icloud.com", image: "icons/icloud.png" },
+            { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png" },
+            { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://magentatv.de", image: "icons/magentatv.png" },
+            { name: "Netflix", url: "https://www.youtube.com/redirect?q=https://www.netflix.com", image: "icons/netflix.png" },
+            { name: "Outlook", url: "https://www.youtube.com/redirect?q=https://outlook.live.com", image: "icons/outlook.png" },
+            { name: "Paramount+", url: "https://www.youtube.com/redirect?q=https://www.paramountplus.com", image: "icons/paramountplus.png" },
+            { name: "Prime Video", url: "https://www.youtube.com/redirect?q=https://www.amazon.de/primevideo", image: "icons/amazonprime.png" },
+            { name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png" },
+            { name: "Spotify", url: "https://www.youtube.com/redirect?q=https://open.spotify.com", image: "icons/spotify.png" },
+            { name: "Tesla Charger Map", url: "https://www.youtube.com/redirect?q=https://www.tesla.com/de_de/findus", image: "icons/tesla.png" },
+            { name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png" },
+            { name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://www.waipu.tv", image: "icons/waiputv.png" },
+            { name: "WhatsApp", url: "https://www.youtube.com/redirect?q=https://web.whatsapp.com", image: "icons/whatsapp.png" },
+            { name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png" },
+            { name: "Xbox", url: "https://www.youtube.com/redirect?q=https://www.xbox.com/play", image: "icons/xbox.png" },
+            { name: "YouTube", url: "https://www.youtube.com/redirect?q=https://www.youtube.com", image: "icons/youtube.png" },
+            { name: "YouTube Music", url: "https://www.youtube.com/redirect?q=https://music.youtube.com/?persist_app=1", image: "icons/youtubemusic.png" },
+            { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png" }
+        ];
+
+        apps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+
+        const grid = document.getElementById('appGrid');
+        apps.forEach(app => {
+            let iconContent = app.image 
+                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
+                : `<span class="placeholder">${app.name[0]}</span>`;
+
+            grid.innerHTML += `
+                <a href="${app.url}" class="app-item" target="_blank">
+                    <div class="app-icon">${iconContent}</div>
+                    <span class="app-name">${app.name}</span>
+                </a>
+            `;
+        });
+    </script>
+</body>
+</html>
