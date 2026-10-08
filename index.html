@@ -653,13 +653,11 @@
         let selectedLetter = null;
         let searchQuery = '';
         
-        // Exakt synchronisiert mit den sichtbaren Tabs oben (ohne die unsichtbaren 'tools')
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'radio'];
 
         const globalAudio = document.getElementById('globalAudioStream');
         let currentPlayingUrl = '';
 
-        // Reiter für Apps und normale Kategorien sauber aufbauen
         const tabsContainer = document.getElementById('tabs-container');
         let tabButtonsMap = {};
         
