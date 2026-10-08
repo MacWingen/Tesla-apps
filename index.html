@@ -653,27 +653,31 @@
         let selectedLetter = null;
         let searchQuery = '';
         
-        let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'tools', 'radio'];
+        // Exakt synchronisiert mit den sichtbaren Tabs oben (ohne die unsichtbaren 'tools')
+        let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'radio'];
 
         const globalAudio = document.getElementById('globalAudioStream');
         let currentPlayingUrl = '';
 
-        // Reiter für Apps und normale Kategorien aufbauen
+        // Reiter für Apps und normale Kategorien sauber aufbauen
         const tabsContainer = document.getElementById('tabs-container');
+        let tabButtonsMap = {};
         
         const appsBtn = document.createElement('button');
         appsBtn.className = 'tab-btn active';
         appsBtn.innerText = 'Apps';
         appsBtn.onclick = (e) => filterCategory('all', appsBtn);
         tabsContainer.appendChild(appsBtn);
+        tabButtonsMap['all'] = appsBtn;
 
         categories.forEach(cat => {
-            if (cat.id !== 'radio') {
+            if (cat.id !== 'radio' && cat.id !== 'tools') {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn';
                 btn.innerText = cat.shortTitle;
                 btn.onclick = (e) => filterCategory(cat.id, btn);
                 tabsContainer.appendChild(btn);
+                tabButtonsMap[cat.id] = btn;
             }
         });
 
@@ -681,7 +685,6 @@
             if (isRadio) {
                 playRadioStream(url);
             } else {
-                // Öffnet die App strikt im selben Browserfenster statt in einem neuen Tab
                 window.location.href = url;
             }
         }
@@ -961,8 +964,8 @@
 
             if (catId === 'radio') {
                 radioIconBtn.classList.add('active');
-            } else if (btnElement && btnElement.classList.contains('tab-btn')) {
-                btnElement.classList.add('active');
+            } else if (tabButtonsMap[catId]) {
+                tabButtonsMap[catId].classList.add('active');
             }
 
             renderDashboard();
@@ -984,22 +987,14 @@
             }
 
             let currentIndex = categoryIds.indexOf(activeCategory);
+            if (currentIndex === -1) currentIndex = 0;
+            
             let newIndex = currentIndex + direction;
             if (newIndex < 0) newIndex = categoryIds.length - 1;
             if (newIndex >= categoryIds.length) newIndex = 0;
             
             let newCatId = categoryIds[newIndex];
-            if (newCatId === 'radio') {
-                filterCategory('radio', document.getElementById('radioSymbolBtn'));
-            } else if (newCatId === 'all') {
-                filterCategory('all', document.querySelector('.tab-btn'));
-            } else {
-                let catIndex = categories.findIndex(c => c.id === newCatId);
-                let buttons = document.querySelectorAll('.tab-btn');
-                if (catIndex !== -1 && buttons[catIndex]) {
-                    filterCategory(newCatId, buttons[catIndex]);
-                }
-            }
+            filterCategory(newCatId, tabButtonsMap[newCatId] || document.getElementById('radioSymbolBtn'));
         }
 
         function handleSearch() {
