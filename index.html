@@ -114,11 +114,25 @@
             cursor: pointer;
             transition: all 0.2s ease;
             flex-shrink: 0;
+            position: relative;
         }
 
         .bar-icon-btn:hover, .bar-icon-btn.active {
             color: var(--text-color);
             background-color: var(--hover-bg);
+        }
+
+        /* Leuchtender Punkt am Radio-Button, wenn ein Sender läuft */
+        .bar-icon-btn.playing-radio::after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #3b82f6;
         }
 
         /* Unsichtbares Suchfeld für Tesla-Tastatur */
@@ -177,7 +191,7 @@
             gap: 12px;
         }
 
-        /* Klickbare Überschriften */
+        /* Klickbare Überschriften (Haupt- und Unterkategorien mit Strich) */
         .category-title {
             font-size: 15px;
             font-weight: 600;
@@ -193,6 +207,19 @@
             width: fit-content;
             cursor: pointer;
             transition: color 0.15s ease;
+        }
+
+        .sub-category-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--section-color);
+            letter-spacing: 0.3px;
+            margin: 0 0 12px 0;
+            padding-left: 4px;
+            border-bottom: 1px solid var(--tile-border);
+            padding-bottom: 5px;
+            display: inline-block;
+            width: fit-content;
         }
 
         .category-title.has-arrow::after {
@@ -269,9 +296,30 @@
         }
 
         .app-icon span.placeholder {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 600;
             color: var(--text-color);
+        }
+
+        /* Dezentes LIVE-Badge für aktive Radiosender */
+        .live-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #e11d48;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .app-item.playing .live-badge, .app-list-item.playing .live-badge {
+            display: block;
         }
 
         .app-name {
@@ -308,6 +356,7 @@
             cursor: pointer;
             width: 100%;
             box-sizing: border-box;
+            position: relative;
         }
 
         .app-list-item:active, .app-list-item:hover {
@@ -325,6 +374,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            position: relative;
         }
 
         .app-list-icon img {
@@ -376,6 +426,12 @@
             background-color: var(--hover-bg);
             color: var(--text-color);
         }
+
+        /* Aktiver Leuchteffekt für spielende Radiosender */
+        .app-item.playing .app-icon, .app-list-item.playing .app-list-icon {
+            border-color: #3b82f6;
+            box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -415,8 +471,22 @@
 
         <div class="bar-divider"></div>
 
+        <!-- Kompaktes Radio-Symbol in der oberen Steuerungsleiste -->
+        <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
+                <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/>
+                <circle cx="12" cy="12" r="2"/>
+                <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.4"/>
+                <path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/>
+            </svg>
+        </button>
+
+        <div class="bar-divider"></div>
+
+        <!-- Text-Reiter für Apps, Streaming etc. -->
         <div class="tabs-container" id="tabs-container">
-            <button class="tab-btn active" onclick="filterCategory('all', this)">Alle</button>
+            <!-- Reiter werden hier dynamisch eingefügt -->
         </div>
     </div>
 
@@ -425,6 +495,9 @@
         <div class="dashboard-container" id="dashboard"></div>
     </div>
 
+    <!-- Globaler Audio-Player für das Webradio -->
+    <audio id="globalAudioStream"></audio>
+
     <script>
         const categories = [
             {
@@ -432,23 +505,23 @@
                 title: "Streaming & TV",
                 shortTitle: "Streaming",
                 apps: [
-                    { name: "Apple TV", url: "https://www.youtube.com/redirect?q=https://tv.apple.com/de", image: "icons/appletv.png" },
-                    { name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png" },
-                    { name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com/de-DE", image: "icons/dazn.png" },
-                    { name: "Disney+", url: "https://www.youtube.com/redirect?q=https://www.disneyplus.com/de-de", image: "icons/disneyplus.png" },
-                    { name: "HBO Max", url: "https://www.youtube.com/redirect?q=https://www.hbomax.com/de/de", image: "icons/hbomax.png" },
-                    { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png" },
-                    { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png" },
-                    { name: "Netflix", url: "https://www.youtube.com/redirect?q=https://www.netflix.com", image: "icons/netflix.png" },
-                    { name: "Paramount+", url: "https://www.youtube.com/redirect?q=https://www.paramountplus.com", image: "icons/paramountplus.png" },
-                    { name: "Prime Video", url: "https://www.youtube.com/redirect?q=https://www.amazon.de/primevideo", image: "icons/amazonprime.png" },
-                    { name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png" },
-                    { name: "TikTok", url: "https://www.youtube.com/redirect?q=https://www.tiktok.com", image: "icons/tiktok.png" },
-                    { name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png" },
-                    { name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://app.waipu.tv/tv", image: "icons/waiputv.png" },
-                    { name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png" },
-                    { name: "YouTube", url: "https://www.youtube.com/redirect?q=https://www.youtube.com", image: "icons/youtube.png" },
-                    { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png" }
+                    { name: "Apple TV", url: "https://www.youtube.com/redirect?q=https://tv.apple.com/de", image: "icons/appletv.png", isRadio: false },
+                    { name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png", isRadio: false },
+                    { name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com/de-DE", image: "icons/dazn.png", isRadio: false },
+                    { name: "Disney+", url: "https://www.youtube.com/redirect?q=https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
+                    { name: "HBO Max", url: "https://www.youtube.com/redirect?q=https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
+                    { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png", isRadio: false },
+                    { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png", isRadio: false },
+                    { name: "Netflix", url: "https://www.youtube.com/redirect?q=https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
+                    { name: "Paramount+", url: "https://www.youtube.com/redirect?q=https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
+                    { name: "Prime Video", url: "https://www.youtube.com/redirect?q=https://www.amazon.de/primevideo", image: "icons/amazonprime.png", isRadio: false },
+                    { name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png", isRadio: false },
+                    { name: "TikTok", url: "https://www.youtube.com/redirect?q=https://www.tiktok.com", image: "icons/tiktok.png", isRadio: false },
+                    { name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png", isRadio: false },
+                    { name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://app.waipu.tv/tv", image: "icons/waiputv.png", isRadio: false },
+                    { name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png", isRadio: false },
+                    { name: "YouTube", url: "https://www.youtube.com/redirect?q=https://www.youtube.com", image: "icons/youtube.png", isRadio: false },
+                    { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png", isRadio: false }
                 ]
             },
             {
@@ -456,9 +529,9 @@
                 title: "Musik & Audio",
                 shortTitle: "Musik",
                 apps: [
-                    { name: "Apple Music", url: "https://www.youtube.com/redirect?q=https://music.apple.com/de", image: "icons/applemusic.png" },
-                    { name: "Spotify", url: "https://www.youtube.com/redirect?q=https://open.spotify.com", image: "icons/spotify.png" },
-                    { name: "YouTube Music", url: "https://www.youtube.com/redirect?q=https://music.youtube.com/?persist_app=1", image: "icons/youtubemusic.png" }
+                    { name: "Apple Music", url: "https://music.apple.com/de", image: "icons/applemusic.png", isRadio: false },
+                    { name: "Spotify", url: "https://open.spotify.com", image: "icons/spotify.png", isRadio: false },
+                    { name: "YouTube Music", url: "https://music.youtube.com/?persist_app=1", image: "icons/youtubemusic.png", isRadio: false }
                 ]
             },
             {
@@ -466,9 +539,9 @@
                 title: "Navigation & Auto",
                 shortTitle: "Navigation",
                 apps: [
-                    { name: "ABRP", url: "https://www.youtube.com/redirect?q=https://abetterrouteplanner.com", image: "icons/abrp.png" },
-                    { name: "Google Maps", url: "https://www.youtube.com/redirect?q=https://www.google.com/maps", image: "icons/googlemaps.png" },
-                    { name: "Tesla Charger Map", url: "https://www.youtube.com/redirect?q=https://www.tesla.com/de_de/findus", image: "icons/tesla.png" }
+                    { name: "ABRP", url: "https://abetterrouteplanner.com", image: "icons/abrp.png", isRadio: false },
+                    { name: "Google Maps", url: "https://www.google.com/maps", image: "icons/googlemaps.png", isRadio: false },
+                    { name: "Tesla Charger Map", url: "https://www.tesla.com/de_de/findus", image: "icons/tesla.png", isRadio: false }
                 ]
             },
             {
@@ -476,8 +549,8 @@
                 title: "Gaming",
                 shortTitle: "Gaming",
                 apps: [
-                    { name: "GeForce NOW", url: "https://www.youtube.com/redirect?q=https://play.geforcenow.com", image: "icons/geforcenow.png" },
-                    { name: "Xbox", url: "https://www.youtube.com/redirect?q=https://www.xbox.com/play", image: "icons/xbox.png" }
+                    { name: "GeForce NOW", url: "https://play.geforcenow.com", image: "icons/geforcenow.png", isRadio: false },
+                    { name: "Xbox", url: "https://www.xbox.com/play", image: "icons/xbox.png", isRadio: false }
                 ]
             },
             {
@@ -485,34 +558,172 @@
                 title: "Tools & Web",
                 shortTitle: "Tools",
                 apps: [
-                    { name: "ChatGPT", url: "https://www.youtube.com/redirect?q=https://chatgpt.com", image: "icons/chatgpt.png" },
-                    { name: "Gemini", url: "https://www.youtube.com/redirect?q=https://gemini.google.com/app", image: "icons/gemini.png" },
-                    { name: "Gmail", url: "https://www.youtube.com/redirect?q=https://mail.google.com", image: "icons/gmail.png" },
-                    { name: "Google", url: "https://www.youtube.com/redirect?q=https://www.google.com", image: "icons/google.png" },
-                    { name: "iCloud", url: "https://www.youtube.com/redirect?q=https://www.icloud.com", image: "icons/icloud.png" },
-                    { name: "Outlook", url: "https://www.youtube.com/redirect?q=https://outlook.live.com", image: "icons/outlook.png" },
-                    { name: "WhatsApp", url: "https://www.youtube.com/redirect?q=https://web.whatsapp.com", image: "icons/whatsapp.png" }
+                    { name: "ChatGPT", url: "https://chatgpt.com", image: "icons/chatgpt.png", isRadio: false },
+                    { name: "Gemini", url: "https://gemini.google.com/app", image: "icons/gemini.png", isRadio: false },
+                    { name: "Gmail", url: "https://mail.google.com", image: "icons/gmail.png", isRadio: false },
+                    { name: "Google", url: "https://www.google.com", image: "icons/google.png", isRadio: false },
+                    { name: "iCloud", url: "https://www.icloud.com", image: "icons/icloud.png", isRadio: false },
+                    { name: "Outlook", url: "https://outlook.live.com", image: "icons/outlook.png", isRadio: false },
+                    { name: "WhatsApp", url: "https://web.whatsapp.com", image: "icons/whatsapp.png", isRadio: false }
+                ]
+            },
+            {
+                id: "radio",
+                title: "Webradio",
+                shortTitle: "Radio",
+                subcategories: [
+                    {
+                        title: "Absolut Radio Familie",
+                        apps: [
+                            { name: "Absolut relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Bella", url: "https://absolut-bella.live-sm.absolutradio.de/absolut-bella/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "Absolut musicXL", url: "https://absolut-music.live-sm.absolutradio.de/absolut-music/stream/mp3", image: "icons/radio.png", isRadio: true }
+                        ]
+                    },
+                    {
+                        title: "90s90s Radio Familie",
+                        apps: [
+                            { name: "90s90s Radio", url: "https://streams.90s90s.de/90s90s/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true },
+                            { name: "90s90s Dance", url: "https://streams.90s90s.de/dance/mp3-128/stream.mp3", image: "icons/90s90seurodance.png", isRadio: true },
+                            { name: "90s90s In The Mix", url: "https://streams.90s90s.de/inthemix/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true },
+                            { name: "90s90s Rock", url: "https://streams.90s90s.de/rock/mp3-128/stream.mp3", image: "icons/90s90srock.png", isRadio: true },
+                            { name: "90s90s Hip-Hop", url: "https://streams.90s90s.de/hiphop/mp3-128/stream.mp3", image: "icons/90s90shiphop.png", isRadio: true },
+                            { name: "90s90s Deutsch-HipHop", url: "https://streams.90s90s.de/hiphopdeutsch/mp3-128/stream.mp3", image: "icons/90s90shiphopdeutsch.png", isRadio: true },
+                            { name: "90s90s Techno", url: "https://streams.90s90s.de/techno/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true },
+                            { name: "90s90s Trance", url: "https://streams.90s90s.de/trance/mp3-128/stream.mp3", image: "icons/90s90strance.png", isRadio: true },
+                            { name: "90s90s Boygroups", url: "https://streams.90s90s.de/boygroup/mp3-128/stream.mp3", image: "icons/90s90sboygroups.png", isRadio: true },
+                            { name: "90s90s Sommerhits", url: "https://streams.90s90s.de/90s90s-sommerhits/mp3-128/stream.mp3", image: "icons/90s90ssommerhits.png", isRadio: true },
+                            { name: "90s90s In The Mix Spezial", url: "https://streams.90s90s.de/inthemix-spezial/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true },
+                            { name: "90s90s Radiorave", url: "https://streams.90s90s.de/radiorave/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true },
+                            { name: "90s90s Hardcore", url: "https://streams.90s90s.de/hardcore/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s Chillout", url: "https://streams.90s90s.de/chillout/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s Love", url: "https://streams.90s90s.de/love/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s R&B", url: "https://streams.90s90s.de/rnb/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s Megamix", url: "https://streams.90s90s.de/megamix/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s Party", url: "https://streams.90s90s.de/party/mp3-128/stream.mp3", image: "icons/radio.png", isRadio: true },
+                            { name: "90s90s Live", url: "https://streams.90s90s.de/live/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true }
+                        ]
+                    },
+                    {
+                        title: "ARD / WDR Programme",
+                        apps: [
+                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true },
+                            { name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true },
+                            { name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true },
+                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true },
+                            { name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true },
+                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true }
+                        ]
+                    },
+                    {
+                        title: "Talk & News",
+                        apps: [
+                            { name: "NIUS – Das Radio", url: "https://nius--di--nacs-ais-lgc--0a--cdn.cast.addradio.de/nius/live/mp3/high", image: "icons/nius.png", isRadio: true },
+                            { name: "Deutschlandfunk", url: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web", image: "icons/deutschlandfunk.png", isRadio: true }
+                        ]
+                    },
+                    {
+                        title: "NRW-Lokalsender (Unna & Co.)",
+                        apps: [
+                            { name: "Antenne Unna", url: "https://stream.lokalradio.nrw/4453z23", image: "icons/antenneunna.png", isRadio: true },
+                            { name: "Radio 91.2 (Dortmund)", url: "https://stream.lokalradio.nrw/4453z57", image: "icons/radio912.png", isRadio: true },
+                            { name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true },
+                            { name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true }
+                        ]
+                    },
+                    {
+                        title: "Charts & Elektronisch",
+                        apps: [
+                            { name: "Sunshine Live", url: "https://stream.sunshine-live.de/live/mp3-128", image: "icons/sunshine-live.png", isRadio: true }
+                        ]
+                    }
                 ]
             }
         ];
 
         let currentView = 'grid'; // 'grid' or 'list'
-        let activeCategory = 'all';
+        let activeCategory = 'all'; // Standardstart bei "Apps"
         let selectedLetter = null;
         let searchQuery = '';
-        let categoryIds = ['all', ...categories.map(c => c.id)];
+        
+        let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'tools', 'radio'];
 
+        const globalAudio = document.getElementById('globalAudioStream');
+        let currentPlayingUrl = '';
+
+        // Reiter für Apps und normale Kategorien aufbauen
         const tabsContainer = document.getElementById('tabs-container');
+        
+        const appsBtn = document.createElement('button');
+        appsBtn.className = 'tab-btn active';
+        appsBtn.innerText = 'Apps';
+        appsBtn.onclick = (e) => filterCategory('all', appsBtn);
+        tabsContainer.appendChild(appsBtn);
+
         categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'tab-btn';
-            btn.innerText = cat.shortTitle;
-            btn.onclick = (e) => filterCategory(cat.id, btn);
-            tabsContainer.appendChild(btn);
+            if (cat.id !== 'radio') {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn';
+                btn.innerText = cat.shortTitle;
+                btn.onclick = (e) => filterCategory(cat.id, btn);
+                tabsContainer.appendChild(btn);
+            }
         });
 
-        function openApp(url) {
-            window.open(url, '_blank');
+        function handleItemClick(url, isRadio) {
+            if (isRadio) {
+                playRadioStream(url);
+            } else {
+                // Öffnet die App strikt im selben Browserfenster statt in einem neuen Tab
+                window.location.href = url;
+            }
+        }
+
+        function playRadioStream(url) {
+            if (currentPlayingUrl === url && !globalAudio.paused) {
+                globalAudio.pause();
+                globalAudio.src = "";
+                currentPlayingUrl = '';
+            } else {
+                globalAudio.pause();
+                globalAudio.currentTime = 0;
+                
+                globalAudio.src = url;
+                currentPlayingUrl = url;
+                
+                globalAudio.play().then(() => {
+                    updatePlayingState();
+                }).catch(e => {
+                    globalAudio.pause();
+                    globalAudio.src = "";
+                    currentPlayingUrl = '';
+                    updatePlayingState();
+                });
+            }
+            updatePlayingState();
+        }
+
+        function updatePlayingState() {
+            document.querySelectorAll('.app-item, .app-list-item').forEach(el => {
+                el.classList.remove('playing');
+            });
+
+            const radioIconBtn = document.getElementById('radioSymbolBtn');
+            if (currentPlayingUrl && !globalAudio.paused) {
+                document.querySelectorAll(`[onclick*="${CSS.escape(currentPlayingUrl)}"]`).forEach(el => {
+                    el.classList.add('playing');
+                });
+                radioIconBtn.classList.add('playing-radio');
+            } else {
+                radioIconBtn.classList.remove('playing-radio');
+            }
         }
 
         function updateViewIcon() {
@@ -530,26 +741,42 @@
             container.innerHTML = '';
             updateViewIcon();
 
-            if (currentView === 'list' && activeCategory === 'all') {
+            const targetCategories = categories.filter(cat => {
+                if (activeCategory === 'all') {
+                    return cat.id !== 'radio';
+                }
+                return activeCategory === cat.id;
+            });
+
+            if (currentView === 'list') {
                 azSidebar.style.display = 'flex';
                 
-                let allApps = [];
+                let targetApps = [];
                 let availableLetters = new Set();
 
-                categories.forEach(cat => {
-                    cat.apps.forEach(app => {
-                        let firstLetter = app.name.trim()[0].toUpperCase();
-                        availableLetters.add(firstLetter);
-
-                        let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-                        let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
-                        
-                        if (matchesSearch && matchesLetter) {
-                            allApps.push(app);
-                        }
-                    });
+                targetCategories.forEach(cat => {
+                    if (cat.subcategories) {
+                        cat.subcategories.forEach(sub => {
+                            sub.apps.forEach(app => collectApp(app));
+                        });
+                    } else if (cat.apps) {
+                        cat.apps.forEach(app => collectApp(app));
+                    }
                 });
-                allApps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+
+                function collectApp(app) {
+                    let firstLetter = app.name.trim()[0].toUpperCase();
+                    availableLetters.add(firstLetter);
+
+                    let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                    let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
+                    
+                    if (matchesSearch && matchesLetter) {
+                        targetApps.push(app);
+                    }
+                }
+
+                targetApps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
                 azSidebar.innerHTML = '';
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter => {
@@ -561,20 +788,25 @@
                     }
                 });
 
-                if (selectedLetter && allApps.length > 0) {
+                if (selectedLetter && targetApps.length > 0) {
                     let sectionHTML = `
                         <div class="category-section">
                             <h2 class="category-title is-back" onclick="filterByLetter(null)" title="Zurück zur Übersicht">${selectedLetter}</h2>
                             <div class="app-list">
                     `;
-                    allApps.forEach(app => {
+                    targetApps.forEach(app => {
+                        let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                        let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                         let iconContent = app.image 
                             ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
-                            : `<span class="placeholder" style="font-size:16px;">${app.name[0]}</span>`;
+                            : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         sectionHTML += `
-                            <div class="app-list-item" onclick="openApp('${app.url}')">
-                                <div class="app-list-icon">${iconContent}</div>
+                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                <div class="app-list-icon">
+                                    ${iconContent}
+                                    ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                </div>
                                 <span class="app-list-name">${app.name}</span>
                             </div>
                         `;
@@ -583,7 +815,7 @@
                     container.innerHTML += sectionHTML;
                 } else {
                     let grouped = {};
-                    allApps.forEach(app => {
+                    targetApps.forEach(app => {
                         let firstLetter = app.name.trim()[0].toUpperCase();
                         if (!grouped[firstLetter]) grouped[firstLetter] = [];
                         grouped[firstLetter].push(app);
@@ -596,13 +828,18 @@
                                 <div class="app-list">
                         `;
                         grouped[letter].forEach(app => {
+                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                             let iconContent = app.image 
                                 ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
-                                : `<span class="placeholder" style="font-size:16px;">${app.name[0]}</span>`;
+                                : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="app-list-item" onclick="openApp('${app.url}')">
-                                    <div class="app-list-icon">${iconContent}</div>
+                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                    <div class="app-list-icon">
+                                        ${iconContent}
+                                        ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                    </div>
                                     <span class="app-list-name">${app.name}</span>
                                 </div>
                             `;
@@ -615,65 +852,92 @@
             } else {
                 azSidebar.style.display = 'none';
 
-                categories.forEach(category => {
-                    if (activeCategory !== 'all' && activeCategory !== category.id) return;
+                targetCategories.forEach(category => {
+                    let titleClass = "category-title";
+                    let titleTooltip = category.title;
 
-                    const filteredApps = category.apps
-                        .filter(app => {
-                            let firstLetter = app.name.trim()[0].toUpperCase();
-                            let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-                            let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
-                            return matchesSearch && matchesLetter;
-                        })
-                        .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+                    if (category.subcategories) {
+                        let sectionHTML = `<div class="category-section is-category">`;
 
-                    if (filteredApps.length === 0) return;
+                        category.subcategories.forEach(sub => {
+                            const filteredSubApps = sub.apps
+                                .filter(app => {
+                                    let firstLetter = app.name.trim()[0].toUpperCase();
+                                    let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                                    let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
+                                    return matchesSearch && matchesLetter;
+                                })
+                                .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
-                    let titleClass = (activeCategory !== 'all') ? "category-title is-back" : "category-title has-arrow";
-                    let titleAction = (activeCategory !== 'all') ? "filterCategory('all', document.querySelector('.tab-btn'))" : `selectCategoryByTitle('${category.id}')`;
-                    let titleTooltip = (activeCategory !== 'all') ? "Zurück zu Alle" : "Vollansicht öffnen";
+                            if (filteredSubApps.length === 0) return;
 
-                    let sectionHTML = `
-                        <div class="category-section is-category">
-                            <h2 class="${titleClass}" onclick="${titleAction}" title="${titleTooltip}">${category.title}</h2>
-                    `;
+                            sectionHTML += `<div style="margin-top: 14px;"><h3 class="sub-category-title">${sub.title}</h3>`;
+                            sectionHTML += `<div class="app-grid">`;
 
-                    if (currentView === 'grid') {
-                        sectionHTML += `<div class="app-grid">`;
+                            filteredSubApps.forEach(app => {
+                                let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                                let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
+                                let iconContent = app.image 
+                                    ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
+                                    : `<span class="placeholder">${app.name[0]}</span>`;
+
+                                sectionHTML += `
+                                    <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                        <div class="app-icon">
+                                            ${iconContent}
+                                            ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        </div>
+                                        <span class="app-name">${app.name}</span>
+                                    </div>
+                                `;
+                            });
+                            sectionHTML += `</div></div>`;
+                        });
+
+                        sectionHTML += `</div>`;
+                        container.innerHTML += sectionHTML;
+
+                    } else {
+                        const filteredApps = category.apps
+                            .filter(app => {
+                                let firstLetter = app.name.trim()[0].toUpperCase();
+                                let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                                let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
+                                return matchesSearch && matchesLetter;
+                            })
+                            .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+
+                        if (filteredApps.length === 0) return;
+
+                        let sectionHTML = `
+                            <div class="category-section is-category">
+                                <h2 class="${titleClass}" title="${titleTooltip}">${category.title}</h2>
+                                <div class="app-grid">
+                        `;
+
                         filteredApps.forEach(app => {
+                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                             let iconContent = app.image 
                                 ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
                                 : `<span class="placeholder">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="app-item" onclick="openApp('${app.url}')">
-                                    <div class="app-icon">${iconContent}</div>
+                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                    <div class="app-icon">
+                                        ${iconContent}
+                                        ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                    </div>
                                     <span class="app-name">${app.name}</span>
                                 </div>
                             `;
                         });
-                        sectionHTML += `</div>`;
-                    } else {
-                        sectionHTML += `<div class="app-list">`;
-                        filteredApps.forEach(app => {
-                            let iconContent = app.image 
-                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
-                                : `<span class="placeholder" style="font-size:16px;">${app.name[0]}</span>`;
-
-                            sectionHTML += `
-                                <div class="app-list-item" onclick="openApp('${app.url}')">
-                                    <div class="app-list-icon">${iconContent}</div>
-                                    <span class="app-list-name">${app.name}</span>
-                                </div>
-                            `;
-                        });
-                        sectionHTML += `</div>`;
+                        sectionHTML += `</div></div>`;
+                        container.innerHTML += sectionHTML;
                     }
-
-                    sectionHTML += `</div>`;
-                    container.innerHTML += sectionHTML;
                 });
             }
+            updatePlayingState();
         }
 
         function toggleView() {
@@ -690,25 +954,19 @@
         function filterCategory(catId, btnElement) {
             activeCategory = catId;
             selectedLetter = null;
+            
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            if (btnElement) {
+            const radioIconBtn = document.getElementById('radioSymbolBtn');
+            radioIconBtn.classList.remove('active');
+
+            if (catId === 'radio') {
+                radioIconBtn.classList.add('active');
+            } else if (btnElement && btnElement.classList.contains('tab-btn')) {
                 btnElement.classList.add('active');
-            } else {
-                let catIndex = categoryIds.indexOf(catId);
-                let buttons = document.querySelectorAll('.tab-btn');
-                if (buttons[catIndex]) buttons[catIndex].classList.add('active');
             }
+
             renderDashboard();
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function selectCategoryByTitle(catId) {
-            let catIndex = categoryIds.indexOf(catId);
-            if (catIndex !== -1) {
-                let buttons = document.querySelectorAll('.tab-btn');
-                let targetButton = buttons[catIndex];
-                filterCategory(catId, targetButton);
-            }
         }
 
         function filterByLetter(letter) {
@@ -725,21 +983,23 @@
                 return;
             }
 
-            if (activeCategory !== 'all') {
-                filterCategory('all', document.querySelector('.tabs-container button'));
-                return;
-            }
-
             let currentIndex = categoryIds.indexOf(activeCategory);
             let newIndex = currentIndex + direction;
             if (newIndex < 0) newIndex = categoryIds.length - 1;
             if (newIndex >= categoryIds.length) newIndex = 0;
             
             let newCatId = categoryIds[newIndex];
-            let buttons = document.querySelectorAll('.tab-btn');
-            let targetButton = buttons[newIndex];
-            
-            filterCategory(newCatId, targetButton);
+            if (newCatId === 'radio') {
+                filterCategory('radio', document.getElementById('radioSymbolBtn'));
+            } else if (newCatId === 'all') {
+                filterCategory('all', document.querySelector('.tab-btn'));
+            } else {
+                let catIndex = categories.findIndex(c => c.id === newCatId);
+                let buttons = document.querySelectorAll('.tab-btn');
+                if (catIndex !== -1 && buttons[catIndex]) {
+                    filterCategory(newCatId, buttons[catIndex]);
+                }
+            }
         }
 
         function handleSearch() {
