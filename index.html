@@ -46,6 +46,8 @@
             box-sizing: border-box;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* Top Bar */
@@ -165,6 +167,52 @@
         .tab-btn:hover, .tab-btn.active {
             color: var(--text-color);
             background-color: var(--hover-bg);
+        }
+
+        /* Genre Filter Text Bar mit feinen Trennstrichen */
+        .genre-filter-container {
+            max-width: 680px;
+            width: 100%;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .genre-filter-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .genre-text-btn {
+            background: transparent;
+            border: none;
+            color: var(--section-color);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 2px 0;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .genre-text-btn:hover, .genre-text-btn.active {
+            color: var(--text-color);
+        }
+
+        .genre-text-btn.active {
+            font-weight: 600;
+            border-bottom: 1.5px solid var(--text-color);
+        }
+
+        .genre-separator {
+            width: 1px;
+            height: 12px;
+            background-color: var(--tile-border);
+            flex-shrink: 0;
         }
 
         /* Main Wrapper */
@@ -312,7 +360,7 @@
             display: block;
         }
 
-        /* Transparenter Stern unten links (ohne Hintergrund) */
+        /* Transparenter Stern unten links (rein optisch, Klicks blockiert) */
         .fav-btn {
             position: absolute;
             bottom: 6px;
@@ -324,13 +372,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: default;
+            pointer-events: none;
             z-index: 15;
             color: rgba(255, 255, 255, 0.4);
             font-size: 18px;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
             opacity: 0.5;
-            transition: opacity 0.2s ease, transform 0.1s ease, color 0.2s ease;
+            transition: opacity 0.2s ease, color 0.2s ease;
         }
 
         .app-item:hover .fav-btn, .fav-btn.is-fav {
@@ -338,12 +387,8 @@
         }
 
         .fav-btn.is-fav {
-            color: #fbbf24; /* Edler Gold-/Gelbton für den aktiven Stern */
+            color: #fbbf24;
             opacity: 1;
-        }
-
-        .fav-btn:active {
-            transform: scale(0.85);
         }
 
         .app-name {
@@ -420,13 +465,13 @@
         .list-fav-btn {
             background: transparent;
             border: none;
-            cursor: pointer;
+            cursor: default;
+            pointer-events: none;
             color: var(--section-color);
             font-size: 16px;
             padding: 6px;
             margin-left: auto;
             border-radius: 6px;
-            transition: color 0.2s;
         }
 
         .list-fav-btn.is-fav {
@@ -530,6 +575,25 @@
         <div class="tabs-container" id="tabs-container"></div>
     </div>
 
+    <!-- Genre Filter Text Bar mit feinen Trennstrichen -->
+    <div class="genre-filter-container" id="genreFilterContainer">
+        <button class="genre-text-btn active" onclick="filterGenre('all', this)">Alle</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('pop', this)">Pop</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('dance', this)">Dance</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('hiphop', this)">Hip-Hop</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('throwback', this)">Throwbacks</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('rock', this)">Rock</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('news', this)">News</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('lokal', this)">Lokal</button>
+    </div>
+
     <div class="main-wrapper">
         <div class="az-sidebar" id="azSidebar" style="display: none;"></div>
         <div class="dashboard-container" id="dashboard"></div>
@@ -614,141 +678,141 @@
                     {
                         title: "Absolut Radio Familie",
                         apps: [
-                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true },
-                            { name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/absolutgermany.png", isRadio: true },
-                            { name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/absoluttop2000er.png", isRadio: true },
-                            { name: "Absolut Relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/absolutrelax.png", isRadio: true },
-                            { name: "Absolut Bella", url: "https://absolut-bella.live-sm.absolutradio.de/absolut-bella/stream/mp3", image: "icons/absolutbella.png", isRadio: true },
-                            { name: "Absolut Classics", url: "https://absolut-oldieclassics.live-sm.absolutradio.de/absolut-oldieclassics/stream/mp3", image: "icons/absolutclassics.png", isRadio: true },
-                            { name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/absolutcoffee.png", isRadio: true },
-                            { name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/absolutlovesongs.png", isRadio: true },
-                            { name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/absolut80iger.png", isRadio: true },
-                            { name: "Absolut Top Clubnight", url: "https://absolut-topclubnight.live-sm.absolutradio.de/absolut-topclubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true },
-                            { name: "Absolut musicXL", url: "https://absolut-musicxl.live-sm.absolutradio.de/absolut-musicxl/stream/mp3", image: "icons/absolutmusicxl.png", isRadio: true },
-                            { name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/absolutrock.png", isRadio: true },
-                            { name: "Absolut Radio AI", url: "https://absolut-radioai.live-sm.absolutradio.de/absolut-radioai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true },
-                            { name: "Absolut Christmas Time", url: "https://absolut-christmastime.live-sm.absolutradio.de/absolut-christmastime/stream/mp3", image: "icons/absolutxmas.png", isRadio: true }
+                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/absolutgermany.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/absoluttop2000er.png", isRadio: true, genre: "throwback" },
+                            { name: "Absolut Relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/absolutrelax.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Bella", url: "https://absolut-bella.live-sm.absolutradio.de/absolut-bella/stream/mp3", image: "icons/absolutbella.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Classics", url: "https://absolut-oldieclassics.live-sm.absolutradio.de/absolut-oldieclassics/stream/mp3", image: "icons/absolutclassics.png", isRadio: true, genre: "throwback" },
+                            { name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/absolutcoffee.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/absolutlovesongs.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/absolut80iger.png", isRadio: true, genre: "throwback" },
+                            { name: "Absolut Top Clubnight", url: "https://absolut-topclubnight.live-sm.absolutradio.de/absolut-topclubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true, genre: "dance" },
+                            { name: "Absolut musicXL", url: "https://absolut-musicxl.live-sm.absolutradio.de/absolut-musicxl/stream/mp3", image: "icons/absolutmusicxl.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/absolutrock.png", isRadio: true, genre: "rock" },
+                            { name: "Absolut Radio AI", url: "https://absolut-radioai.live-sm.absolutradio.de/absolut-radioai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true, genre: "dance" },
+                            { name: "Absolut Christmas Time", url: "https://absolut-christmastime.live-sm.absolutradio.de/absolut-christmastime/stream/mp3", image: "icons/absolutxmas.png", isRadio: true, genre: "pop" }
                         ]
                     },
                     {
                         title: "90s90s Radio Familie",
                         apps: [
-                            { name: "90s90s Radio", url: "https://streams.90s90s.de/90s90s/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true },
-                            { name: "90s90s Dance", url: "https://streams.90s90s.de/dance/mp3-128/stream.mp3", image: "icons/90s90seurodance.png", isRadio: true },
-                            { name: "90s90s In The Mix", url: "https://streams.90s90s.de/inthemix/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true },
-                            { name: "90s90s Rock", url: "https://streams.90s90s.de/rock/mp3-128/stream.mp3", image: "icons/90s90srock.png", isRadio: true },
-                            { name: "90s90s Hip-Hop", url: "https://streams.90s90s.de/hiphop/mp3-128/stream.mp3", image: "icons/90s90shiphop.png", isRadio: true },
-                            { name: "90s90s Deutsch-HipHop", url: "https://streams.90s90s.de/hiphopdeutsch/mp3-128/stream.mp3", image: "icons/90s90shiphopdeutsch.png", isRadio: true },
-                            { name: "90s90s Techno", url: "https://streams.90s90s.de/techno/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true },
-                            { name: "90s90s Trance", url: "https://streams.90s90s.de/trance/mp3-128/stream.mp3", image: "icons/90s90strance.png", isRadio: true },
-                            { name: "90s90s Boygroups", url: "https://streams.90s90s.de/boygroup/mp3-128/stream.mp3", image: "icons/90s90sboygroups.png", isRadio: true },
-                            { name: "90s90s Sommerhits", url: "https://streams.90s90s.de/90s90s-sommerhits/mp3-128/stream.mp3", image: "icons/90s90ssommerhits.png", isRadio: true },
-                            { name: "90s90s In The Mix Spezial", url: "https://streams.90s90s.de/inthemix-spezial/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true },
-                            { name: "90s90s Radiorave", url: "https://streams.90s90s.de/radiorave/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true },
-                            { name: "90s90s Chillout", url: "https://streams.90s90s.de/chillout/mp3-128/stream.mp3", image: "icons/90s90schillout.png", isRadio: true },
-                            { name: "90s90s Love Songs", url: "https://streams.90s90s.de/love/mp3-128/stream.mp3", image: "icons/90s90slovesongs.png", isRadio: true },
-                            { name: "90s90s Soul&R&B", url: "https://streams.90s90s.de/rnb/mp3-128/stream.mp3", image: "icons/90s90srnb.png", isRadio: true },
-                            { name: "90s90s Hessen", url: "https://streams.90s90s.de/hessen/mp3-128/stream.mp3", image: "icons/90s90shessen.png", isRadio: true },
-                            { name: "90s90s Sachsen", url: "https://streams.90s90s.de/sachsen/mp3-128/stream.mp3", image: "icons/90s90ssachsen.png", isRadio: true },
-                            { name: "90s90s Clubhits", url: "https://streams.90s90s.de/clubhits/mp3-128/stream.mp3", image: "icons/90s90sclubhits.png", isRadio: true },
-                            { name: "90s90s House", url: "https://streams.90s90s.de/house/mp3-128/stream.mp3", image: "icons/90s90shouse.png", isRadio: true }
+                            { name: "90s90s Radio", url: "https://streams.90s90s.de/90s90s/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true, genre: "throwback" },
+                            { name: "90s90s Dance", url: "https://streams.90s90s.de/dance/mp3-128/stream.mp3", image: "icons/90s90seurodance.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s In The Mix", url: "https://streams.90s90s.de/inthemix/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s Rock", url: "https://streams.90s90s.de/rock/mp3-128/stream.mp3", image: "icons/90s90srock.png", isRadio: true, genre: "rock" },
+                            { name: "90s90s Hip-Hop", url: "https://streams.90s90s.de/hiphop/mp3-128/stream.mp3", image: "icons/90s90shiphop.png", isRadio: true, genre: "hiphop" },
+                            { name: "90s90s Deutsch-HipHop", url: "https://streams.90s90s.de/hiphopdeutsch/mp3-128/stream.mp3", image: "icons/90s90shiphopdeutsch.png", isRadio: true, genre: "hiphop" },
+                            { name: "90s90s Techno", url: "https://streams.90s90s.de/techno/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s Trance", url: "https://streams.90s90s.de/trance/mp3-128/stream.mp3", image: "icons/90s90strance.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s Boygroups", url: "https://streams.90s90s.de/boygroup/mp3-128/stream.mp3", image: "icons/90s90sboygroups.png", isRadio: true, genre: "throwback" },
+                            { name: "90s90s Sommerhits", url: "https://streams.90s90s.de/90s90s-sommerhits/mp3-128/stream.mp3", image: "icons/90s90ssommerhits.png", isRadio: true, genre: "throwback" },
+                            { name: "90s90s In The Mix Spezial", url: "https://streams.90s90s.de/inthemix-spezial/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s Radiorave", url: "https://streams.90s90s.de/radiorave/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s Chillout", url: "https://streams.90s90s.de/chillout/mp3-128/stream.mp3", image: "icons/90s90schillout.png", isRadio: true, genre: "pop" },
+                            { name: "90s90s Love Songs", url: "https://streams.90s90s.de/love/mp3-128/stream.mp3", image: "icons/90s90slovesongs.png", isRadio: true, genre: "throwback" },
+                            { name: "90s90s Soul&R&B", url: "https://streams.90s90s.de/rnb/mp3-128/stream.mp3", image: "icons/90s90srnb.png", isRadio: true, genre: "hiphop" },
+                            { name: "90s90s Hessen", url: "https://streams.90s90s.de/hessen/mp3-128/stream.mp3", image: "icons/90s90shessen.png", isRadio: true, genre: "lokal" },
+                            { name: "90s90s Sachsen", url: "https://streams.90s90s.de/sachsen/mp3-128/stream.mp3", image: "icons/90s90ssachsen.png", isRadio: true, genre: "lokal" },
+                            { name: "90s90s Clubhits", url: "https://streams.90s90s.de/clubhits/mp3-128/stream.mp3", image: "icons/90s90sclubhits.png", isRadio: true, genre: "dance" },
+                            { name: "90s90s House", url: "https://streams.90s90s.de/house/mp3-128/stream.mp3", image: "icons/90s90shouse.png", isRadio: true, genre: "dance" }
                         ]
                     },
                     {
-                        title: "bigFM Radio Familie (Komplett)",
+                        title: "bigFM Radio Familie",
                         apps: [
-                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true },
-                            { name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true },
-                            { name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true },
-                            { name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true },
-                            { name: "bigFM Hessen", url: "https://stream.bigfm.de/hessen/mp3-128/private", image: "icons/bigfmhessen.png", isRadio: true },
-                            { name: "bigFM Saarland", url: "https://stream.bigfm.de/saarland/mp3-128/private", image: "icons/bigfmsaarland.png", isRadio: true },
-                            { name: "bigFM Berlin", url: "https://stream.bigfm.de/berlin/mp3-128/private", image: "icons/bigfmberlin.png", isRadio: true },
-                            { name: "bigFM Hamburg", url: "https://stream.bigfm.de/hamburg/mp3-128/private", image: "icons/bigfmhamburg.png", isRadio: true },
-                            { name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true },
-                            { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true },
-                            { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true },
+                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Hessen", url: "https://stream.bigfm.de/hessen/mp3-128/private", image: "icons/bigfmhessen.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Saarland", url: "https://stream.bigfm.de/saarland/mp3-128/private", image: "icons/bigfmsaarland.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Berlin", url: "https://stream.bigfm.de/berlin/mp3-128/private", image: "icons/bigfmberlin.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Hamburg", url: "https://stream.bigfm.de/hamburg/mp3-128/private", image: "icons/bigfmhamburg.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true, genre: "lokal" },
+                            { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true, genre: "lokal" },
                             
-                            { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true },
-                            { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true },
-                            { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true },
-                            { name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true },
-                            { name: "bigFM EDM & Progressive", url: "https://stream.bigfm.de/edm/mp3-128/private", image: "icons/bigfmedm.png", isRadio: true },
-                            { name: "bigFM Hip-Hop Radio", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true },
-                            { name: "bigFM US Rap & Hip-Hop", url: "https://stream.bigfm.de/usrap/mp3-128/private", image: "icons/bigfmusrap.png", isRadio: true },
-                            { name: "bigFM Oldschool Rap & Hip-Hop", url: "https://stream.bigfm.de/oldschoolrap/mp3-128/private", image: "icons/bigfmoldschoolrap.png", isRadio: true },
-                            { name: "bigFM Deutschrap Rasiert", url: "https://stream.bigfm.de/deutschrap/mp3-128/private", image: "icons/bigfmdeutschrap.png", isRadio: true },
-                            { name: "bigFM Deutschrap rasiert brandeu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapbrandneu.png", isRadio: true },
-                            { name: "bigFM Oldschool Deutschrap", url: "https://stream.bigfm.de/oldschooldeutschrap/mp3-128/private", image: "icons/bigfmoldschooldeutschrap.png", isRadio: true },
-                            { name: "bigFM Apache 207", url: "https://stream.bigfm.de/apache/mp3-128/private", image: "icons/bigfmapache.png", isRadio: true },
-                            { name: "bigFM RnB", url: "https://stream.bigfm.de/rnb/mp3-128/private", image: "icons/bigfmrnb.png", isRadio: true },
-                            { name: "bigFM Throwback", url: "https://stream.bigfm.de/throwback/mp3-128/private", image: "icons/bigfmthrowback.png", isRadio: true },
-                            { name: "bigFM 2000er", url: "https://stream.bigfm.de/2000er/mp3-128/private", image: "icons/bigfm2000er.png", isRadio: true },
-                            { name: "bigFM 2010er", url: "https://stream.bigfm.de/2010er/mp3-128/private", image: "icons/bigfm2010er.png", isRadio: true },
-                            { name: "bigFM Party", url: "https://stream.bigfm.de/party/mp3-128/private", image: "icons/bigfmparty.png", isRadio: true },
-                            { name: "bigFM Groovenight - HipHop DJ Mix", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true },
-                            { name: "bigFM Turn UP", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true },
-                            { name: "bigFM Mashup", url: "https://stream.bigfm.de/mashup/mp3-128/private", image: "icons/bigfmmashup.png", isRadio: true },
-                            { name: "bigFM World Beats", url: "https://stream.bigfm.de/worldbeats/mp3-128/private", image: "icons/bigfmworldbeats.png", isRadio: true },
-                            { name: "bigFM Latin Beats", url: "https://stream.bigfm.de/latinbeats/mp3-128/private", image: "icons/bigfmlatin.png", isRadio: true },
-                            { name: "bigFM Balkan", url: "https://stream.bigfm.de/balkan/mp3-128/private", image: "icons/bigfmbalkan.png", isRadio: true },
-                            { name: "bigFM MUZYKA", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true },
-                            { name: "bigFM Afrobeats", url: "https://stream.bigfm.de/afrobeats/mp3-128/private", image: "icons/bigfmafrobeats.png", isRadio: true },
-                            { name: "bigFM SES", url: "https://stream.bigfm.de/ses/mp3-128/private", image: "icons/bigfmses.png", isRadio: true },
-                            { name: "bigFM Rock", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true },
-                            { name: "bigFM Sunset Lounge", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmsunsetlounge.png", isRadio: true },
-                            { name: "bigFM LoFi Focus", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmlofi.png", isRadio: true },
-                            { name: "bigFM Sports & Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true },
-                            { name: "bigFM Tomorrowland One World Radio", url: "https://stream.bigfm.de/tomorrowland/mp3-128/private", image: "icons/bigfmtomorrowland.png", isRadio: true },
-                            { name: "bigGPT", url: "https://stream.bigfm.de/biggpt/mp3-128/private", image: "icons/biggpt.png", isRadio: true },
-                            { name: "bigFM Xmas", url: "https://stream.bigfm.de/xmas/mp3-128/private", image: "icons/bigfmxmas.png", isRadio: true }
+                            { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM EDM & Progressive", url: "https://stream.bigfm.de/edm/mp3-128/private", image: "icons/bigfmedm.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Hip-Hop Radio", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM US Rap & Hip-Hop", url: "https://stream.bigfm.de/usrap/mp3-128/private", image: "icons/bigfmusrap.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Oldschool Rap & Hip-Hop", url: "https://stream.bigfm.de/oldschoolrap/mp3-128/private", image: "icons/bigfmoldschoolrap.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Deutschrap Rasiert", url: "https://stream.bigfm.de/deutschrap/mp3-128/private", image: "icons/bigfmdeutschrap.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Deutschrap rasiert brandeu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapbrandneu.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Oldschool Deutschrap", url: "https://stream.bigfm.de/oldschooldeutschrap/mp3-128/private", image: "icons/bigfmoldschooldeutschrap.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Apache 207", url: "https://stream.bigfm.de/apache/mp3-128/private", image: "icons/bigfmapache.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM RnB", url: "https://stream.bigfm.de/rnb/mp3-128/private", image: "icons/bigfmrnb.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Throwback", url: "https://stream.bigfm.de/throwback/mp3-128/private", image: "icons/bigfmthrowback.png", isRadio: true, genre: "throwback" },
+                            { name: "bigFM 2000er", url: "https://stream.bigfm.de/2000er/mp3-128/private", image: "icons/bigfm2000er.png", isRadio: true, genre: "throwback" },
+                            { name: "bigFM 2010er", url: "https://stream.bigfm.de/2010er/mp3-128/private", image: "icons/bigfm2010er.png", isRadio: true, genre: "throwback" },
+                            { name: "bigFM Party", url: "https://stream.bigfm.de/party/mp3-128/private", image: "icons/bigfmparty.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Groovenight - HipHop DJ Mix", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM Turn UP", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Mashup", url: "https://stream.bigfm.de/mashup/mp3-128/private", image: "icons/bigfmmashup.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM World Beats", url: "https://stream.bigfm.de/worldbeats/mp3-128/private", image: "icons/bigfmworldbeats.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Latin Beats", url: "https://stream.bigfm.de/latinbeats/mp3-128/private", image: "icons/bigfmlatin.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Balkan", url: "https://stream.bigfm.de/balkan/mp3-128/private", image: "icons/bigfmbalkan.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM MUZYKA", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Afrobeats", url: "https://stream.bigfm.de/afrobeats/mp3-128/private", image: "icons/bigfmafrobeats.png", isRadio: true, genre: "hiphop" },
+                            { name: "bigFM SES", url: "https://stream.bigfm.de/ses/mp3-128/private", image: "icons/bigfmses.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Rock", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true, genre: "rock" },
+                            { name: "bigFM Sunset Lounge", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmsunsetlounge.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM LoFi Focus", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmlofi.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Sports & Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true, genre: "dance" },
+                            { name: "bigFM Tomorrowland One World Radio", url: "https://stream.bigfm.de/tomorrowland/mp3-128/private", image: "icons/bigfmtomorrowland.png", isRadio: true, genre: "dance" },
+                            { name: "bigGPT", url: "https://stream.bigfm.de/biggpt/mp3-128/private", image: "icons/biggpt.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Xmas", url: "https://stream.bigfm.de/xmas/mp3-128/private", image: "icons/bigfmxmas.png", isRadio: true, genre: "pop" }
                         ]
                     },
                     {
                         title: "ARD / WDR Programme",
                         apps: [
-                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true },
-                            { name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true },
-                            { name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true },
-                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true },
-                            { name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true },
-                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true }
+                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true, genre: "pop" },
+                            { name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true, genre: "pop" },
+                            { name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true, genre: "lokal" },
+                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true, genre: "news" },
+                            { name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true, genre: "throwback" },
+                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true, genre: "news" }
                         ]
                     },
                     {
                         title: "Talk & News",
                         apps: [
-                            { name: "NIUS – Das Radio", url: "https://nius--di--nacs-ais-lgc--0a--cdn.cast.addradio.de/nius/live/mp3/high", image: "icons/nius.png", isRadio: true },
-                            { name: "Deutschlandfunk", url: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web", image: "icons/deutschlandfunk.png", isRadio: true }
+                            { name: "NIUS – Das Radio", url: "https://nius--di--nacs-ais-lgc--0a--cdn.cast.addradio.de/nius/live/mp3/high", image: "icons/nius.png", isRadio: true, genre: "news" },
+                            { name: "Deutschlandfunk", url: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web", image: "icons/deutschlandfunk.png", isRadio: true, genre: "news" }
                         ]
                     },
                     {
                         title: "NRW-Lokalsender (Unna & Co.)",
                         apps: [
-                            { name: "Antenne Unna", url: "https://antenneunna--di--nacs-ais-lgc--07--cdn.cast.addradio.de/antenneunna/live/mp3/high", image: "icons/antenneunna.png", isRadio: true },
-                            { name: "Radio 91.2 (Dortmund)", url: "https://radio912--di--nacs-ais-lgc--0c--cdn.cast.addradio.de/radio912/live/mp3/high", image: "icons/radio912.png", isRadio: true },
-                            { name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true },
-                            { name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true }
+                            { name: "Antenne Unna", url: "https://antenneunna--di--nacs-ais-lgc--07--cdn.cast.addradio.de/antenneunna/live/mp3/high", image: "icons/antenneunna.png", isRadio: true, genre: "lokal" },
+                            { name: "Radio 91.2 (Dortmund)", url: "https://radio912--di--nacs-ais-lgc--0c--cdn.cast.addradio.de/radio912/live/mp3/high", image: "icons/radio912.png", isRadio: true, genre: "lokal" },
+                            { name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true, genre: "lokal" },
+                            { name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true, genre: "lokal" }
                         ]
                     },
                     {
                         title: "Charts & Elektronisch",
                         apps: [
-                            { name: "Sunshine Live", url: "https://stream.sunshine-live.de/live/mp3-128", image: "icons/sunshine-live.png", isRadio: true }
+                            { name: "Sunshine Live", url: "https://stream.sunshine-live.de/live/mp3-128", image: "icons/sunshine-live.png", isRadio: true, genre: "dance" }
                         ]
                     }
                 ]
             }
         ];
 
-        let currentView = 'grid'; // 'grid' or 'list'
-        let activeCategory = 'all'; // Standardstart bei "Apps"
+        let currentView = 'grid'; 
+        let activeCategory = 'all'; 
+        let activeGenre = 'all'; 
         let selectedLetter = null;
         let searchQuery = '';
         
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'radio'];
 
-        // Favoriten aus localStorage laden
         let favorites = JSON.parse(localStorage.getItem('tesla_dashboard_favs') || '[]');
 
         const globalAudio = document.getElementById('globalAudioStream');
@@ -778,8 +842,32 @@
             }
         });
 
-        function toggleFavorite(event, appUrl) {
-            event.stopPropagation();
+        // Long-Press Logik auf der gesamten Kachel: 
+        // - Kurzer Klick = App öffnen / Radio abspielen
+        // - Langes Halten (0,6s) = Zu Favoriten hinzufügen / entfernen
+        let pressTimer = null;
+        let isLongPress = false;
+
+        function handlePressStart(url) {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                toggleFavoriteDirect(url);
+            }, 600);
+        }
+
+        function handlePressEnd(url, isRadio, name, image) {
+            clearTimeout(pressTimer);
+            if (!isLongPress) {
+                handleItemClick(url, isRadio, name, image);
+            }
+        }
+
+        function handlePressCancel() {
+            clearTimeout(pressTimer);
+        }
+
+        function toggleFavoriteDirect(appUrl) {
             const index = favorites.indexOf(appUrl);
             if (index > -1) {
                 favorites.splice(index, 1);
@@ -901,7 +989,7 @@
 
             const radioIconBtn = document.getElementById('radioSymbolBtn');
             if (currentPlayingUrl && !globalAudio.paused) {
-                document.querySelectorAll(`[onclick*="${CSS.escape(currentPlayingUrl)}"]`).forEach(el => {
+                document.querySelectorAll(`[data-url="${CSS.escape(currentPlayingUrl)}"]`).forEach(el => {
                     el.classList.add('playing');
                 });
                 radioIconBtn.classList.add('playing-radio');
@@ -923,6 +1011,14 @@
         function renderDashboard() {
             const container = document.getElementById('dashboard');
             const azSidebar = document.getElementById('azSidebar');
+            const genreBar = document.getElementById('genreFilterContainer');
+            
+            if (activeCategory === 'radio') {
+                genreBar.style.display = 'flex';
+            } else {
+                genreBar.style.display = 'none';
+            }
+
             container.innerHTML = '';
             updateViewIcon();
 
@@ -937,7 +1033,7 @@
                 azSidebar.style.display = 'flex';
                 
                 let targetApps = [];
-                let availableLetters = new Set();
+                let availableKeys = new Set();
 
                 targetCategories.forEach(cat => {
                     if (cat.subcategories) {
@@ -950,13 +1046,18 @@
                 });
 
                 function collectApp(app) {
-                    let firstLetter = app.name.trim()[0].toUpperCase();
-                    availableLetters.add(firstLetter);
+                    if (activeCategory === 'radio' && activeGenre !== 'all' && app.genre !== activeGenre) {
+                        return;
+                    }
+
+                    let firstChar = app.name.trim()[0].toUpperCase();
+                    let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
+                    availableKeys.add(sortKey);
 
                     let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-                    let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
+                    let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
                     
-                    if (matchesSearch && matchesLetter) {
+                    if (matchesSearch && matchesKey) {
                         targetApps.push(app);
                     }
                 }
@@ -974,18 +1075,26 @@
                     favAppsList.forEach(app => {
                         let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                         let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
+                        let isFav = isFavorite(app.url);
+                        let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
                         let iconContent = app.image 
                             ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         favHTML += `
-                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                            <div class="${isPlayingClass}" data-url="${app.url}" 
+                                 onmousedown="handlePressStart('${app.url}')" 
+                                 onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 onmouseleave="handlePressCancel()"
+                                 ontouchstart="handlePressStart('${app.url}')" 
+                                 ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 ontouchcancel="handlePressCancel()">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
                                 </div>
                                 <span class="app-list-name">${app.name}</span>
-                                <button class="list-fav-btn is-fav" onclick="toggleFavorite(event, '${app.url}')" title="Aus Favoriten entfernen">★</button>
+                                <span class="${favClass}">★</span>
                             </div>
                         `;
                     });
@@ -994,12 +1103,13 @@
                 }
 
                 azSidebar.innerHTML = '';
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter => {
-                    if (availableLetters.has(letter)) {
-                        let activeClass = (selectedLetter === letter) ? 'active-letter selected-letter' : 'active-letter';
-                        azSidebar.innerHTML += `<a onclick="filterByLetter('${letter}')" class="${activeClass}">${letter}</a>`;
+                let sidebarKeys = ['#', ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
+                sidebarKeys.forEach(key => {
+                    if (availableKeys.has(key)) {
+                        let activeClass = (selectedLetter === key) ? 'active-letter selected-letter' : 'active-letter';
+                        azSidebar.innerHTML += `<a onclick="filterByLetter('${key}')" class="${activeClass}">${key}</a>`;
                     } else {
-                        azSidebar.innerHTML += `<a class="inactive-letter">${letter}</a>`;
+                        azSidebar.innerHTML += `<a class="inactive-letter">${key}</a>`;
                     }
                 });
 
@@ -1019,13 +1129,19 @@
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         sectionHTML += `
-                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                            <div class="${isPlayingClass}" data-url="${app.url}" 
+                                 onmousedown="handlePressStart('${app.url}')" 
+                                 onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 onmouseleave="handlePressCancel()"
+                                 ontouchstart="handlePressStart('${app.url}')" 
+                                 ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 ontouchcancel="handlePressCancel()">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
                                 </div>
                                 <span class="app-list-name">${app.name}</span>
-                                <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Favorit umschalten">★</button>
+                                <span class="${favClass}">★</span>
                             </div>
                         `;
                     });
@@ -1034,18 +1150,25 @@
                 } else {
                     let grouped = {};
                     targetApps.forEach(app => {
-                        let firstLetter = app.name.trim()[0].toUpperCase();
-                        if (!grouped[firstLetter]) grouped[firstLetter] = [];
-                        grouped[firstLetter].push(app);
+                        let firstChar = app.name.trim()[0].toUpperCase();
+                        let groupKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
+                        if (!grouped[groupKey]) grouped[groupKey] = [];
+                        grouped[groupKey].push(app);
                     });
 
-                    Object.keys(grouped).sort().forEach(letter => {
+                    let sortedKeys = Object.keys(grouped).sort((a, b) => {
+                        if (a === '#') return -1;
+                        if (b === '#') return 1;
+                        return a.localeCompare(b);
+                    });
+
+                    sortedKeys.forEach(key => {
                         let sectionHTML = `
                             <div class="category-section">
-                                <h2 class="category-title has-arrow" onclick="filterByLetter('${letter}')" title="Nur diesen Buchstaben anzeigen">${letter}</h2>
+                                <h2 class="category-title has-arrow" onclick="filterByLetter('${key}')" title="Nur diese Gruppe anzeigen">${key}</h2>
                                 <div class="app-list">
                         `;
-                        grouped[letter].forEach(app => {
+                        grouped[key].forEach(app => {
                             let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                             let isFav = isFavorite(app.url);
@@ -1055,13 +1178,19 @@
                                 : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                <div class="${isPlayingClass}" data-url="${app.url}" 
+                                     onmousedown="handlePressStart('${app.url}')" 
+                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel()"
+                                     ontouchstart="handlePressStart('${app.url}')" 
+                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel()">
                                     <div class="app-list-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
                                     </div>
                                     <span class="app-list-name">${app.name}</span>
-                                    <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Favorit umschalten">★</button>
+                                    <span class="${favClass}">★</span>
                                 </div>
                             `;
                         });
@@ -1076,7 +1205,15 @@
                 targetCategories.forEach(category => {
                     let allCatApps = [];
                     if (category.subcategories) {
-                        category.subcategories.forEach(sub => allCatApps.push(...sub.apps));
+                        category.subcategories.forEach(sub => {
+                            let filteredSubApps = sub.apps.filter(app => {
+                                if (activeCategory === 'radio' && activeGenre !== 'all' && app.genre !== activeGenre) {
+                                    return false;
+                                }
+                                return true;
+                            });
+                            allCatApps.push(...filteredSubApps);
+                        });
                     } else if (category.apps) {
                         allCatApps.push(...category.apps);
                     }
@@ -1096,16 +1233,24 @@
                         catFavs.forEach(app => {
                             let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
+                            let isFav = isFavorite(app.url);
+                            let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                             let iconContent = app.image 
-                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
-                                : `<span class="placeholder">${app.name[0]}</span>`;
+                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>` 
+                                : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
 
                             favSectionHTML += `
-                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                <div class="${isPlayingClass}" data-url="${app.url}" 
+                                     onmousedown="handlePressStart('${app.url}')" 
+                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel()"
+                                     ontouchstart="handlePressStart('${app.url}')" 
+                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel()">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
-                                        <button class="fav-btn is-fav" onclick="toggleFavorite(event, '${app.url}')" title="Aus Favoriten entfernen">★</button>
+                                        <span class="${favClass}">★</span>
                                     </div>
                                     <span class="app-name">${app.name}</span>
                                 </div>
@@ -1122,10 +1267,14 @@
                         category.subcategories.forEach(sub => {
                             const filteredSubApps = sub.apps
                                 .filter(app => {
-                                    let firstLetter = app.name.trim()[0].toUpperCase();
+                                    if (activeCategory === 'radio' && activeGenre !== 'all' && app.genre !== activeGenre) {
+                                        return false;
+                                    }
+                                    let firstChar = app.name.trim()[0].toUpperCase();
+                                    let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
                                     let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-                                    let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
-                                    return matchesSearch && matchesLetter;
+                                    let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
+                                    return matchesSearch && matchesKey;
                                 })
                                 .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
@@ -1136,19 +1285,25 @@
 
                             filteredSubApps.forEach(app => {
                                 let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
-                                let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                                 let isFav = isFavorite(app.url);
+                                let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                                 let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                                 let iconContent = app.image 
-                                    ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
-                                    : `<span class="placeholder">${app.name[0]}</span>`;
+                                    ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>` 
+                                    : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
 
                                 sectionHTML += `
-                                    <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                    <div class="${isPlayingClass}" data-url="${app.url}" 
+                                         onmousedown="handlePressStart('${app.url}')" 
+                                         onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                         onmouseleave="handlePressCancel()"
+                                         ontouchstart="handlePressStart('${app.url}')" 
+                                         ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                         ontouchcancel="handlePressCancel()">
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
-                                            <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Zu Favoriten hinzufügen">★</button>
+                                            <span class="${favClass}">★</span>
                                         </div>
                                         <span class="app-name">${app.name}</span>
                                     </div>
@@ -1163,10 +1318,11 @@
                     } else {
                         const filteredApps = category.apps
                             .filter(app => {
-                                let firstLetter = app.name.trim()[0].toUpperCase();
+                                let firstChar = app.name.trim()[0].toUpperCase();
+                                let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
                                 let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
-                                let matchesLetter = selectedLetter ? (firstLetter === selectedLetter) : true;
-                                return matchesSearch && matchesLetter;
+                                let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
+                                return matchesSearch && matchesKey;
                             })
                             .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
@@ -1180,19 +1336,25 @@
 
                         filteredApps.forEach(app => {
                             let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
-                            let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                             let isFav = isFavorite(app.url);
+                            let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                             let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                             let iconContent = app.image 
-                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
-                                : `<span class="placeholder">${app.name[0]}</span>`;
+                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>` 
+                                : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                <div class="${isPlayingClass}" data-url="${app.url}" 
+                                     onmousedown="handlePressStart('${app.url}')" 
+                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel()"
+                                     ontouchstart="handlePressStart('${app.url}')" 
+                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel()">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
-                                        <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Zu Favoriten hinzufügen">★</button>
+                                        <span class="${favClass}">★</span>
                                     </div>
                                     <span class="app-name">${app.name}</span>
                                 </div>
@@ -1220,6 +1382,13 @@
         function filterCategory(catId, btnElement) {
             activeCategory = catId;
             selectedLetter = null;
+            activeGenre = 'all';
+            
+            const genreButtons = document.querySelectorAll('.genre-text-btn');
+            genreButtons.forEach((b, index) => {
+                if (index === 0) b.classList.add('active');
+                else b.classList.remove('active');
+            });
             
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             const radioIconBtn = document.getElementById('radioSymbolBtn');
@@ -1230,6 +1399,17 @@
             } else if (tabButtonsMap[catId]) {
                 tabButtonsMap[catId].classList.add('active');
             }
+
+            renderDashboard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterGenre(genreId, btnElement) {
+            activeGenre = genreId;
+            selectedLetter = null;
+
+            document.querySelectorAll('.genre-text-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
 
             renderDashboard();
             window.scrollTo({ top: 0, behavior: 'smooth' });
