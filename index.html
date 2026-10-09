@@ -902,7 +902,6 @@
                 currentStationName = name;
                 currentStationImage = image;
 
-                // Zwingt den Browsertitel und das MediaSession-Objekt sofort zum Sender, blockiert den URL-Fallback
                 document.title = name;
                 globalAudio.src = url;
                 
@@ -927,21 +926,20 @@
             if ('mediaSession' in navigator) {
                 let artworks = [];
                 if (artworkUrl) {
+                    // Erzeugt eine absolute URL, damit der Tesla-Browser das Icon als Cover laden kann
                     let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
                     artworks = [
                         { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
                         { src: absoluteArtworkUrl, sizes: '128x128', type: 'image/png' },
-                        { src: absoluteArtworkUrl, sizes: '192x192', type: 'image/png' },
                         { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/png' }
                     ];
                 }
 
-                // Erzwingt, dass niemals ein leerer String oder die URL durchschlägt
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: title || "Webradio",
-                    artist: artist || "Live Stream",
-                    album: "Tesla Dashboard",
-                    artwork: artworks
+                    title: title,                // Zeigt den Sendernamen
+                    artist: "Live Webradio",     // Verhindert, dass der GitHub-Link durchschlägt
+                    album: "Tesla Apps Dashboard",
+                    artwork: artworks            // Übergibt das absolute Icon-Cover an den Player
                 });
 
                 try {
@@ -984,7 +982,6 @@
                     if (data && data.elements && data.elements.length > 0) {
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
-                            // Wenn ein echter Songtitel gefunden wird, setzen wir ihn sauber in den Player
                             document.title = `${station.currentTitle} – ${currentStationName}`;
                             updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
                         }
