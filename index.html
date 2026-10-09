@@ -71,7 +71,7 @@
             display: none;
         }
 
-        /* 1. Logo (Igel frei) */
+        /* Logo */
         .brand-logo {
             display: flex;
             align-items: center;
@@ -92,7 +92,7 @@
             object-fit: contain;
         }
 
-        /* Feiner Trennstrich */
+        /* Trennstrich */
         .bar-divider {
             width: 1px;
             height: 16px;
@@ -122,7 +122,6 @@
             background-color: var(--hover-bg);
         }
 
-        /* Leuchtender Punkt am Radio-Button, wenn ein Sender läuft */
         .bar-icon-btn.playing-radio::after {
             content: "";
             position: absolute;
@@ -135,7 +134,6 @@
             box-shadow: 0 0 6px #3b82f6;
         }
 
-        /* Unsichtbares Suchfeld für Tesla-Tastatur */
         #searchInput {
             position: absolute;
             opacity: 0;
@@ -191,7 +189,6 @@
             gap: 12px;
         }
 
-        /* Klickbare Überschriften */
         .category-title {
             font-size: 15px;
             font-weight: 600;
@@ -260,6 +257,7 @@
             cursor: pointer;
             transition: transform 0.15s ease;
             width: 100%;
+            position: relative;
         }
 
         .app-item:active {
@@ -294,7 +292,6 @@
             color: var(--text-color);
         }
 
-        /* Dezentes LIVE-Badge */
         .live-badge {
             position: absolute;
             top: 8px;
@@ -315,6 +312,40 @@
             display: block;
         }
 
+        /* Transparenter Stern unten links (ohne Hintergrund) */
+        .fav-btn {
+            position: absolute;
+            bottom: 6px;
+            left: 6px;
+            background: transparent;
+            border: none;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 15;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 18px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+            opacity: 0.5;
+            transition: opacity 0.2s ease, transform 0.1s ease, color 0.2s ease;
+        }
+
+        .app-item:hover .fav-btn, .fav-btn.is-fav {
+            opacity: 1;
+        }
+
+        .fav-btn.is-fav {
+            color: #fbbf24; /* Edler Gold-/Gelbton für den aktiven Stern */
+            opacity: 1;
+        }
+
+        .fav-btn:active {
+            transform: scale(0.85);
+        }
+
         .app-name {
             font-size: 13px;
             font-weight: 400;
@@ -323,7 +354,7 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
             width: 100%;
             line-height: 1.2;
-            height: 32px; /* Feste Höhe für exakt 2 Zeilen, damit das Grid perfekt einrastet */
+            height: 32px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -386,6 +417,22 @@
             color: var(--text-color);
         }
 
+        .list-fav-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--section-color);
+            font-size: 16px;
+            padding: 6px;
+            margin-left: auto;
+            border-radius: 6px;
+            transition: color 0.2s;
+        }
+
+        .list-fav-btn.is-fav {
+            color: #fbbf24;
+        }
+
         /* A-Z Index Sidebar */
         .az-sidebar {
             position: absolute;
@@ -424,7 +471,6 @@
             color: var(--text-color);
         }
 
-        /* Aktiver Leuchteffekt für spielende Radiosender */
         .app-item.playing .app-icon, .app-list-item.playing .app-list-icon {
             border-color: #3b82f6;
             box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
@@ -450,7 +496,6 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Ansicht Umschalten Button -->
         <button class="bar-icon-btn" title="Ansicht umschalten" onclick="toggleView()" id="viewToggleBtn">
             <svg id="viewIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </button>
@@ -468,7 +513,7 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Kompaktes Radio-Symbol in der oberen Steuerungsleiste -->
+        <!-- Radiosymbol -->
         <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
@@ -481,10 +526,8 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Text-Reiter für Apps, Streaming etc. -->
-        <div class="tabs-container" id="tabs-container">
-            <!-- Reiter werden hier dynamisch eingefügt -->
-        </div>
+        <!-- Text-Reiter -->
+        <div class="tabs-container" id="tabs-container"></div>
     </div>
 
     <div class="main-wrapper">
@@ -492,7 +535,6 @@
         <div class="dashboard-container" id="dashboard"></div>
     </div>
 
-    <!-- Globaler Audio-Player für das Webradio -->
     <audio id="globalAudioStream"></audio>
 
     <script>
@@ -702,6 +744,9 @@
         
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'radio'];
 
+        // Favoriten aus localStorage laden
+        let favorites = JSON.parse(localStorage.getItem('tesla_dashboard_favs') || '[]');
+
         const globalAudio = document.getElementById('globalAudioStream');
         let currentPlayingUrl = '';
         let currentStationName = '';
@@ -728,6 +773,22 @@
                 tabButtonsMap[cat.id] = btn;
             }
         });
+
+        function toggleFavorite(event, appUrl) {
+            event.stopPropagation();
+            const index = favorites.indexOf(appUrl);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(appUrl);
+            }
+            localStorage.setItem('tesla_dashboard_favs', JSON.stringify(favorites));
+            renderDashboard();
+        }
+
+        function isFavorite(appUrl) {
+            return favorites.includes(appUrl);
+        }
 
         function handleItemClick(url, isRadio, name, image) {
             if (isRadio) {
@@ -898,6 +959,36 @@
 
                 targetApps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
+                // 1. Favoriten-Sektion oben in der Liste
+                let favAppsList = targetApps.filter(app => favorites.includes(app.url));
+                if (favAppsList.length > 0 && !selectedLetter && !searchQuery) {
+                    let favHTML = `
+                        <div class="category-section">
+                            <h2 class="category-title">★ Favoriten</h2>
+                            <div class="app-list">
+                    `;
+                    favAppsList.forEach(app => {
+                        let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                        let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
+                        let iconContent = app.image 
+                            ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
+                            : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
+
+                        favHTML += `
+                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                <div class="app-list-icon">
+                                    ${iconContent}
+                                    ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                </div>
+                                <span class="app-list-name">${app.name}</span>
+                                <button class="list-fav-btn is-fav" onclick="toggleFavorite(event, '${app.url}')" title="Aus Favoriten entfernen">★</button>
+                            </div>
+                        `;
+                    });
+                    favHTML += `</div></div>`;
+                    container.innerHTML += favHTML;
+                }
+
                 azSidebar.innerHTML = '';
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter => {
                     if (availableLetters.has(letter)) {
@@ -917,6 +1008,8 @@
                     targetApps.forEach(app => {
                         let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                         let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
+                        let isFav = isFavorite(app.url);
+                        let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
                         let iconContent = app.image 
                             ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
@@ -928,6 +1021,7 @@
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
                                 </div>
                                 <span class="app-list-name">${app.name}</span>
+                                <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Favorit umschalten">★</button>
                             </div>
                         `;
                     });
@@ -950,6 +1044,8 @@
                         grouped[letter].forEach(app => {
                             let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
+                            let isFav = isFavorite(app.url);
+                            let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
                             let iconContent = app.image 
                                 ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>` 
                                 : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
@@ -961,6 +1057,7 @@
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
                                     </div>
                                     <span class="app-list-name">${app.name}</span>
+                                    <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Favorit umschalten">★</button>
                                 </div>
                             `;
                         });
@@ -973,9 +1070,48 @@
                 azSidebar.style.display = 'none';
 
                 targetCategories.forEach(category => {
-                    let titleClass = "category-title";
-                    let titleTooltip = category.title;
+                    let allCatApps = [];
+                    if (category.subcategories) {
+                        category.subcategories.forEach(sub => allCatApps.push(...sub.apps));
+                    } else if (category.apps) {
+                        allCatApps.push(...category.apps);
+                    }
 
+                    // 1. Favoriten-Sektion ganz oben in der Kategorie anzeigen
+                    let catFavs = allCatApps.filter(app => {
+                        let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                        return favorites.includes(app.url) && matchesSearch;
+                    }).sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+
+                    if (catFavs.length > 0 && !selectedLetter) {
+                        let favSectionHTML = `
+                            <div class="category-section is-category">
+                                <h2 class="category-title">★ Favoriten</h2>
+                                <div class="app-grid">
+                        `;
+                        catFavs.forEach(app => {
+                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
+                            let iconContent = app.image 
+                                ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
+                                : `<span class="placeholder">${app.name[0]}</span>`;
+
+                            favSectionHTML += `
+                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
+                                    <div class="app-icon">
+                                        ${iconContent}
+                                        ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        <button class="fav-btn is-fav" onclick="toggleFavorite(event, '${app.url}')" title="Aus Favoriten entfernen">★</button>
+                                    </div>
+                                    <span class="app-name">${app.name}</span>
+                                </div>
+                            `;
+                        });
+                        favSectionHTML += `</div></div>`;
+                        container.innerHTML += favSectionHTML;
+                    }
+
+                    // 2. Reguläre Unterkategorien oder Apps rendern
                     if (category.subcategories) {
                         let sectionHTML = `<div class="category-section is-category">`;
 
@@ -997,6 +1133,8 @@
                             filteredSubApps.forEach(app => {
                                 let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                                 let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
+                                let isFav = isFavorite(app.url);
+                                let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                                 let iconContent = app.image 
                                     ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
                                     : `<span class="placeholder">${app.name[0]}</span>`;
@@ -1006,6 +1144,7 @@
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                            <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Zu Favoriten hinzufügen">★</button>
                                         </div>
                                         <span class="app-name">${app.name}</span>
                                     </div>
@@ -1031,13 +1170,15 @@
 
                         let sectionHTML = `
                             <div class="category-section is-category">
-                                <h2 class="${titleClass}" title="${titleTooltip}">${category.title}</h2>
+                                <h2 class="category-title" title="${category.title}">${category.title}</h2>
                                 <div class="app-grid">
                         `;
 
                         filteredApps.forEach(app => {
                             let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
+                            let isFav = isFavorite(app.url);
+                            let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                             let iconContent = app.image 
                                 ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none;">${app.name[0]}</span>` 
                                 : `<span class="placeholder">${app.name[0]}</span>`;
@@ -1047,6 +1188,7 @@
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        <button class="${favClass}" onclick="toggleFavorite(event, '${app.url}')" title="Zu Favoriten hinzufügen">★</button>
                                     </div>
                                     <span class="app-name">${app.name}</span>
                                 </div>
