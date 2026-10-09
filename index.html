@@ -677,20 +677,6 @@
                 ]
             },
             {
-                id: "tools",
-                title: "Tools & Web",
-                shortTitle: "Tools",
-                apps: [
-                    { name: "ChatGPT", url: "https://chatgpt.com", image: "icons/chatgpt.png", isRadio: false },
-                    { name: "Gemini", url: "https://gemini.google.com/app", image: "icons/gemini.png", isRadio: false },
-                    { name: "Gmail", url: "https://mail.google.com", image: "icons/gmail.png", isRadio: false },
-                    { name: "Google", url: "https://www.google.com", image: "icons/google.png", isRadio: false },
-                    { name: "iCloud", url: "https://www.icloud.com", image: "icons/icloud.png", isRadio: false },
-                    { name: "Outlook", url: "https://outlook.live.com", image: "icons/outlook.png", isRadio: false },
-                    { name: "WhatsApp", url: "https://web.whatsapp.com", image: "icons/whatsapp.png", isRadio: false }
-                ]
-            },
-            {
                 id: "radio",
                 title: "Webradio",
                 shortTitle: "Radio",
@@ -857,7 +843,8 @@
         let selectedLetter = null;
         let searchQuery = '';
         
-        let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'gaming', 'radio'];
+        // Gaming ist in der Gesamtansicht ("all") und im System drin, taucht aber als eigener Reiter oben nicht auf
+        let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'radio'];
 
         let favorites = JSON.parse(localStorage.getItem('tesla_dashboard_favs') || '[]');
 
@@ -878,7 +865,8 @@
         tabButtonsMap['all'] = appsBtn;
 
         categories.forEach(cat => {
-            if (cat.id !== 'radio' && cat.id !== 'tools') {
+            // Gaming und Radio werden oben als separater Text-Reiter ausgeschlossen
+            if (cat.id !== 'radio' && cat.id !== 'gaming') {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn';
                 btn.innerText = cat.shortTitle;
