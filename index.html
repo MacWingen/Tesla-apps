@@ -73,16 +73,24 @@
             display: none;
         }
 
-        /* Logo */
+        /* Logo / Info Trigger */
         .brand-logo {
             display: flex;
             align-items: center;
             flex-shrink: 0;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 2px 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .brand-logo:hover {
+            background-color: var(--hover-bg);
         }
 
         .brand-icon {
-            width: 32px;
-            height: 32px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -533,13 +541,121 @@
             border-color: #3b82f6;
             box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
         }
+
+        /* Modal / Changelog Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--tile-bg);
+            border: 1px solid var(--tile-border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 420px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--tile-border);
+            padding-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--section-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            font-size: 13px;
+            color: var(--name-color);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 60vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .modal-body h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 4px 0;
+        }
+
+        .modal-body ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--tile-border);
+            padding-top: 12px;
+            font-size: 11px;
+            color: var(--section-color);
+            text-align: center;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <div class="brand-logo">
+        <div class="brand-logo" onclick="toggleChangelog(true)" title="Über / Changelog anzeigen">
             <div class="brand-icon">
                 <img src="icons/hedgehog.png" alt="Igel">
             </div>
@@ -612,9 +728,43 @@
         <div class="dashboard-container" id="dashboard"></div>
     </div>
 
+    <!-- Changelog Modal -->
+    <div class="modal-overlay" id="changelogModal" onclick="handleModalClick(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <img src="icons/hedgehog.png" alt="" style="width: 52px; height: 52px; object-fit: contain;">
+                    Tesla Apps Dashboard
+                </h3>
+                <button class="modal-close-btn" onclick="toggleChangelog(false)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2</span>
+                    <h4>Was ist neu in v1.2:</h4>
+                    <ul>
+                        <li><strong>KiKa Integration:</strong> Kinder-Mediathek unter Streaming & TV hinzugefügt (ideal für Ladepauken mit Kids).</li>
+                        <li><strong>Blitzer.de Map Integration:</strong> Neue App unter Navigation & Auto hinzugefügt.</li>
+                        <li>Logo im Infofenster auf 52px vergrößert.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-top: 8px;">Version 1.0:</h4>
+                    <ul>
+                        <li>Initiales Release des Dashboards.</li>
+                        <li>Streaming, Webradio mit Metadaten, A-Z Filter und Favoriten-System.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
+            </div>
+        </div>
+    </div>
+
     <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream"></audio>
@@ -632,6 +782,7 @@
                     { name: "Disney+", url: "https://www.youtube.com/redirect?q=https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
                     { name: "HBO Max", url: "https://www.youtube.com/redirect?q=https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
                     { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png", isRadio: false },
+                    { name: "KiKa", url: "https://www.youtube.com/redirect?q=https://www.kika.de/videos/kindervideos-videos-fuer-kinder-100", image: "icons/kika.png", isRadio: false },
                     { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png", isRadio: false },
                     { name: "Netflix", url: "https://www.youtube.com/redirect?q=https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
                     { name: "Paramount+", url: "https://www.youtube.com/redirect?q=https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
@@ -1045,6 +1196,22 @@
                 iconSvg.innerHTML = `<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>`;
             } else {
                 iconSvg.innerHTML = `<path d="M3 12h18M3 6h18M3 18h18"/>`;
+            }
+        }
+
+        function toggleChangelog(show) {
+            const modal = document.getElementById('changelogModal');
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
+        function handleModalClick(event) {
+            const modalContent = document.querySelector('.modal-content');
+            if (!modalContent.contains(event.target)) {
+                toggleChangelog(false);
             }
         }
 
