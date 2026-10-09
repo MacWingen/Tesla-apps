@@ -743,8 +743,8 @@
                 globalAudio.src = url;
                 
                 globalAudio.play().then(() => {
-                    // Beim Start direkt den Sendernamen anzeigen und Polling starten
-                    updateMediaSession(name, "Live Webradio", image);
+                    // Sofort beim Start den Sender als Titel und Interpret anzeigen (keine URL mehr im Player!)
+                    updateMediaSession(name, currentStationName, image);
                     startMetadataPolling(url);
                     updatePlayingState();
                 }).catch(e => {
@@ -760,34 +760,40 @@
 
         function updateMediaSession(title, artist, artworkUrl) {
             if ('mediaSession' in navigator) {
+                // Wir bauen ein sauberes Artwork-Array für den Tesla-Player
+                let artworks = [];
+                if (artworkUrl) {
+                    // Absolute URL aus relativer URL machen, damit der Tesla sie sicher laden kann
+                    let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
+                    artworks = [
+                        { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '128x128', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/png' }
+                    ];
+                }
+
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: title,
                     artist: artist,
-                    album: currentStationName || "Webradio",
-                    artwork: artworkUrl ? [
-                        { src: artworkUrl, sizes: '96x96', type: 'image/png' },
-                        { src: artworkUrl, sizes: '128x128', type: 'image/png' },
-                        { src: artworkUrl, sizes: '512x512', type: 'image/png' }
-                    ] : []
+                    album: "Live Webradio",
+                    artwork: artworks
                 });
             }
         }
 
-        // Metadaten-Abfrage NUR im aktiven Wiedergabe-Modus (Intervall: 45 Sekunden)
+        // Metadaten-Abfrage im 60-Sekunden-Takt
         function startMetadataPolling(streamUrl) {
             stopMetadataPolling();
             
-            // Sofort einmal abfragen nach kurzer Einspielzeit
             setTimeout(() => fetchTrackInfo(streamUrl), 2000);
 
-            // Alle 45 Sekunden aktualisieren (schont API & Akku/Traffic)
             metadataInterval = setInterval(() => {
                 if (globalAudio.paused || currentPlayingUrl !== streamUrl) {
                     stopMetadataPolling();
                     return;
                 }
                 fetchTrackInfo(streamUrl);
-            }, 45000);
+            }, 60000);
         }
 
         function stopMetadataPolling() {
@@ -805,18 +811,18 @@
             fetch(apiEndpoint)
                 .then(res => res.json())
                 .then(data => {
-                    // Prüfen, ob der Stream während des Fetschens noch aktiv ist
                     if (globalAudio.paused || currentPlayingUrl !== streamUrl) return;
 
                     if (data && data.elements && data.elements.length > 0) {
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
+                            // Wenn die API einen Songtitel liefert: Titel = Songname, Interpret = Sendungsname
                             updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
                         }
                     }
                 })
                 .catch(err => {
-                    // Stiller Fallback: Wenn Netzwerk/API hängt, läuft der Stream ungestört weiter
+                    // Stiller Fallback: Sendername bleibt stabil im Player
                 });
         }
 
@@ -833,7 +839,7 @@
                 radioIconBtn.classList.add('playing-radio');
             } else {
                 radioIconBtn.classList.remove('playing-radio');
-                stopMetadataPolling(); // Stoppt jegliche Abfragen, sobald nichts mehr läuft
+                stopMetadataPolling();
             }
         }
 
