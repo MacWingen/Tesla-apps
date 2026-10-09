@@ -661,6 +661,7 @@
                 shortTitle: "Navigation",
                 apps: [
                     { name: "ABRP", url: "https://abetterrouteplanner.com", image: "icons/abrp.png", isRadio: false },
+                    { name: "Blitzer.de Map", url: "https://www.blitzer.de/karte/", image: "icons/blitzerdemap.png", isRadio: false },
                     { name: "ChargeFinder", url: "https://chargefinder.com", image: "icons/chargefinder.png", isRadio: false },
                     { name: "Chargemap", url: "https://chargemap.com", image: "icons/chargemap.png", isRadio: false },
                     { name: "Google Maps", url: "https://www.google.com/maps", image: "icons/googlemaps.png", isRadio: false },
@@ -843,7 +844,6 @@
         let selectedLetter = null;
         let searchQuery = '';
         
-        // Gaming ist in der Gesamtansicht ("all") und im System drin, taucht aber als eigener Reiter oben nicht auf
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'radio'];
 
         let favorites = JSON.parse(localStorage.getItem('tesla_dashboard_favs') || '[]');
@@ -865,7 +865,6 @@
         tabButtonsMap['all'] = appsBtn;
 
         categories.forEach(cat => {
-            // Gaming und Radio werden oben als separater Text-Reiter ausgeschlossen
             if (cat.id !== 'radio' && cat.id !== 'gaming') {
                 const btn = document.createElement('button');
                 btn.className = 'tab-btn';
