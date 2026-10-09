@@ -718,22 +718,6 @@
             }
         });
 
-        function findAppByUrl(url) {
-            for (let cat of categories) {
-                if (cat.apps) {
-                    let found = cat.apps.find(a => a.url === url);
-                    if (found) return found;
-                }
-                if (cat.subcategories) {
-                    for (let sub of cat.subcategories) {
-                        let found = sub.apps.find(a => a.url === url);
-                        if (found) return found;
-                    }
-                }
-            }
-            return null;
-        }
-
         function handleItemClick(url, isRadio, name, image) {
             if (isRadio) {
                 playRadioStream(url, name, image);
@@ -759,6 +743,7 @@
                 globalAudio.src = url;
                 
                 globalAudio.play().then(() => {
+                    // Beim Start direkt den Sendernamen anzeigen und Polling starten
                     updateMediaSession(name, "Live Webradio", image);
                     startMetadataPolling(url);
                     updatePlayingState();
@@ -788,21 +773,21 @@
             }
         }
 
-        // Live-Metadaten Abfrage über die public Radio-APIs (z.B. radio.de / addradio / audiolytics Endpunkte)
+        // Metadaten-Abfrage NUR im aktiven Wiedergabe-Modus (Intervall: 45 Sekunden)
         function startMetadataPolling(streamUrl) {
             stopMetadataPolling();
             
-            // Sofort einmal abfragen
-            fetchTrackInfo(streamUrl);
+            // Sofort einmal abfragen nach kurzer Einspielzeit
+            setTimeout(() => fetchTrackInfo(streamUrl), 2000);
 
-            // Alle 12 Sekunden aktualisieren
+            // Alle 45 Sekunden aktualisieren (schont API & Akku/Traffic)
             metadataInterval = setInterval(() => {
                 if (globalAudio.paused || currentPlayingUrl !== streamUrl) {
                     stopMetadataPolling();
                     return;
                 }
                 fetchTrackInfo(streamUrl);
-            }, 12000);
+            }, 45000);
         }
 
         function stopMetadataPolling() {
@@ -813,23 +798,25 @@
         }
 
         function fetchTrackInfo(streamUrl) {
-            // Wir nutzen hier einen standardisierten Meta-Endpunkt (z.B. über public radio API-Aggregatoren)
-            // Fallback auf den Sendernamen, falls kein aktueller Titel geliefert wird
+            if (globalAudio.paused || !currentPlayingUrl) return;
+
             let apiEndpoint = `https://api.radio.de/v2/search/station?q=` + encodeURIComponent(currentStationName);
 
             fetch(apiEndpoint)
                 .then(res => res.json())
                 .then(data => {
+                    // Prüfen, ob der Stream während des Fetschens noch aktiv ist
+                    if (globalAudio.paused || currentPlayingUrl !== streamUrl) return;
+
                     if (data && data.elements && data.elements.length > 0) {
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
-                            // Wenn ein echter Songtitel übertragen wird: Aktualisiere den Player unten links!
                             updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
                         }
                     }
                 })
                 .catch(err => {
-                    // Falls die API blockiert oder offline ist, bleibt der Stationsname stabil stehen
+                    // Stiller Fallback: Wenn Netzwerk/API hängt, läuft der Stream ungestört weiter
                 });
         }
 
@@ -846,6 +833,7 @@
                 radioIconBtn.classList.add('playing-radio');
             } else {
                 radioIconBtn.classList.remove('playing-radio');
+                stopMetadataPolling(); // Stoppt jegliche Abfragen, sobald nichts mehr läuft
             }
         }
 
