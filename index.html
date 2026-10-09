@@ -612,6 +612,11 @@
         <div class="dashboard-container" id="dashboard"></div>
     </div>
 
+    <!-- Fußzeile -->
+    <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
+        Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
+    </footer>
+
     <audio id="globalAudioStream"></audio>
 
     <script>
@@ -838,12 +843,6 @@
                             { name: "Radio 91.2 (Dortmund)", url: "https://radio912--di--nacs-ais-lgc--0c--cdn.cast.addradio.de/radio912/live/mp3/high", image: "icons/radio912.png", isRadio: true, genre: "lokal" },
                             { name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true, genre: "lokal" },
                             { name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true, genre: "lokal" }
-                        ]
-                    },
-                    {
-                        title: "Charts & Elektronisch",
-                        apps: [
-                            { name: "Sunshine Live", url: "https://stream.sunshine-live.de/live/mp3-128", image: "icons/sunshine-live.png", isRadio: true, genre: "dance" }
                         ]
                     }
                 ]
@@ -1289,7 +1288,7 @@
                             let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
                             let iconContent = app.image 
                                 ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>` 
-                                : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
+                                : `<span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>`;
 
                             favSectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
@@ -1442,13 +1441,11 @@
             }
         }
 
-        // Globaler Klick-Listener, um das Suchfeld bei Klick außerhalb zu schließen
         document.addEventListener('click', (event) => {
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchToggleBtn');
 
             if (searchInput.classList.contains('active')) {
-                // Prüfen, ob der Klick außerhalb des Suchfelds und des Lupen-Buttons stattfand
                 if (!searchInput.contains(event.target) && !searchBtn.contains(event.target)) {
                     searchInput.classList.remove('active');
                     searchBtn.classList.remove('active');
