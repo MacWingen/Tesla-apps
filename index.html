@@ -136,12 +136,25 @@
             box-shadow: 0 0 6px #3b82f6;
         }
 
+        /* Suchfeld */
         #searchInput {
-            position: absolute;
+            display: none;
+            background: var(--tile-bg);
+            border: 1px solid var(--tile-border);
+            color: var(--text-color);
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            outline: none;
+            width: 150px;
             opacity: 0;
-            pointer-events: none;
-            width: 0;
-            height: 0;
+            transition: opacity 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        #searchInput.active {
+            display: block;
+            opacity: 1;
         }
 
         /* Kategorie Reiter */
@@ -169,7 +182,7 @@
             background-color: var(--hover-bg);
         }
 
-        /* Genre Filter Text Bar mit feinen Trennstrichen */
+        /* Genre Filter Text Bar */
         .genre-filter-container {
             max-width: 680px;
             width: 100%;
@@ -360,7 +373,7 @@
             display: block;
         }
 
-        /* Transparenter Stern unten links (rein optisch, Klicks blockiert) */
+        /* Transparenter Stern unten links */
         .fav-btn {
             position: absolute;
             bottom: 6px;
@@ -534,10 +547,10 @@
 
         <div class="bar-divider"></div>
 
-        <button class="bar-icon-btn" title="Suchen" onclick="triggerNativeSearch()">
+        <button class="bar-icon-btn" id="searchToggleBtn" title="Suchen" onclick="toggleSearch(event)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </button>
-        <input type="text" id="searchInput" oninput="handleSearch()" autocomplete="off">
+        <input type="text" id="searchInput" placeholder="Suchen..." oninput="handleSearch()" autocomplete="off">
 
         <div class="bar-divider"></div>
 
@@ -575,9 +588,11 @@
         <div class="tabs-container" id="tabs-container"></div>
     </div>
 
-    <!-- Genre Filter Text Bar mit feinen Trennstrichen -->
+    <!-- Genre Filter Text Bar -->
     <div class="genre-filter-container" id="genreFilterContainer">
         <button class="genre-text-btn active" onclick="filterGenre('all', this)">Alle</button>
+        <div class="genre-separator"></div>
+        <button class="genre-text-btn" onclick="filterGenre('charts', this)">Charts</button>
         <div class="genre-separator"></div>
         <button class="genre-text-btn" onclick="filterGenre('pop', this)">Pop</button>
         <div class="genre-separator"></div>
@@ -588,8 +603,6 @@
         <button class="genre-text-btn" onclick="filterGenre('throwback', this)">Throwbacks</button>
         <div class="genre-separator"></div>
         <button class="genre-text-btn" onclick="filterGenre('rock', this)">Rock</button>
-        <div class="genre-separator"></div>
-        <button class="genre-text-btn" onclick="filterGenre('news', this)">News</button>
         <div class="genre-separator"></div>
         <button class="genre-text-btn" onclick="filterGenre('lokal', this)">Lokal</button>
     </div>
@@ -676,9 +689,48 @@
                 shortTitle: "Radio",
                 subcategories: [
                     {
+                        title: "I Love Music Familie",
+                        apps: [
+                            { name: "I Love Radio", url: "https://play.ilovemusic.de/ilm_iloveradio/", image: "icons/iloveradio.png", isRadio: true, genre: "charts" },
+                            { name: "I Love 2 Dance", url: "https://play.ilovemusic.de/ilm_ilove2dance/", image: "icons/ilove2dance.png", isRadio: true, genre: "dance" },
+                            { name: "I Love 2000+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2000throwbacks/", image: "icons/ilove2000throwbacks.png", isRadio: true, genre: "throwback" },
+                            { name: "I Love 2010+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2010throwbacks/", image: "icons/ilove2010throwbacks.png", isRadio: true, genre: "throwback" },
+                            { name: "I Love Bass (by HBZ)", url: "https://play.ilovemusic.de/ilm_ilovebass/", image: "icons/ilovebass.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Biggest Pop Hits", url: "https://play.ilovemusic.de/ilm_ilovenewpop/", image: "icons/ilovebiggestpophits.png", isRadio: true, genre: "charts" },
+                            { name: "I Love Büffelradio", url: "https://play.ilovemusic.de/ilm-buffelradio/mp3-192/", image: "icons/ilovebuffelradio.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Chillhop", url: "https://play.ilovemusic.de/ilm_ilovechillhop/", image: "icons/ilovechillhop.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Chillout Beats", url: "https://play.ilovemusic.de/ilm-ichillout_beats/", image: "icons/ilovechilloutbeats.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Dance 2026", url: "https://play.ilovemusic.de/ilm_dance-2023-jahrescharts/", image: "icons/ilovedance2026.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Dance History", url: "https://play.ilovemusic.de/ilm_ilovedancehistory/", image: "icons/ilovedancehistory.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Deutschrap Beste", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapbeste/", image: "icons/ilovedeutschrapbeste.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Deutschrap First!", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapfirst/", image: "icons/ilovedeutschrapfirst.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Greatest Hits", url: "https://play.ilovemusic.de/ilm_ilovegreatesthits/", image: "icons/ilovegreatesthits.png", isRadio: true, genre: "charts" },
+                            { name: "I Love Hardstyle", url: "https://play.ilovemusic.de/ilm_ilovehardstyle/", image: "icons/ilovehardstyle.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Hip Hop", url: "https://play.ilovemusic.de/ilm_ilovehiphop/", image: "icons/ilovehiphop.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Hip Hop 2026", url: "https://play.ilovemusic.de/ilm_hiphop-2023-jahrescharts/", image: "icons/ilovehiphop2026.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovedancehistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Hit-Quiz", url: "https://play.ilovemusic.de/ilm-ihit-quiz/", image: "icons/ilovehitquiz.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Hits 2026", url: "https://play.ilovemusic.de/ilm_hits-2023-jahrescharts/", image: "icons/ilovehits2026.png", isRadio: true, genre: "charts" },
+                            { name: "I Love Hits History", url: "https://play.ilovemusic.de/ilm_ilovehitshistory/", image: "icons/ilovehitshistory.png", isRadio: true, genre: "pop" },
+                            { name: "I Love K-Pop", url: "https://play.ilovemusic.de/ilm-ilovekpop/", image: "icons/ilovekpop.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Mainstage", url: "https://play.ilovemusic.de/ilm_ilovemainstagemadness/", image: "icons/ilovemainstage.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Malle", url: "https://play.ilovemusic.de/ilm_ilovemalle/", image: "icons/ilovemalle.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Mashup", url: "https://play.ilovemusic.de/ilm_ilovemashup/", image: "icons/ilovemashup.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Music & Chill", url: "https://play.ilovemusic.de/ilm_ilovemusicandchill/", image: "icons/ilovemusicandchill.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Party Hard", url: "https://play.ilovemusic.de/ilm_ilovepartyhard/", image: "icons/ilovepartyhard.png", isRadio: true, genre: "dance" },
+                            { name: "I Love Rock Radio", url: "https://play.ilovemusic.de/ilm_iloveradiorock/", image: "icons/iloverock.png", isRadio: true, genre: "rock" },
+                            { name: "I Love Sugar Radio", url: "https://play.ilovemusic.de/ilm_ilovesugarradio/", image: "icons/ilovesugarradio.png", isRadio: true, genre: "dance" },
+                            { name: "I Love The 90s", url: "https://play.ilovemusic.de/ilm_ilovethe90s/", image: "icons/ilovethe90s.png", isRadio: true, genre: "throwback" },
+                            { name: "I Love The Beach", url: "https://play.ilovemusic.de/ilm_ilovethebeach/", image: "icons/ilovethebeach.png", isRadio: true, genre: "pop" },
+                            { name: "I Love The Summer", url: "https://play.ilovemusic.de/ilm-ilovethesummer/mp3-192/", image: "icons/ilovethesummer.png", isRadio: true, genre: "pop" },
+                            { name: "I Love The Sun", url: "https://play.ilovemusic.de/ilm_ilovethesun/", image: "icons/ilovethesun.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Tomorrowland", url: "https://play.ilovemusic.de/ilm-itomorrowland_one_world_radio_germany/", image: "icons/ilovetomorrowland.png", isRadio: true, genre: "dance" }
+                        ]
+                    },
+                    {
                         title: "Absolut Radio Familie",
                         apps: [
-                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true, genre: "pop" },
+                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true, genre: "charts" },
                             { name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/absolutgermany.png", isRadio: true, genre: "pop" },
                             { name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/absoluttop2000er.png", isRadio: true, genre: "throwback" },
                             { name: "Absolut Relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/absolutrelax.png", isRadio: true, genre: "pop" },
@@ -721,7 +773,7 @@
                     {
                         title: "bigFM Radio Familie",
                         apps: [
-                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true, genre: "charts" },
                             { name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true, genre: "lokal" },
                             { name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true, genre: "lokal" },
                             { name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true, genre: "lokal" },
@@ -733,7 +785,7 @@
                             { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true, genre: "lokal" },
                             { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true, genre: "lokal" },
                             
-                            { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "pop" },
+                            { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "charts" },
                             { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true, genre: "pop" },
                             { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true, genre: "dance" },
                             { name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true, genre: "dance" },
@@ -771,19 +823,12 @@
                     {
                         title: "ARD / WDR Programme",
                         apps: [
-                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true, genre: "pop" },
+                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true, genre: "charts" },
                             { name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true, genre: "pop" },
                             { name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true, genre: "lokal" },
-                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true, genre: "news" },
+                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true, genre: "lokal" },
                             { name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true, genre: "throwback" },
-                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true, genre: "news" }
-                        ]
-                    },
-                    {
-                        title: "Talk & News",
-                        apps: [
-                            { name: "NIUS – Das Radio", url: "https://nius--di--nacs-ais-lgc--0a--cdn.cast.addradio.de/nius/live/mp3/high", image: "icons/nius.png", isRadio: true, genre: "news" },
-                            { name: "Deutschlandfunk", url: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web", image: "icons/deutschlandfunk.png", isRadio: true, genre: "news" }
+                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true, genre: "lokal" }
                         ]
                     },
                     {
@@ -926,7 +971,6 @@
             if ('mediaSession' in navigator) {
                 let artworks = [];
                 if (artworkUrl) {
-                    // Erzeugt eine absolute URL, damit der Tesla-Browser das Icon als Cover laden kann
                     let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
                     artworks = [
                         { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
@@ -936,10 +980,10 @@
                 }
 
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: title,                // Zeigt den Sendernamen
-                    artist: "Live Webradio",     // Verhindert, dass der GitHub-Link durchschlägt
+                    title: title,
+                    artist: "Live Webradio",
                     album: "Tesla Apps Dashboard",
-                    artwork: artworks            // Übergibt das absolute Icon-Cover an den Player
+                    artwork: artworks
                 });
 
                 try {
@@ -1062,7 +1106,8 @@
                     let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
                     availableKeys.add(sortKey);
 
-                    let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                    let query = searchQuery.toLowerCase().trim();
+                    let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                     let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
                     
                     if (matchesSearch && matchesKey) {
@@ -1225,12 +1270,13 @@
                         allCatApps.push(...category.apps);
                     }
 
+                    let query = searchQuery.toLowerCase().trim();
                     let catFavs = allCatApps.filter(app => {
-                        let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                        let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                         return favorites.includes(app.url) && matchesSearch;
                     }).sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
-                    if (catFavs.length > 0 && !selectedLetter) {
+                    if (catFavs.length > 0 && !selectedLetter && query === '') {
                         let favSectionHTML = `
                             <div class="category-section is-category">
                                 <h2 class="category-title">★ Favoriten</h2>
@@ -1277,7 +1323,7 @@
                                     }
                                     let firstChar = app.name.trim()[0].toUpperCase();
                                     let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
-                                    let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                                    let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                                     let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
                                     return matchesSearch && matchesKey;
                                 })
@@ -1325,7 +1371,7 @@
                             .filter(app => {
                                 let firstChar = app.name.trim()[0].toUpperCase();
                                 let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
-                                let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
+                                let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                                 let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
                                 return matchesSearch && matchesKey;
                             })
@@ -1379,10 +1425,39 @@
             renderDashboard();
         }
 
-        function triggerNativeSearch() {
+        function toggleSearch(event) {
+            if (event) event.stopPropagation();
             const searchInput = document.getElementById('searchInput');
-            searchInput.focus();
+            const searchBtn = document.getElementById('searchToggleBtn');
+            
+            searchInput.classList.toggle('active');
+            searchBtn.classList.toggle('active');
+
+            if (searchInput.classList.contains('active')) {
+                searchInput.focus();
+            } else {
+                searchInput.value = '';
+                searchQuery = '';
+                renderDashboard();
+            }
         }
+
+        // Globaler Klick-Listener, um das Suchfeld bei Klick außerhalb zu schließen
+        document.addEventListener('click', (event) => {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchToggleBtn');
+
+            if (searchInput.classList.contains('active')) {
+                // Prüfen, ob der Klick außerhalb des Suchfelds und des Lupen-Buttons stattfand
+                if (!searchInput.contains(event.target) && !searchBtn.contains(event.target)) {
+                    searchInput.classList.remove('active');
+                    searchBtn.classList.remove('active');
+                    searchInput.value = '';
+                    searchQuery = '';
+                    renderDashboard();
+                }
+            }
+        });
 
         function filterCategory(catId, btnElement) {
             activeCategory = catId;
