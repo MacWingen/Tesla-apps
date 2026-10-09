@@ -191,7 +191,7 @@
             gap: 12px;
         }
 
-        /* Klickbare Überschriften (Haupt- und Unterkategorien mit Strich) */
+        /* Klickbare Überschriften */
         .category-title {
             font-size: 15px;
             font-weight: 600;
@@ -242,14 +242,6 @@
             color: var(--text-color);
         }
 
-        .category-title:hover.has-arrow::after {
-            transform: translateX(3px);
-        }
-
-        .category-title:hover.is-back::after {
-            transform: translateX(-3px);
-        }
-
         /* Grid View */
         .app-grid {
             display: grid;
@@ -287,6 +279,7 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
             border: 1px solid var(--tile-border);
             position: relative;
+            flex-shrink: 0;
         }
 
         .app-icon img {
@@ -301,7 +294,7 @@
             color: var(--text-color);
         }
 
-        /* Dezentes LIVE-Badge für aktive Radiosender */
+        /* Dezentes LIVE-Badge */
         .live-badge {
             position: absolute;
             top: 8px;
@@ -328,10 +321,14 @@
             text-align: center;
             color: var(--name-color);
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            white-space: nowrap;
+            width: 100%;
+            line-height: 1.2;
+            height: 32px; /* Feste Höhe für exakt 2 Zeilen, damit das Grid perfekt einrastet */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            width: 100%;
         }
 
         /* List View Styles */
@@ -612,39 +609,53 @@
                         ]
                     },
                     {
-                        title: "bigFM Radio Familie",
+                        title: "bigFM Radio Familie (Komplett)",
                         apps: [
-                            { name: "bigFM Deutschland", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true },
-                            { name: "bigFM NRW", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true },
+                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true },
                             { name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true },
+                            { name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true },
+                            { name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true },
                             { name: "bigFM Hessen", url: "https://stream.bigfm.de/hessen/mp3-128/private", image: "icons/bigfmhessen.png", isRadio: true },
+                            { name: "bigFM Saarland", url: "https://stream.bigfm.de/saarland/mp3-128/private", image: "icons/bigfmsaarland.png", isRadio: true },
                             { name: "bigFM Berlin", url: "https://stream.bigfm.de/berlin/mp3-128/private", image: "icons/bigfmberlin.png", isRadio: true },
                             { name: "bigFM Hamburg", url: "https://stream.bigfm.de/hamburg/mp3-128/private", image: "icons/bigfmhamburg.png", isRadio: true },
+                            { name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true },
+                            { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true },
+                            { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true },
+                            
                             { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true },
                             { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true },
-                            { name: "bigFM Dance", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true },
+                            { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true },
+                            { name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true },
                             { name: "bigFM EDM & Progressive", url: "https://stream.bigfm.de/edm/mp3-128/private", image: "icons/bigfmedm.png", isRadio: true },
-                            { name: "bigFM Hip-Hop", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true },
+                            { name: "bigFM Hip-Hop Radio", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true },
                             { name: "bigFM US Rap & Hip-Hop", url: "https://stream.bigfm.de/usrap/mp3-128/private", image: "icons/bigfmusrap.png", isRadio: true },
+                            { name: "bigFM Oldschool Rap & Hip-Hop", url: "https://stream.bigfm.de/oldschoolrap/mp3-128/private", image: "icons/bigfmoldschoolrap.png", isRadio: true },
                             { name: "bigFM Deutschrap Rasiert", url: "https://stream.bigfm.de/deutschrap/mp3-128/private", image: "icons/bigfmdeutschrap.png", isRadio: true },
+                            { name: "bigFM Deutschrap rasiert brandeu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapnew.png", isRadio: true },
+                            { name: "bigFM Oldschool Deutschrap", url: "https://stream.bigfm.de/oldschooldeutschrap/mp3-128/private", image: "icons/bigfmoldschooldeutschrap.png", isRadio: true },
                             { name: "bigFM Apache 207", url: "https://stream.bigfm.de/apache/mp3-128/private", image: "icons/bigfmapache.png", isRadio: true },
-                            { name: "bigFM Deutschrap Brandneu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapnew.png", isRadio: true },
                             { name: "bigFM RnB", url: "https://stream.bigfm.de/rnb/mp3-128/private", image: "icons/bigfmrnb.png", isRadio: true },
                             { name: "bigFM Throwback", url: "https://stream.bigfm.de/throwback/mp3-128/private", image: "icons/bigfmthrowback.png", isRadio: true },
                             { name: "bigFM 2000er", url: "https://stream.bigfm.de/2000er/mp3-128/private", image: "icons/bigfm2000er.png", isRadio: true },
                             { name: "bigFM 2010er", url: "https://stream.bigfm.de/2010er/mp3-128/private", image: "icons/bigfm2010er.png", isRadio: true },
                             { name: "bigFM Party", url: "https://stream.bigfm.de/party/mp3-128/private", image: "icons/bigfmparty.png", isRadio: true },
-                            { name: "bigFM Groovenight", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true },
-                            { name: "bigFM Turn Up", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true },
+                            { name: "bigFM Groovenight - HipHop DJ Mix", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true },
+                            { name: "bigFM Turn UP", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true },
                             { name: "bigFM Mashup", url: "https://stream.bigfm.de/mashup/mp3-128/private", image: "icons/bigfmmashup.png", isRadio: true },
-                            { name: "bigFM Urban Club Beats", url: "https://stream.bigfm.de/urbanclubbeats/mp3-128/private", image: "icons/bigfmucb.png", isRadio: true },
                             { name: "bigFM World Beats", url: "https://stream.bigfm.de/worldbeats/mp3-128/private", image: "icons/bigfmworldbeats.png", isRadio: true },
                             { name: "bigFM Latin Beats", url: "https://stream.bigfm.de/latinbeats/mp3-128/private", image: "icons/bigfmlatin.png", isRadio: true },
                             { name: "bigFM Balkan", url: "https://stream.bigfm.de/balkan/mp3-128/private", image: "icons/bigfmbalkan.png", isRadio: true },
-                            { name: "bigFM Muzyka", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true },
-                            { name: "bigFM Rock FM", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true },
+                            { name: "bigFM MUZYKA", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true },
+                            { name: "bigFM Afrobeats", url: "https://stream.bigfm.de/afrobeats/mp3-128/private", image: "icons/bigfmafrobeats.png", isRadio: true },
+                            { name: "bigFM SES", url: "https://stream.bigfm.de/ses/mp3-128/private", image: "icons/bigfmses.png", isRadio: true },
+                            { name: "bigFM Rock", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true },
+                            { name: "bigFM Sunset Lounge", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmsunsetlounge.png", isRadio: true },
                             { name: "bigFM LoFi Focus", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmlofi.png", isRadio: true },
-                            { name: "bigFM Sports and Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true }
+                            { name: "bigFM Sports & Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true },
+                            { name: "bigFM Tomorrowland One World Radio", url: "https://stream.bigfm.de/tomorrowland/mp3-128/private", image: "icons/bigfmtomorrowland.png", isRadio: true },
+                            { name: "bigGPT", url: "https://stream.bigfm.de/biggpt/mp3-128/private", image: "icons/biggpt.png", isRadio: true },
+                            { name: "bigFM Xmas", url: "https://stream.bigfm.de/xmas/mp3-128/private", image: "icons/bigfmxmas.png", isRadio: true }
                         ]
                     },
                     {
@@ -743,7 +754,6 @@
                 globalAudio.src = url;
                 
                 globalAudio.play().then(() => {
-                    // Sofort beim Start den Sender als Titel und Interpret anzeigen (keine URL mehr im Player!)
                     updateMediaSession(name, currentStationName, image);
                     startMetadataPolling(url);
                     updatePlayingState();
@@ -760,10 +770,8 @@
 
         function updateMediaSession(title, artist, artworkUrl) {
             if ('mediaSession' in navigator) {
-                // Wir bauen ein sauberes Artwork-Array für den Tesla-Player
                 let artworks = [];
                 if (artworkUrl) {
-                    // Absolute URL aus relativer URL machen, damit der Tesla sie sicher laden kann
                     let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
                     artworks = [
                         { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
@@ -781,10 +789,8 @@
             }
         }
 
-        // Metadaten-Abfrage im 60-Sekunden-Takt
         function startMetadataPolling(streamUrl) {
             stopMetadataPolling();
-            
             setTimeout(() => fetchTrackInfo(streamUrl), 2000);
 
             metadataInterval = setInterval(() => {
@@ -816,14 +822,11 @@
                     if (data && data.elements && data.elements.length > 0) {
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
-                            // Wenn die API einen Songtitel liefert: Titel = Songname, Interpret = Sendungsname
                             updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
                         }
                     }
                 })
-                .catch(err => {
-                    // Stiller Fallback: Sendername bleibt stabil im Player
-                });
+                .catch(err => {});
         }
 
         function updatePlayingState() {
