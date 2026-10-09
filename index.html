@@ -693,6 +693,9 @@
 
         const globalAudio = document.getElementById('globalAudioStream');
         let currentPlayingUrl = '';
+        let currentStationName = '';
+        let currentStationImage = '';
+        let metadataInterval = null;
 
         const tabsContainer = document.getElementById('tabs-container');
         let tabButtonsMap = {};
@@ -715,36 +718,119 @@
             }
         });
 
-        function handleItemClick(url, isRadio) {
+        function findAppByUrl(url) {
+            for (let cat of categories) {
+                if (cat.apps) {
+                    let found = cat.apps.find(a => a.url === url);
+                    if (found) return found;
+                }
+                if (cat.subcategories) {
+                    for (let sub of cat.subcategories) {
+                        let found = sub.apps.find(a => a.url === url);
+                        if (found) return found;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function handleItemClick(url, isRadio, name, image) {
             if (isRadio) {
-                playRadioStream(url);
+                playRadioStream(url, name, image);
             } else {
                 window.location.href = url;
             }
         }
 
-        function playRadioStream(url) {
+        function playRadioStream(url, name, image) {
             if (currentPlayingUrl === url && !globalAudio.paused) {
                 globalAudio.pause();
                 globalAudio.src = "";
                 currentPlayingUrl = '';
+                stopMetadataPolling();
             } else {
                 globalAudio.pause();
                 globalAudio.currentTime = 0;
                 
-                globalAudio.src = url;
                 currentPlayingUrl = url;
+                currentStationName = name;
+                currentStationImage = image;
+
+                globalAudio.src = url;
                 
                 globalAudio.play().then(() => {
+                    updateMediaSession(name, "Live Webradio", image);
+                    startMetadataPolling(url);
                     updatePlayingState();
                 }).catch(e => {
                     globalAudio.pause();
                     globalAudio.src = "";
                     currentPlayingUrl = '';
+                    stopMetadataPolling();
                     updatePlayingState();
                 });
             }
             updatePlayingState();
+        }
+
+        function updateMediaSession(title, artist, artworkUrl) {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: title,
+                    artist: artist,
+                    album: currentStationName || "Webradio",
+                    artwork: artworkUrl ? [
+                        { src: artworkUrl, sizes: '96x96', type: 'image/png' },
+                        { src: artworkUrl, sizes: '128x128', type: 'image/png' },
+                        { src: artworkUrl, sizes: '512x512', type: 'image/png' }
+                    ] : []
+                });
+            }
+        }
+
+        // Live-Metadaten Abfrage über die public Radio-APIs (z.B. radio.de / addradio / audiolytics Endpunkte)
+        function startMetadataPolling(streamUrl) {
+            stopMetadataPolling();
+            
+            // Sofort einmal abfragen
+            fetchTrackInfo(streamUrl);
+
+            // Alle 12 Sekunden aktualisieren
+            metadataInterval = setInterval(() => {
+                if (globalAudio.paused || currentPlayingUrl !== streamUrl) {
+                    stopMetadataPolling();
+                    return;
+                }
+                fetchTrackInfo(streamUrl);
+            }, 12000);
+        }
+
+        function stopMetadataPolling() {
+            if (metadataInterval) {
+                clearInterval(metadataInterval);
+                metadataInterval = null;
+            }
+        }
+
+        function fetchTrackInfo(streamUrl) {
+            // Wir nutzen hier einen standardisierten Meta-Endpunkt (z.B. über public radio API-Aggregatoren)
+            // Fallback auf den Sendernamen, falls kein aktueller Titel geliefert wird
+            let apiEndpoint = `https://api.radio.de/v2/search/station?q=` + encodeURIComponent(currentStationName);
+
+            fetch(apiEndpoint)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.elements && data.elements.length > 0) {
+                        let station = data.elements[0];
+                        if (station && station.currentTitle) {
+                            // Wenn ein echter Songtitel übertragen wird: Aktualisiere den Player unten links!
+                            updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
+                        }
+                    }
+                })
+                .catch(err => {
+                    // Falls die API blockiert oder offline ist, bleibt der Stationsname stabil stehen
+                });
         }
 
         function updatePlayingState() {
@@ -839,7 +925,7 @@
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         sectionHTML += `
-                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                            <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -872,7 +958,7 @@
                                 : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
                                     <div class="app-list-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -919,7 +1005,7 @@
                                     : `<span class="placeholder">${app.name[0]}</span>`;
 
                                 sectionHTML += `
-                                    <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                    <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -960,7 +1046,7 @@
                                 : `<span class="placeholder">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio})">
+                                <div class="${isPlayingClass}" onclick="handleItemClick('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
