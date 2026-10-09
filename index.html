@@ -842,9 +842,6 @@
             }
         });
 
-        // Long-Press Logik auf der gesamten Kachel: 
-        // - Kurzer Klick = App öffnen / Radio abspielen
-        // - Langes Halten (0,6s) = Zu Favoriten hinzufügen / entfernen
         let pressTimer = null;
         let isLongPress = false;
 
@@ -895,6 +892,7 @@
                 globalAudio.pause();
                 globalAudio.src = "";
                 currentPlayingUrl = '';
+                document.title = "Tesla Apps Dashboard";
                 stopMetadataPolling();
             } else {
                 globalAudio.pause();
@@ -904,16 +902,20 @@
                 currentStationName = name;
                 currentStationImage = image;
 
+                // Zwingt den Browsertitel und das MediaSession-Objekt sofort zum Sender, blockiert den URL-Fallback
+                document.title = name;
                 globalAudio.src = url;
                 
+                updateMediaSession(name, "Live Webradio", image);
+
                 globalAudio.play().then(() => {
-                    updateMediaSession(name, currentStationName, image);
                     startMetadataPolling(url);
                     updatePlayingState();
                 }).catch(e => {
                     globalAudio.pause();
                     globalAudio.src = "";
                     currentPlayingUrl = '';
+                    document.title = "Tesla Apps Dashboard";
                     stopMetadataPolling();
                     updatePlayingState();
                 });
@@ -929,16 +931,23 @@
                     artworks = [
                         { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
                         { src: absoluteArtworkUrl, sizes: '128x128', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '192x192', type: 'image/png' },
                         { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/png' }
                     ];
                 }
 
+                // Erzwingt, dass niemals ein leerer String oder die URL durchschlägt
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: title,
-                    artist: artist,
-                    album: "Live Webradio",
+                    title: title || "Webradio",
+                    artist: artist || "Live Stream",
+                    album: "Tesla Dashboard",
                     artwork: artworks
                 });
+
+                try {
+                    navigator.mediaSession.setActionHandler('play', function() { globalAudio.play(); });
+                    navigator.mediaSession.setActionHandler('pause', function() { globalAudio.pause(); });
+                } catch(err) {}
             }
         }
 
@@ -975,6 +984,8 @@
                     if (data && data.elements && data.elements.length > 0) {
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
+                            // Wenn ein echter Songtitel gefunden wird, setzen wir ihn sauber in den Player
+                            document.title = `${station.currentTitle} – ${currentStationName}`;
                             updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
                         }
                     }
@@ -1064,7 +1075,6 @@
 
                 targetApps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
-                // 1. Favoriten-Sektion oben in der Liste
                 let favAppsList = targetApps.filter(app => favorites.includes(app.url));
                 if (favAppsList.length > 0 && !selectedLetter && !searchQuery) {
                     let favHTML = `
@@ -1218,7 +1228,6 @@
                         allCatApps.push(...category.apps);
                     }
 
-                    // 1. Favoriten-Sektion ganz oben in der Kategorie anzeigen
                     let catFavs = allCatApps.filter(app => {
                         let matchesSearch = app.name.toLowerCase().startsWith(searchQuery.toLowerCase());
                         return favorites.includes(app.url) && matchesSearch;
@@ -1260,7 +1269,6 @@
                         container.innerHTML += favSectionHTML;
                     }
 
-                    // 2. Reguläre Unterkategorien oder Apps rendern
                     if (category.subcategories) {
                         let sectionHTML = `<div class="category-section is-category">`;
 
