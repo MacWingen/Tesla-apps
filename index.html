@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tesla Apps Dashboard</title>
     <!-- Favicon für Browser-Tabs und Lesezeichen -->
     <link rel="icon" type="image/png" href="icons/hedgehog.png">
@@ -37,12 +37,12 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-color);
             margin: 0;
-            padding: 3vw 4vw 4vw 4vw;
+            padding: 3vw 4vw 60px 4vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            min-height: 100vh;
+            min-height: 100dvh;
             box-sizing: border-box;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -161,6 +161,24 @@
             box-shadow: 0 0 6px #3b82f6;
         }
 
+        /* News-Badge Animation / Rot-Färbung bei neuen Eilmeldungen */
+        .bar-icon-btn.has-new-news svg {
+            color: #e11d48 !important;
+            filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.5));
+        }
+
+        .bar-icon-btn.has-new-news::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            width: 7px;
+            height: 7px;
+            background-color: #e11d48;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #e11d48;
+        }
+
         /* Eleganter Wetter-Button in der Topbar */
         .top-weather-btn {
             display: flex;
@@ -199,28 +217,6 @@
             letter-spacing: -0.3px;
             color: var(--text-color);
             line-height: 1;
-        }
-
-        #searchInput {
-            display: none;
-            background: var(--tile-bg);
-            border: 1px solid var(--tile-border);
-            color: var(--text-color);
-            font-size: 16px;
-            transform: scale(0.875);
-            transform-origin: left;
-            padding: 4px 10px;
-            border-radius: 8px;
-            outline: none;
-            width: 170px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        #searchInput.active {
-            display: block;
-            opacity: 1;
         }
 
         .tabs-container {
@@ -716,7 +712,7 @@
             color: var(--text-color);
         }
 
-        /* Modal / Wetter Popup (Perfekt passend für Tesla Touchscreen ohne unschöne Scrollbalken) */
+        /* Modal / Popups - Optimiert für Tesla Split-Screen Touchscreens */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -744,17 +740,16 @@
             border: 1px solid var(--tile-border);
             border-radius: 18px;
             width: 90%;
-            max-width: 400px;
-            max-height: 82vh;
+            max-width: 440px;
+            max-height: 68vh;
             padding: 14px 18px;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            gap: 10px;
             transform: scale(0.95);
             transition: transform 0.25s ease;
             box-sizing: border-box;
-            overflow: hidden; /* Verhindert hässliche Scrollbalken */
+            overflow: hidden;
         }
 
         .modal-overlay.active .modal-content {
@@ -766,7 +761,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--tile-border);
-            padding-bottom: 6px;
+            padding-bottom: 8px;
             flex-shrink: 0;
         }
 
@@ -784,15 +779,17 @@
             background: transparent;
             border: none;
             color: var(--section-color);
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 0;
+            padding: 2px 6px;
             line-height: 1;
-            transition: color 0.15s;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
         }
 
         .modal-close-btn:hover {
             color: var(--text-color);
+            background-color: var(--hover-bg);
         }
 
         .modal-body {
@@ -801,9 +798,11 @@
             line-height: 1.3;
             display: flex;
             flex-direction: column;
-            gap: 8px;
             overflow-y: auto;
-            scrollbar-width: none; /* Kein Scrollbalken im Tesla-Browser */
+            scrollbar-width: none;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            gap: 8px;
         }
 
         .modal-body::-webkit-scrollbar {
@@ -827,11 +826,12 @@
             background-color: var(--tile-border);
             width: 100%;
             flex-shrink: 0;
+            margin: 4px 0;
         }
 
         .modal-footer {
             border-top: 1px solid var(--tile-border);
-            padding-top: 4px;
+            padding-top: 8px;
             font-size: 10px;
             color: var(--section-color);
             text-align: center;
@@ -839,7 +839,7 @@
             flex-shrink: 0;
         }
 
-        /* WETTER-LAYOUT KOMPAKT FÜR TESLA */
+        /* WETTER & EILMELDUNGEN STYLING */
         .weather-top-row {
             display: flex;
             align-items: center;
@@ -912,25 +912,11 @@
             overflow: hidden;
         }
 
-        .weather-current-centered::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: 
-                radial-gradient(1.5px 1.5px at 20% 30%, #fff 80%, transparent),
-                radial-gradient(1px 1px at 75% 20%, #fef08a 80%, transparent),
-                radial-gradient(1.5px 1.5px at 85% 70%, #fff 80%, transparent);
-            opacity: 0.65;
-            pointer-events: none;
-        }
-
         .weather-current-centered .weather-current-icon {
             width: 54px;
             height: 54px;
             margin-bottom: 2px;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
-            position: relative;
-            z-index: 2;
         }
 
         .weather-temp-giant {
@@ -939,8 +925,6 @@
             color: var(--text-color);
             letter-spacing: -1.2px;
             line-height: 1;
-            position: relative;
-            z-index: 2;
         }
 
         .weather-current-centered h5 {
@@ -948,8 +932,6 @@
             font-weight: 600;
             color: var(--text-color);
             margin: 2px 0 0 0;
-            position: relative;
-            z-index: 2;
         }
 
         .weather-details-bar {
@@ -1098,6 +1080,40 @@
             flex-shrink: 0;
         }
 
+        /* EILMELDUNGEN REINER STATISCHER TEXT (KEIN HOVER, KEIN CURSOR) */
+        .news-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--tile-border);
+            cursor: default;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--section-color);
+        }
+
+        .news-headline {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+
+        .news-snippet {
+            font-size: 11px;
+            color: var(--name-color);
+            line-height: 1.35;
+        }
+
         /* ANIMATIONEN */
         @keyframes rotateSun { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes pulseCorona { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.08); opacity: 1; } }
@@ -1106,7 +1122,6 @@
 
         .anim-sun-rays { transform-origin: 16px 16px; animation: rotateSun 20s linear infinite; }
         .anim-sun-core { transform-origin: 16px 16px; animation: pulseCorona 4s ease-in-out infinite; }
-        .anim-moon { transform-origin: 16px 16px; }
         .anim-cloud { animation: driftCloud 4.5s ease-in-out infinite; }
         .anim-rain-1 { animation: fallRain 0.85s infinite ease-in; }
         .anim-rain-2 { animation: fallRain 0.65s infinite ease-in 0.2s; }
@@ -1125,6 +1140,7 @@
 
         <div class="bar-divider"></div>
 
+        <!-- Wetter Button -->
         <button class="top-weather-btn" onclick="toggleWeatherModal(true)" title="Wetter & 7-Tage-Vorhersage">
             <div class="top-weather-icon-wrapper" id="topBarWeatherIconContainer">
                 <svg id="topBarWeatherIcon" viewBox="0 0 32 32">
@@ -1136,21 +1152,21 @@
 
         <div class="bar-divider"></div>
 
-        <button class="bar-icon-btn" id="searchToggleBtn" title="Suchen" onclick="toggleSearch(event)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <!-- Breaking News / Eilmeldungen Button -->
+        <button class="bar-icon-btn" id="newsBtn" onclick="toggleNewsModal(true)" title="WELT Eilmeldungen" style="height: 32px; padding: 2px 6px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 10h-5"/><path d="M10 18h8"/></svg>
         </button>
-        <input type="text" id="searchInput" placeholder="Suchen..." oninput="handleSearch()" autocomplete="off">
 
         <div class="bar-divider"></div>
 
         <button class="bar-icon-btn" title="Ansicht umschalten" onclick="toggleView()" id="viewToggleBtn" style="flex-direction: row; gap: 6px; height: 32px;">
-            <svg id="viewIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <svg id="viewIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </button>
 
         <div class="bar-divider"></div>
 
         <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio" style="flex-direction: row; gap: 6px; height: 32px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
                 <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/>
                 <circle cx="12" cy="12" r="2"/>
@@ -1162,11 +1178,11 @@
         <div class="bar-divider"></div>
 
         <div class="nav-arrows" style="display: flex; gap: 2px;">
-            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie / Zurück" style="flex-direction: row; gap: 6px; height: 32px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie" style="flex-direction: row; gap: 6px; height: 32px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
             </button>
             <button class="bar-icon-btn" onclick="navigateCategory(1)" title="Nächste Kategorie" style="flex-direction: row; gap: 6px; height: 32px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
             </button>
         </div>
 
@@ -1201,7 +1217,7 @@
 
     <!-- Changelog & Info Modal -->
     <div class="modal-overlay" id="changelogModal" onclick="handleModalClick(event, 'changelogModal')">
-        <div class="modal-content">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h3 class="modal-title">
                     <img src="icons/hedgehog.png" alt="" style="width: 26px; height: 26px; object-fit: contain;">
@@ -1213,9 +1229,9 @@
                 <div class="modal-section">
                     <h4>Was kann dieses Dashboard?</h4>
                     <ul>
-                        <li><strong>Webradio & Streams:</strong> Über 100+ Sender mit Live-Anzeige und Kachel-Stopp.</li>
-                        <li><strong>Favoriten:</strong> Kachel ca. 0,7 Sek. gedrückt halten, um sie zu favorisieren (★).</li>
-                        <li><strong>Wetter-Widget:</strong> Werbefreie 7-Tage-Vorhersage per Ortssuche.</li>
+                        <li><strong>Webradio & Streams:</strong> 100+ Sender mit Live-Anzeige und Kachel-Stopp.</li>
+                        <li><strong>Favoriten:</strong> Kachel ca. 0,7 Sek. gedrückt halten (★).</li>
+                        <li><strong>Wetter & Eilmeldungen:</strong> Direkte Stichworte & Teaser in der Übersicht.</li>
                     </ul>
                 </div>
 
@@ -1223,23 +1239,23 @@
 
                 <div class="modal-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <h4 style="margin: 0;">Release v2.0.1</h4>
-                        <span style="background-color: var(--hover-bg); padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 10px; color: var(--text-color);">v2.0.1</span>
+                        <h4 style="margin: 0;">Release v1.1.0</h4>
+                        <span style="background-color: var(--hover-bg); padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 10px; color: var(--text-color);">v1.1.0</span>
                     </div>
                     <ul>
-                        <li><strong>v2.0.1:</strong> Wetter-Popup für den Tesla-Bildschirm optimiert (feste Kompakthöhe ohne Scrollbalken).</li>
+                        <li><strong>v1.1.0:</strong> Eilmeldungen-Button standardmäßig dezent grau; leuchtet automatisch rot auf, sobald neue Eilmeldungen eintreffen.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v2.0.1 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.1.0 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <!-- Wetter Modal -->
     <div class="modal-overlay" id="weatherModal" onclick="handleModalClick(event, 'weatherModal')">
-        <div class="modal-content">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h3 class="modal-title">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #38bdf8;"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
@@ -1256,14 +1272,30 @@
         </div>
     </div>
 
+    <!-- Breaking News / Eilmeldungen Modal -->
+    <div class="modal-overlay" id="newsModal" onclick="handleModalClick(event, 'newsModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #e11d48;"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 10h-5"/><path d="M10 18h8"/></svg>
+                    WELT Eilmeldungen (Direkt-Übersicht)
+                </h3>
+                <button class="modal-close-btn" onclick="toggleNewsModal(false)">&times;</button>
+            </div>
+            <div class="modal-body" id="newsModalBody">
+                <div style="text-align: center; color: var(--section-color); padding: 20px;">Lade Eilmeldungen...</div>
+            </div>
+        </div>
+    </div>
+
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v2.0.1 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.1.0 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream" preload="none"></audio>
 
     <script>
-        const CURRENT_VERSION = 'v2.0.1';
+        const CURRENT_VERSION = 'v1.1.0';
 
         const categories = [
             {
@@ -1484,7 +1516,6 @@
         let activeCategory = 'all'; 
         let activeGenre = 'all'; 
         let selectedLetter = null;
-        let searchQuery = '';
         
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'radio'];
 
@@ -1784,12 +1815,128 @@
             }
         }
 
-        function handleModalClick(event, modalId) {
-            const modalContent = document.querySelector(`#${modalId} .modal-content`);
-            if (!modalContent.contains(event.target)) {
-                if (modalId === 'changelogModal') toggleChangelog(false);
-                if (modalId === 'weatherModal') toggleWeatherModal(false);
+        function toggleNewsModal(show) {
+            const modal = document.getElementById('newsModal');
+            if (show) {
+                modal.classList.add('active');
+                fetchWeltNews();
+                
+                // Wenn das Modal geöffnet wird, setzen wir den letzten gelesenen Zeitpunkt auf jetzt
+                localStorage.setItem('tesla_dashboard_last_read_news', new Date().toISOString());
+                const newsBtn = document.getElementById('newsBtn');
+                if (newsBtn) newsBtn.classList.remove('has-new-news');
+            } else {
+                modal.classList.remove('active');
             }
+        }
+
+        function handleModalClick(event, modalId) {
+            const modal = document.getElementById(modalId);
+            if (event.target === modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // WELT Eilmeldungen & Prüfung auf neue Artikel für den Button-Status
+        function fetchWeltNews() {
+            const container = document.getElementById('newsModalBody');
+            container.innerHTML = `<div style="text-align: center; color: var(--section-color); padding: 20px;">Lade Eilmeldungen...</div>`;
+
+            const rssUrl = encodeURIComponent('https://www.welt.de/?service=Rss');
+            fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.items && data.items.length > 0) {
+                        let items = data.items.filter(item => {
+                            let title = (item.title || "").toLowerCase();
+                            let cats = (item.categories || []).join(' ').toLowerCase();
+                            return title.includes('eilmeldung') || title.includes('breaking') || cats.includes('eilmeldung') || cats.includes('breaking');
+                        });
+
+                        if (items.length === 0) {
+                            items = data.items.slice(0, 5);
+                        }
+
+                        // Prüfen ob die neueste Nachricht neuer ist als der letzte Lese-Zeitpunkt
+                        if (items.length > 0 && items[0].pubDate) {
+                            let latestPubTime = new Date(items[0].pubDate).getTime();
+                            let lastReadTimeStr = localStorage.getItem('tesla_dashboard_last_read_news');
+                            let lastReadTime = lastReadTimeStr ? new Date(lastReadTimeStr).getTime() : 0;
+                            
+                            const newsBtn = document.getElementById('newsBtn');
+                            if (newsBtn) {
+                                if (latestPubTime > lastReadTime) {
+                                    newsBtn.classList.add('has-new-news');
+                                } else {
+                                    newsBtn.classList.remove('has-new-news');
+                                }
+                            }
+                        }
+
+                        let html = '';
+                        items.forEach(item => {
+                            let title = item.title || "Kein Titel";
+                            let desc = item.description || item.contentSnippet || "";
+                            let cleanDesc = desc.replace(/<[^>]*>?/gm, '').trim();
+                            let timeStr = "";
+                            
+                            if (item.pubDate) {
+                                let d = new Date(item.pubDate);
+                                timeStr = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
+                            }
+
+                            html += `
+                                <div class="news-item">
+                                    <div class="news-meta">
+                                        <span style="color: #e11d48; font-weight: 700;">EILMELDUNG</span>
+                                        <span>${timeStr}</span>
+                                    </div>
+                                    <div class="news-headline">${title}</div>
+                                    ${cleanDesc ? `<div class="news-snippet">${cleanDesc}</div>` : ''}
+                                </div>
+                            `;
+                        });
+
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = `<div style="text-align: center; color: var(--section-color); padding: 20px;">Keine aktuellen Eilmeldungen.</div>`;
+                    }
+                })
+                .catch(err => {
+                    container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 20px;">Fehler beim Laden der Nachrichten.</div>`;
+                });
+        }
+
+        // Beim Start im Hintergrund einmal den News-Status prüfen, damit der Button direkt korrekt gefärbt ist
+        function checkBackgroundNews() {
+            const rssUrl = encodeURIComponent('https://www.welt.de/?service=Rss');
+            fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.items && data.items.length > 0) {
+                        let items = data.items.filter(item => {
+                            let title = (item.title || "").toLowerCase();
+                            let cats = (item.categories || []).join(' ').toLowerCase();
+                            return title.includes('eilmeldung') || title.includes('breaking') || cats.includes('eilmeldung') || cats.includes('breaking');
+                        });
+                        if (items.length === 0) items = data.items.slice(0, 5);
+
+                        if (items.length > 0 && items[0].pubDate) {
+                            let latestPubTime = new Date(items[0].pubDate).getTime();
+                            let lastReadTimeStr = localStorage.getItem('tesla_dashboard_last_read_news');
+                            let lastReadTime = lastReadTimeStr ? new Date(lastReadTimeStr).getTime() : 0;
+                            
+                            const newsBtn = document.getElementById('newsBtn');
+                            if (newsBtn) {
+                                if (latestPubTime > lastReadTime) {
+                                    newsBtn.classList.add('has-new-news');
+                                } else {
+                                    newsBtn.classList.remove('has-new-news');
+                                }
+                            }
+                        }
+                    }
+                }).catch(e => {});
         }
 
         function toggleWeatherSearch() {
@@ -1809,7 +1956,6 @@
             fetchWeatherForCity(city);
         }
 
-        /* GRAFISCHE HOCHGLANZ WETTER-IKONEN MIT MOND / SONNE & STERNEN */
         function getSharedGradients() {
             return `
                 <defs>
@@ -2093,11 +2239,8 @@
                     let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
                     availableKeys.add(sortKey);
 
-                    let query = searchQuery.toLowerCase().trim();
-                    let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                     let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
-                    
-                    if (matchesSearch && matchesKey) {
+                    if (matchesKey) {
                         targetApps.push(app);
                     }
                 }
@@ -2105,7 +2248,7 @@
                 targetApps.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
                 let favAppsList = targetApps.filter(app => favorites.includes(app.url));
-                if (favAppsList.length > 0 && !selectedLetter && !searchQuery) {
+                if (favAppsList.length > 0 && !selectedLetter) {
                     let favHTML = `
                         <div class="category-section">
                             <h2 class="category-title">★ Favoriten</h2>
@@ -2254,13 +2397,11 @@
                         allCatApps.push(...category.apps);
                     }
 
-                    let query = searchQuery.toLowerCase().trim();
                     let catFavs = allCatApps.filter(app => {
-                        let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
-                        return favorites.includes(app.url) && matchesSearch;
+                        return favorites.includes(app.url);
                     }).sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
-                    if (catFavs.length > 0 && !selectedLetter && query === '') {
+                    if (catFavs.length > 0 && !selectedLetter) {
                         let favSectionHTML = `
                             <div class="category-section is-category">
                                 <h2 class="category-title">★ Favoriten</h2>
@@ -2306,9 +2447,8 @@
                                     }
                                     let firstChar = app.name.trim()[0].toUpperCase();
                                     let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
-                                    let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                                     let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
-                                    return matchesSearch && matchesKey;
+                                    return matchesKey;
                                 })
                                 .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
@@ -2353,9 +2493,8 @@
                             .filter(app => {
                                 let firstChar = app.name.trim()[0].toUpperCase();
                                 let sortKey = /^[0-9]$/.test(firstChar) ? '#' : firstChar;
-                                let matchesSearch = query === '' || app.name.toLowerCase().startsWith(query);
                                 let matchesKey = selectedLetter ? (sortKey === selectedLetter) : true;
-                                return matchesSearch && matchesKey;
+                                return matchesKey;
                             })
                             .sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
 
@@ -2405,38 +2544,6 @@
             selectedLetter = null;
             renderDashboard();
         }
-
-        function toggleSearch(event) {
-            if (event) event.stopPropagation();
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchToggleBtn');
-            
-            searchInput.classList.toggle('active');
-            searchBtn.classList.toggle('active');
-
-            if (searchInput.classList.contains('active')) {
-                searchInput.focus();
-            } else {
-                searchInput.value = '';
-                searchQuery = '';
-                renderDashboard();
-            }
-        }
-
-        document.addEventListener('click', (event) => {
-            const searchInput = document.getElementById('searchInput');
-            const searchBtn = document.getElementById('searchToggleBtn');
-
-            if (searchInput.classList.contains('active')) {
-                if (!searchInput.contains(event.target) && !searchBtn.contains(event.target)) {
-                    searchInput.classList.remove('active');
-                    searchBtn.classList.remove('active');
-                    searchInput.value = '';
-                    searchQuery = '';
-                    renderDashboard();
-                }
-            }
-        });
 
         function filterCategory(catId, btnElement) {
             activeCategory = catId;
@@ -2509,11 +2616,6 @@
             filterCategory(newCatId, tabButtonsMap[newCatId] || document.getElementById('radioSymbolBtn'));
         }
 
-        function handleSearch() {
-            searchQuery = document.getElementById('searchInput.active') ? document.getElementById('searchInput').value : '';
-            renderDashboard();
-        }
-
         let initialCity = localStorage.getItem('tesla_dashboard_city') || 'Lünen';
         fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(initialCity)}&count=1&language=de&format=json`)
             .then(res => res.json())
@@ -2532,6 +2634,7 @@
 
         renderDashboard();
         checkVersion();
+        checkBackgroundNews();
     </script>
 </body>
 </html>
