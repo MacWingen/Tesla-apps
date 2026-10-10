@@ -395,14 +395,13 @@
         .press-border-rect {
             fill: none;
             stroke: #fbbf24;
-            stroke-width: 1.2; /* Extra fein und dezent */
+            stroke-width: 1.2;
             stroke-dasharray: 320;
             stroke-dashoffset: 320;
             rx: 21;
             ry: 21;
         }
 
-        /* Animation läuft in exakt 0,4 Sekunden herum */
         .app-item.is-holding .press-border-rect, .app-list-item.is-holding .press-border-rect {
             stroke-dashoffset: 0;
             transition: stroke-dashoffset 0.4s linear;
@@ -432,7 +431,7 @@
             color: var(--text-color);
         }
 
-        /* Live Badge - Strahlt in voller Helligkeit */
+        /* Live Badge */
         .live-badge {
             position: absolute;
             top: 8px;
@@ -490,7 +489,7 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* Butterweicher, nativer Stern-Übergang */
+        /* Stern-Übergang */
         .fav-btn {
             position: absolute;
             bottom: 6px;
@@ -520,7 +519,7 @@
         .fav-btn.is-fav {
             color: #fbbf24;
             opacity: 1;
-            transform: scale(1.2); /* Kurzer, edler Pop-Effekt */
+            transform: scale(1.2);
         }
 
         .app-name {
@@ -872,28 +871,28 @@
                 <div class="modal-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <h4 style="margin: 0;">Was ist neu?</h4>
-                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.2.21</span>
+                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.2.22</span>
                     </div>
                     <ul>
-                        <li><strong>Feinerer Timer-Rahmen:</strong> Strichstärke beim Long-Press auf filigrane 1.2px angepasst, mit feinem Schimmer-Glow.</li>
+                        <li><strong>Mobile Touch-Optimierung:</strong> Sauberer Event-Handler (`pointerdown` / `pointerup`) für Smartphones implementiert, damit Radio-Starts & -Stopps auf iOS & Android absolut fehlerfrei und ohne Doppelauslösung funktionieren.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.2.21 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.2.22 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.2.21 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2.22 &copy; 2026 McWingen
     </footer>
 
-    <audio id="globalAudioStream"></audio>
+    <audio id="globalAudioStream" preload="none"></audio>
 
     <script>
-        const CURRENT_VERSION = 'v1.2.21';
+        const CURRENT_VERSION = 'v1.2.22';
 
         const categories = [
             {
@@ -1153,9 +1152,14 @@
         let pressTimer = null;
         let holdStartTimer = null;
         let isLongPress = false;
+        let pointerDownTime = 0;
 
-        function handlePressStart(element, url) {
+        function handlePointerDown(element, url, event) {
+            // Verhindert Maus-Emulation auf Touch-Geräten, um Doppelauslösungen zu blockieren
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            
             isLongPress = false;
+            pointerDownTime = Date.now();
             
             // Erst nach 0,3 Sekunden ununterbrochenem Drücken schaltet sich der Schimmer-Rahmen ein.
             holdStartTimer = setTimeout(() => {
@@ -1186,18 +1190,19 @@
             }, 750);
         }
 
-        function handlePressEnd(element, url, isRadio, name, image) {
+        function handlePointerUp(element, url, isRadio, name, image, event) {
             clearTimeout(pressTimer);
             clearTimeout(holdStartTimer);
             element.classList.remove('is-holding');
-            removeBorderSvg(element);
+            removeBorderSvg(event.currentTarget);
             
-            if (!isLongPress) {
+            // Wenn es kein langer Druck war, als regulärer Klick / Tipp werten
+            if (!isLongPress && (Date.now() - pointerDownTime < 700)) {
                 handleItemClick(url, isRadio, name, image);
             }
         }
 
-        function handlePressCancel(element) {
+        function handlePointerCancel(element) {
             clearTimeout(pressTimer);
             clearTimeout(holdStartTimer);
             if (element) {
@@ -1223,7 +1228,6 @@
             }
             localStorage.setItem('tesla_dashboard_favs', JSON.stringify(favorites));
 
-            // Sofortiges optisches Live-DOM-Feedback (Stern-Animation & Kachel-Bounce)
             document.querySelectorAll(`[data-url="${CSS.escape(appUrl)}"]`).forEach(el => {
                 const favBtn = el.querySelector('.fav-btn, .list-fav-btn');
                 if (favBtn) {
@@ -1238,8 +1242,6 @@
                 setTimeout(() => el.classList.remove('just-favorited'), 300);
             });
 
-            // Nach einer kurzen Animation das Dashboard im Hintergrund aktualisieren,
-            // damit die Favoriten-Sektion ganz oben sofort sauber einsortiert oder entfernt wird.
             setTimeout(() => {
                 renderDashboard();
             }, 250);
@@ -1491,12 +1493,10 @@
 
                         favHTML += `
                             <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onmousedown="handlePressStart(this, '${app.url}')" 
-                                 onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 onmouseleave="handlePressCancel(this)"
-                                 ontouchstart="handlePressStart(this, '${app.url}')" 
-                                 ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 ontouchcancel="handlePressCancel(this)">
+                                 onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                 onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                 onpointercancel="handlePointerCancel(this)"
+                                 onpointerleave="handlePointerCancel(this)">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1539,12 +1539,10 @@
 
                         sectionHTML += `
                             <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onmousedown="handlePressStart(this, '${app.url}')" 
-                                 onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 onmouseleave="handlePressCancel(this)"
-                                 ontouchstart="handlePressStart(this, '${app.url}')" 
-                                 ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 ontouchcancel="handlePressCancel(this)">
+                                 onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                 onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                 onpointercancel="handlePointerCancel(this)"
+                                 onpointerleave="handlePointerCancel(this)">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1589,12 +1587,10 @@
 
                             sectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart(this, '${app.url}')" 
-                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel(this)"
-                                     ontouchstart="handlePressStart(this, '${app.url}')" 
-                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel(this)">
+                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                     onpointercancel="handlePointerCancel(this)"
+                                     onpointerleave="handlePointerCancel(this)">
                                     <div class="app-list-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1652,12 +1648,10 @@
 
                             favSectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart(this, '${app.url}')" 
-                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel(this)"
-                                     ontouchstart="handlePressStart(this, '${app.url}')" 
-                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel(this)">
+                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                     onpointercancel="handlePointerCancel(this)"
+                                     onpointerleave="handlePointerCancel(this)">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1705,12 +1699,10 @@
 
                                 sectionHTML += `
                                     <div class="${isPlayingClass}" data-url="${app.url}" 
-                                         onmousedown="handlePressStart(this, '${app.url}')" 
-                                         onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                         onmouseleave="handlePressCancel(this)"
-                                         ontouchstart="handlePressStart(this, '${app.url}')" 
-                                         ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                         ontouchcancel="handlePressCancel(this)">
+                                         onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                         onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                         onpointercancel="handlePointerCancel(this)"
+                                         onpointerleave="handlePointerCancel(this)">
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1757,12 +1749,10 @@
 
                             sectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart(this, '${app.url}')" 
-                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel(this)"
-                                     ontouchstart="handlePressStart(this, '${app.url}')" 
-                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel(this)">
+                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                     onpointercancel="handlePointerCancel(this)"
+                                     onpointerleave="handlePointerCancel(this)">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
