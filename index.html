@@ -75,7 +75,7 @@
             display: none;
         }
 
-        /* Logo / Info Trigger */
+        /* Logo / Info Trigger mit reinem, rahmenlosem grünen Update-Pfeil */
         .brand-logo {
             display: flex;
             align-items: center;
@@ -84,6 +84,7 @@
             border-radius: 8px;
             padding: 2px 4px;
             transition: background-color 0.2s ease;
+            position: relative;
         }
 
         .brand-logo:hover {
@@ -102,6 +103,21 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+        }
+
+        /* Reiner, rahmenloser grüner Update-Pfeil oben rechts am Logo */
+        .brand-logo.has-update::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            width: 10px;
+            height: 14px;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 4v14M6 13l6 6 6-6'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
         }
 
         /* Trennstrich */
@@ -337,6 +353,17 @@
             transform: scale(0.92); 
         }
 
+        /* Native Feedback Animation für das Einrasten */
+        .app-item.just-favorited {
+            animation: tileSnap 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes tileSnap {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.93); }
+            100% { transform: scale(1); }
+        }
+
         .app-icon {
             width: 90px;
             height: 90px;
@@ -351,6 +378,45 @@
             border: 1px solid var(--tile-border);
             position: relative;
             flex-shrink: 0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Sehr feiner, eleganter Strich (1.2px) – exakt so dünn wie gewünscht */
+        .press-border-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+            border-radius: 22px;
+        }
+
+        .press-border-rect {
+            fill: none;
+            stroke: #fbbf24;
+            stroke-width: 1.2; /* Extra fein und dezent */
+            stroke-dasharray: 320;
+            stroke-dashoffset: 320;
+            rx: 21;
+            ry: 21;
+        }
+
+        /* Animation läuft in exakt 0,4 Sekunden herum */
+        .app-item.is-holding .press-border-rect, .app-list-item.is-holding .press-border-rect {
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 0.4s linear;
+        }
+
+        .app-list-icon .press-border-svg {
+            border-radius: 10px;
+        }
+
+        .app-list-icon .press-border-rect {
+            rx: 9;
+            ry: 9;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 160;
         }
 
         .app-icon img {
@@ -366,7 +432,7 @@
             color: var(--text-color);
         }
 
-        /* Live Badge - Liegt über dem Overlay und strahlt in voller Helligkeit */
+        /* Live Badge - Strahlt in voller Helligkeit */
         .live-badge {
             position: absolute;
             top: 8px;
@@ -387,7 +453,19 @@
             display: block;
         }
 
-        /* Dynamisches Play/Stopp Center Overlay (unter dem Live-Badge & Stern) */
+        /* Radio-Spielzustand: Blau mit Schimmer */
+        .app-item.playing .app-icon, .app-list-item.playing .app-list-icon {
+            border-color: #3b82f6;
+            box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Schöner Gold-Glow beim Halten */
+        .app-item.is-holding .app-icon, .app-list-item.is-holding .app-list-icon {
+            border-color: #fbbf24;
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+        }
+
+        /* Dynamisches Play/Stopp Center Overlay */
         .radio-state-overlay {
             position: absolute;
             inset: 0;
@@ -412,7 +490,7 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* Transparenter Stern unten links - Liegt ebenfalls über dem Overlay */
+        /* Butterweicher, nativer Stern-Übergang */
         .fav-btn {
             position: absolute;
             bottom: 6px;
@@ -431,7 +509,8 @@
             font-size: 18px;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
             opacity: 0.5;
-            transition: opacity 0.2s ease, color 0.2s ease;
+            transform: scale(1);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease, opacity 0.2s ease;
         }
 
         .app-item:hover .fav-btn, .fav-btn.is-fav {
@@ -441,6 +520,7 @@
         .fav-btn.is-fav {
             color: #fbbf24;
             opacity: 1;
+            transform: scale(1.2); /* Kurzer, edler Pop-Effekt */
         }
 
         .app-name {
@@ -501,6 +581,7 @@
             justify-content: center;
             flex-shrink: 0;
             position: relative;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .app-list-icon img {
@@ -525,10 +606,12 @@
             padding: 6px;
             margin-left: auto;
             border-radius: 6px;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
         }
 
         .list-fav-btn.is-fav {
             color: #fbbf24;
+            transform: scale(1.15);
         }
 
         /* A-Z Index Sidebar */
@@ -570,11 +653,6 @@
             color: var(--text-color);
         }
 
-        .app-item.playing .app-icon, .app-list-item.playing .app-list-icon {
-            border-color: #3b82f6;
-            box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
-        }
-
         /* Modal / Changelog Popup */
         .modal-overlay {
             position: fixed;
@@ -603,7 +681,7 @@
             border: 1px solid var(--tile-border);
             border-radius: 16px;
             width: 90%;
-            max-width: 420px;
+            max-width: 440px;
             padding: 24px;
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
             display: flex;
@@ -656,22 +734,28 @@
             line-height: 1.5;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
             max-height: 60vh;
             overflow-y: auto;
             scrollbar-width: thin;
         }
 
-        .modal-body h4 {
+        .modal-section h4 {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-color);
-            margin: 0 0 4px 0;
+            margin: 0 0 6px 0;
         }
 
-        .modal-body ul {
+        .modal-section ul {
             margin: 0;
             padding-left: 18px;
+        }
+
+        .modal-divider {
+            height: 1px;
+            background-color: var(--tile-border);
+            width: 100%;
         }
 
         .modal-footer {
@@ -688,7 +772,7 @@
 
     <!-- Top Bar -->
     <div class="top-bar">
-        <div class="brand-logo" onclick="toggleChangelog(true)" title="Über / Changelog anzeigen">
+        <div class="brand-logo" id="brandLogoContainer" onclick="toggleChangelog(true)" title="Über / Infos & Changelog anzeigen">
             <div class="brand-icon">
                 <img src="icons/hedgehog.png" alt="Igel">
             </div>
@@ -761,40 +845,56 @@
         <div class="dashboard-container" id="dashboard"></div>
     </div>
 
-    <!-- Changelog Modal -->
+    <!-- Changelog & Info Modal -->
     <div class="modal-overlay" id="changelogModal" onclick="handleModalClick(event)">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">
-                    <img src="icons/hedgehog.png" alt="" style="width: 52px; height: 52px; object-fit: contain;">
+                    <img src="icons/hedgehog.png" alt="" style="width: 44px; height: 44px; object-fit: contain;">
                     Tesla Apps Dashboard
                 </h3>
                 <button class="modal-close-btn" onclick="toggleChangelog(false)">&times;</button>
             </div>
             <div class="modal-body">
-                <div>
-                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2.4</span>
-                    <h4>Was ist neu in v1.2.4:</h4>
+                <!-- Allgemeine Übersicht -->
+                <div class="modal-section">
+                    <h4>Was kann dieses Dashboard?</h4>
                     <ul>
-                        <li><strong>Helles Live-Badge:</strong> Das rote "LIVE"-Badge und der Favoriten-Stern werden nun nicht mehr vom Stopp-Overlay abgedunkelt, sondern strahlen in voller Helligkeit.</li>
-                        <li><strong>Automatischer Jump:</strong> Direktes Hinspringen zum aktiven Sender beim Klick auf das Radio-Symbol.</li>
+                        <li><strong>Webradio & Streams:</strong> Über 100+ Sender mit Live-Anzeige und Kachel-Stopp.</li>
+                        <li><strong>Favoriten:</strong> Kachel ca. 0,7 Sek. gedrückt halten, um sie zu favorisieren (★).</li>
+                        <li><strong>Ansichten & Suche:</strong> Flexibles Grid/Liste-Umschalten und Sofortsuche.</li>
+                    </ul>
+                </div>
+
+                <div class="modal-divider"></div>
+
+                <!-- Update Informationen / Changelog -->
+                <div class="modal-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <h4 style="margin: 0;">Was ist neu?</h4>
+                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.2.21</span>
+                    </div>
+                    <ul>
+                        <li><strong>Feinerer Timer-Rahmen:</strong> Strichstärke beim Long-Press auf filigrane 1.2px angepasst, mit feinem Schimmer-Glow.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.2.4 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.2.21 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.2.4 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2.21 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream"></audio>
 
     <script>
+        const CURRENT_VERSION = 'v1.2.21';
+
         const categories = [
             {
                 id: "streaming",
@@ -1051,36 +1151,98 @@
         });
 
         let pressTimer = null;
+        let holdStartTimer = null;
         let isLongPress = false;
 
-        function handlePressStart(url) {
+        function handlePressStart(element, url) {
             isLongPress = false;
+            
+            // Erst nach 0,3 Sekunden ununterbrochenem Drücken schaltet sich der Schimmer-Rahmen ein.
+            holdStartTimer = setTimeout(() => {
+                element.classList.add('is-holding');
+                
+                let iconContainer = element.querySelector('.app-icon, .app-list-icon');
+                if (iconContainer && !iconContainer.querySelector('.press-border-svg')) {
+                    let isList = iconContainer.classList.contains('app-list-icon');
+                    let svgCode = isList ? `
+                        <svg class="press-border-svg" viewBox="0 0 38 38">
+                            <rect class="press-border-rect" x="1" y="1" width="36" height="36" rx="9" ry="9" />
+                        </svg>
+                    ` : `
+                        <svg class="press-border-svg" viewBox="0 0 90 90">
+                            <rect class="press-border-rect" x="1" y="1" width="88" height="88" rx="21" ry="21" />
+                        </svg>
+                    `;
+                    iconContainer.insertAdjacentHTML('beforeend', svgCode);
+                }
+            }, 300);
+
+            // Nach insgesamt 0,75 Sekunden greift der Favorit
             pressTimer = setTimeout(() => {
                 isLongPress = true;
+                element.classList.remove('is-holding');
+                removeBorderSvg(element);
                 toggleFavoriteDirect(url);
-            }, 600);
+            }, 750);
         }
 
-        function handlePressEnd(url, isRadio, name, image) {
+        function handlePressEnd(element, url, isRadio, name, image) {
             clearTimeout(pressTimer);
+            clearTimeout(holdStartTimer);
+            element.classList.remove('is-holding');
+            removeBorderSvg(element);
+            
             if (!isLongPress) {
                 handleItemClick(url, isRadio, name, image);
             }
         }
 
-        function handlePressCancel() {
+        function handlePressCancel(element) {
             clearTimeout(pressTimer);
+            clearTimeout(holdStartTimer);
+            if (element) {
+                element.classList.remove('is-holding');
+                removeBorderSvg(element);
+            }
         }
 
+        function removeBorderSvg(element) {
+            let svg = element.querySelector('.press-border-svg');
+            if (svg) svg.remove();
+        }
+
+        /* Sofortige Favoriten-Zuweisung inklusive reibungslosem Rerender im Hintergrund */
         function toggleFavoriteDirect(appUrl) {
             const index = favorites.indexOf(appUrl);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
+            const isNowFav = index === -1;
+
+            if (isNowFav) {
                 favorites.push(appUrl);
+            } else {
+                favorites.splice(index, 1);
             }
             localStorage.setItem('tesla_dashboard_favs', JSON.stringify(favorites));
-            renderDashboard();
+
+            // Sofortiges optisches Live-DOM-Feedback (Stern-Animation & Kachel-Bounce)
+            document.querySelectorAll(`[data-url="${CSS.escape(appUrl)}"]`).forEach(el => {
+                const favBtn = el.querySelector('.fav-btn, .list-fav-btn');
+                if (favBtn) {
+                    if (isNowFav) {
+                        favBtn.classList.add('is-fav');
+                    } else {
+                        favBtn.classList.remove('is-fav');
+                    }
+                }
+                
+                el.classList.add('just-favorited');
+                setTimeout(() => el.classList.remove('just-favorited'), 300);
+            });
+
+            // Nach einer kurzen Animation das Dashboard im Hintergrund aktualisieren,
+            // damit die Favoriten-Sektion ganz oben sofort sauber einsortiert oder entfernt wird.
+            setTimeout(() => {
+                renderDashboard();
+            }, 250);
         }
 
         function isFavorite(appUrl) {
@@ -1225,10 +1387,14 @@
 
         function toggleChangelog(show) {
             const modal = document.getElementById('changelogModal');
+            const logo = document.getElementById('brandLogoContainer');
+            
             if (show) {
                 modal.classList.add('active');
             } else {
                 modal.classList.remove('active');
+                localStorage.setItem('tesla_dashboard_seen_version', CURRENT_VERSION);
+                logo.classList.remove('has-update');
             }
         }
 
@@ -1236,6 +1402,15 @@
             const modalContent = document.querySelector('.modal-content');
             if (!modalContent.contains(event.target)) {
                 toggleChangelog(false);
+            }
+        }
+
+        function checkVersion() {
+            const seenVersion = localStorage.getItem('tesla_dashboard_seen_version');
+            const logo = document.getElementById('brandLogoContainer');
+
+            if (seenVersion !== CURRENT_VERSION) {
+                logo.classList.add('has-update');
             }
         }
 
@@ -1316,12 +1491,12 @@
 
                         favHTML += `
                             <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onmousedown="handlePressStart('${app.url}')" 
-                                 onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 onmouseleave="handlePressCancel()"
-                                 ontouchstart="handlePressStart('${app.url}')" 
-                                 ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 ontouchcancel="handlePressCancel()">
+                                 onmousedown="handlePressStart(this, '${app.url}')" 
+                                 onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 onmouseleave="handlePressCancel(this)"
+                                 ontouchstart="handlePressStart(this, '${app.url}')" 
+                                 ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 ontouchcancel="handlePressCancel(this)">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1364,12 +1539,12 @@
 
                         sectionHTML += `
                             <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onmousedown="handlePressStart('${app.url}')" 
-                                 onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 onmouseleave="handlePressCancel()"
-                                 ontouchstart="handlePressStart('${app.url}')" 
-                                 ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                 ontouchcancel="handlePressCancel()">
+                                 onmousedown="handlePressStart(this, '${app.url}')" 
+                                 onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 onmouseleave="handlePressCancel(this)"
+                                 ontouchstart="handlePressStart(this, '${app.url}')" 
+                                 ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                 ontouchcancel="handlePressCancel(this)">
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1414,12 +1589,12 @@
 
                             sectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart('${app.url}')" 
-                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel()"
-                                     ontouchstart="handlePressStart('${app.url}')" 
-                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel()">
+                                     onmousedown="handlePressStart(this, '${app.url}')" 
+                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel(this)"
+                                     ontouchstart="handlePressStart(this, '${app.url}')" 
+                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel(this)">
                                     <div class="app-list-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1477,12 +1652,12 @@
 
                             favSectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart('${app.url}')" 
-                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel()"
-                                     ontouchstart="handlePressStart('${app.url}')" 
-                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel()">
+                                     onmousedown="handlePressStart(this, '${app.url}')" 
+                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel(this)"
+                                     ontouchstart="handlePressStart(this, '${app.url}')" 
+                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel(this)">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1530,12 +1705,12 @@
 
                                 sectionHTML += `
                                     <div class="${isPlayingClass}" data-url="${app.url}" 
-                                         onmousedown="handlePressStart('${app.url}')" 
-                                         onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                         onmouseleave="handlePressCancel()"
-                                         ontouchstart="handlePressStart('${app.url}')" 
-                                         ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                         ontouchcancel="handlePressCancel()">
+                                         onmousedown="handlePressStart(this, '${app.url}')" 
+                                         onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                         onmouseleave="handlePressCancel(this)"
+                                         ontouchstart="handlePressStart(this, '${app.url}')" 
+                                         ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                         ontouchcancel="handlePressCancel(this)">
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1582,12 +1757,12 @@
 
                             sectionHTML += `
                                 <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onmousedown="handlePressStart('${app.url}')" 
-                                     onmouseup="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     onmouseleave="handlePressCancel()"
-                                     ontouchstart="handlePressStart('${app.url}')" 
-                                     ontouchend="handlePressEnd('${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
-                                     ontouchcancel="handlePressCancel()">
+                                     onmousedown="handlePressStart(this, '${app.url}')" 
+                                     onmouseup="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     onmouseleave="handlePressCancel(this)"
+                                     ontouchstart="handlePressStart(this, '${app.url}')" 
+                                     ontouchend="handlePressEnd(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}')"
+                                     ontouchcancel="handlePressCancel(this)">
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
@@ -1720,7 +1895,9 @@
             renderDashboard();
         }
 
+        // Initialisierung beim Laden
         renderDashboard();
+        checkVersion();
     </script>
 </body>
 </html>
