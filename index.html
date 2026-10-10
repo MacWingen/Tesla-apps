@@ -860,28 +860,28 @@
 
                 <div class="modal-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <h4 style="margin: 0;">Release v1.2</h4>
-                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.2</span>
+                        <h4 style="margin: 0;">Release v1.0 Final</h4>
+                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.0</span>
                     </div>
                     <ul>
-                        <li><strong>v1.2:</strong> Einheitliche Sender-IDs für perfekte Status-Synchronisation zwischen "Zuletzt gehört" und Genre-Listen.</li>
+                        <li><strong>v1.0 Final:</strong> Stabiles Fundament, korrigierte Stream-Pfade (*Absolut Top Clubnight* & *AI*), gerätespezifischer LocalStorage und synchronisierte Multi-Kachel-Anzeige.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream" preload="none"></audio>
 
     <script>
-        const CURRENT_VERSION = 'v1.2';
+        const CURRENT_VERSION = 'v1.0';
 
         const categories = [
             {
@@ -997,10 +997,10 @@
                             { id: "absolutcoffee", name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/absolutcoffee.png", isRadio: true, genre: "pop" },
                             { id: "absolutlovesongs", name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/absolutlovesongs.png", isRadio: true, genre: "pop" },
                             { id: "absolut80iger", name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/absolut80iger.png", isRadio: true, genre: "throwback" },
-                            { id: "absoluttopclubnight", name: "Absolut Top Clubnight", url: "https://absolut-topclubnight.live-sm.absolutradio.de/absolut-topclubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true, genre: "dance" },
+                            { id: "absoluttopclubnight", name: "Absolut Top Clubnight", url: "https://edge16.live-sm.absolutradio.de/absolut-clubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true, genre: "dance" },
                             { id: "absolutmusicxl", name: "Absolut musicXL", url: "https://absolut-musicxl.live-sm.absolutradio.de/absolut-musicxl/stream/mp3", image: "icons/absolutmusicxl.png", isRadio: true, genre: "pop" },
                             { id: "absolutrock", name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/absolutrock.png", isRadio: true, genre: "rock" },
-                            { id: "absolutradioai", name: "Absolut Radio AI", url: "https://absolut-radioai.live-sm.absolutradio.de/absolut-radioai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true, genre: "dance" },
+                            { id: "absolutradioai", name: "Absolut Radio AI", url: "https://edge66.live-sm.absolutradio.de/absolut-ai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true, genre: "dance" },
                             { id: "absolutxmas", name: "Absolut Christmas Time", url: "https://absolut-christmastime.live-sm.absolutradio.de/absolut-christmastime/stream/mp3", image: "icons/absolutxmas.png", isRadio: true, genre: "pop" }
                         ]
                     },
@@ -1252,7 +1252,7 @@
         }
 
         function playRadioStream(stationObj) {
-            let uniqueId = stationObj.id; // Einheitliche Sender-ID (z.B. "iloveradio")
+            let uniqueId = stationObj.id;
             let url = stationObj.url;
             let name = stationObj.name;
             let image = stationObj.image;
