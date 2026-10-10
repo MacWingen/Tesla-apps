@@ -623,10 +623,10 @@
             transform: scale(1.15);
         }
 
-        /* A-Z Sidebar - Nochmals tiefer gesetzt (top: 220px) damit sie perfekt unter der Linie sitzt */
+        /* A-Z Sidebar - Exakt auf Höhe der Oberkante des ersten Listeneintrags (ABRP / 1LIVE) angepasst */
         .az-sidebar {
             position: sticky;
-            top: 220px;
+            top: 158px; /* Exakter Startpunkt für Standard-Ansicht (Apps) auf Mauszeiger-Höhe */
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -639,6 +639,12 @@
             padding: 6px 2px;
             border: none;
             box-shadow: none;
+            transition: top 0.2s ease;
+        }
+
+        /* Wenn die Radio-Ansicht mit Genre-Leiste aktiv ist, wandert die Sidebar exakt um diese Zeile nach unten */
+        .az-sidebar.has-genre-bar {
+            top: 202px;
         }
 
         .az-sidebar a {
@@ -1447,8 +1453,10 @@
             
             if (activeCategory === 'radio') {
                 genreBar.style.display = 'flex';
+                azSidebar.classList.add('has-genre-bar');
             } else {
                 genreBar.style.display = 'none';
+                azSidebar.classList.remove('has-genre-bar');
             }
 
             container.innerHTML = '';
