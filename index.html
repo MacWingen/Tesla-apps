@@ -249,7 +249,7 @@
             flex-shrink: 0;
         }
 
-        /* Main Wrapper - Responsive Fluid Width */
+        /* Main Wrapper */
         .main-wrapper {
             width: 100%;
             max-width: 900px;
@@ -262,7 +262,7 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
-            padding-left: 36px;
+            padding-left: 0;
             box-sizing: border-box;
         }
 
@@ -323,7 +323,7 @@
             color: var(--text-color);
         }
 
-        /* Responsive Fluid Grid View - Dynamisch und fließend skaliert */
+        /* Grid View */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -430,11 +430,10 @@
             color: var(--text-color);
         }
 
-        /* Live Badge - Grid View */
-        .app-item .live-badge {
+        .app-item .live-badge, .app-list-item .live-badge {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             background-color: #e11d48;
             color: #fff;
             font-size: 8px;
@@ -444,24 +443,6 @@
             letter-spacing: 0.5px;
             display: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            z-index: 25;
-            pointer-events: none;
-        }
-
-        /* Live Badge - List View */
-        .app-list-item .live-badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background-color: #e11d48;
-            color: #fff;
-            font-size: 7px;
-            font-weight: 700;
-            padding: 1px 3px;
-            border-radius: 4px;
-            letter-spacing: 0.3px;
-            display: none;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             z-index: 25;
             pointer-events: none;
         }
@@ -552,7 +533,7 @@
             text-overflow: ellipsis;
         }
 
-        /* List View Styles */
+        /* List View */
         .app-list {
             display: flex;
             flex-direction: column;
@@ -597,10 +578,6 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .app-list-icon img {
-            -webkit-touch-callout: none;
-        }
-
         .app-list-name {
             font-size: 15px;
             font-weight: 400;
@@ -625,18 +602,23 @@
             transform: scale(1.15);
         }
 
-        /* A-Z Index Sidebar */
+        /* A-Z Sidebar */
         .az-sidebar {
-            position: absolute;
-            left: -22px;
-            top: 15px;
+            position: fixed;
+            left: 8px;
+            top: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             z-index: 200;
             user-select: none;
             touch-action: pan-y;
+            background: var(--bg-color);
+            padding: 6px 3px;
+            border-radius: 8px;
+            border: 1px solid var(--tile-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .az-sidebar a {
@@ -815,7 +797,6 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Radiosymbol -->
         <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
@@ -828,7 +809,6 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Text-Reiter -->
         <div class="tabs-container" id="tabs-container"></div>
     </div>
 
@@ -867,44 +847,41 @@
                 <button class="modal-close-btn" onclick="toggleChangelog(false)">&times;</button>
             </div>
             <div class="modal-body">
-                <!-- Allgemeine Übersicht -->
                 <div class="modal-section">
                     <h4>Was kann dieses Dashboard?</h4>
                     <ul>
                         <li><strong>Webradio & Streams:</strong> Über 100+ Sender mit Live-Anzeige und Kachel-Stopp.</li>
+                        <li><strong>Zuletzt gehört:</strong> Merkt sich deine zuletzt gespielten Radiosender.</li>
                         <li><strong>Favoriten:</strong> Kachel ca. 0,7 Sek. gedrückt halten, um sie zu favorisieren (★).</li>
-                        <li><strong>Ansichten & Suche:</strong> Flexibles Grid/Liste-Umschalten und Sofortsuche.</li>
                     </ul>
                 </div>
 
                 <div class="modal-divider"></div>
 
-                <!-- Update Informationen / Changelog -->
                 <div class="modal-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <h4 style="margin: 0;">Release v1.0</h4>
-                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.0</span>
+                        <h4 style="margin: 0;">Release v1.2</h4>
+                        <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.2</span>
                     </div>
                     <ul>
-                        <li><strong>v1.0:</strong> Finale Release-Version mit fließendem, stabilem Grid-Verhalten beim Vergrößern und Verkleinern des Browserfensters.</li>
+                        <li><strong>v1.2:</strong> Einheitliche Sender-IDs für perfekte Status-Synchronisation zwischen "Zuletzt gehört" und Genre-Listen.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
-    <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream" preload="none"></audio>
 
     <script>
-        const CURRENT_VERSION = 'v1.0';
+        const CURRENT_VERSION = 'v1.2';
 
         const categories = [
             {
@@ -912,24 +889,24 @@
                 title: "Streaming & TV",
                 shortTitle: "Streaming",
                 apps: [
-                    { name: "Apple TV", url: "https://tv.apple.com/de", image: "icons/appletv.png", isRadio: false },
-                    { name: "Disney+", url: "https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
-                    { name: "HBO Max", url: "https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
-                    { name: "Netflix", url: "https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
-                    { name: "Paramount+", url: "https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
-                    { name: "Prime Video", url: "https://www.amazon.de/primevideo", image: "icons/amazonprime.png", isRadio: false },
-                    { name: "YouTube", url: "https://www.youtube.com", image: "icons/youtube.png", isRadio: false },
-                    { name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png", isRadio: false },
-                    { name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com/de-DE", image: "icons/dazn.png", isRadio: false },
-                    { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png", isRadio: false },
-                    { name: "KiKa", url: "https://www.youtube.com/redirect?q=https://www.kika.de/videos/kindervideos-videos-fuer-kinder-100", image: "icons/kika.png", isRadio: false },
-                    { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png", isRadio: false },
-                    { name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png", isRadio: false },
-                    { name: "TikTok", url: "https://www.youtube.com/redirect?q=https://www.tiktok.com", image: "icons/tiktok.png", isRadio: false },
-                    { name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png", isRadio: false },
-                    { name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://app.waipu.tv/tv", image: "icons/waiputv.png", isRadio: false },
-                    { name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png", isRadio: false },
-                    { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png", isRadio: false }
+                    { id: "appletv", name: "Apple TV", url: "https://tv.apple.com/de", image: "icons/appletv.png", isRadio: false },
+                    { id: "disneyplus", name: "Disney+", url: "https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
+                    { id: "hbomax", name: "HBO Max", url: "https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
+                    { id: "netflix", name: "Netflix", url: "https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
+                    { id: "paramountplus", name: "Paramount+", url: "https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
+                    { id: "amazonprime", name: "Prime Video", url: "https://www.amazon.de/primevideo", image: "icons/amazonprime.png", isRadio: false },
+                    { id: "youtube", name: "YouTube", url: "https://www.youtube.com", image: "icons/youtube.png", isRadio: false },
+                    { id: "ard", name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png", isRadio: false },
+                    { id: "dazn", name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com/de-DE", image: "icons/dazn.png", isRadio: false },
+                    { id: "joyn", name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png", isRadio: false },
+                    { id: "kika", name: "KiKa", url: "https://www.youtube.com/redirect?q=https://www.kika.de/videos/kindervideos-videos-fuer-kinder-100", image: "icons/kika.png", isRadio: false },
+                    { id: "magentatv", name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png", isRadio: false },
+                    { id: "rtlplus", name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png", isRadio: false },
+                    { id: "tiktok", name: "TikTok", url: "https://www.youtube.com/redirect?q=https://www.tiktok.com", image: "icons/tiktok.png", isRadio: false },
+                    { id: "twitch", name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png", isRadio: false },
+                    { id: "waiputv", name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://app.waipu.tv/tv", image: "icons/waiputv.png", isRadio: false },
+                    { id: "wow", name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png", isRadio: false },
+                    { id: "zdf", name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png", isRadio: false }
                 ]
             },
             {
@@ -937,9 +914,9 @@
                 title: "Musik & Audio",
                 shortTitle: "Musik",
                 apps: [
-                    { name: "Apple Music", url: "https://music.apple.com/de", image: "icons/applemusic.png", isRadio: false },
-                    { name: "Spotify", url: "https://open.spotify.com", image: "icons/spotify.png", isRadio: false },
-                    { name: "YouTube Music", url: "https://music.youtube.com/?persist_app=1", image: "icons/youtubemusic.png", isRadio: false }
+                    { id: "applemusic", name: "Apple Music", url: "https://music.apple.com/de", image: "icons/applemusic.png", isRadio: false },
+                    { id: "spotify", name: "Spotify", url: "https://open.spotify.com", image: "icons/spotify.png", isRadio: false },
+                    { id: "youtubemusic", name: "YouTube Music", url: "https://music.youtube.com/?persist_app=1", image: "icons/youtubemusic.png", isRadio: false }
                 ]
             },
             {
@@ -947,12 +924,12 @@
                 title: "Navigation & Auto",
                 shortTitle: "Navigation",
                 apps: [
-                    { name: "ABRP", url: "https://abetterrouteplanner.com", image: "icons/abrp.png", isRadio: false },
-                    { name: "Blitzer.de Map", url: "https://www.blitzer.de/karte/", image: "icons/blitzerdemap.png", isRadio: false },
-                    { name: "ChargeFinder", url: "https://chargefinder.com", image: "icons/chargefinder.png", isRadio: false },
-                    { name: "Chargemap", url: "https://chargemap.com", image: "icons/chargemap.png", isRadio: false },
-                    { name: "Google Maps", url: "https://www.google.com/maps", image: "icons/googlemaps.png", isRadio: false },
-                    { name: "Tesla Charger Map", url: "https://www.tesla.com/de_de/findus", image: "icons/tesla.png", isRadio: false }
+                    { id: "abrp", name: "ABRP", url: "https://abetterrouteplanner.com", image: "icons/abrp.png", isRadio: false },
+                    { id: "blitzerdemap", name: "Blitzer.de Map", url: "https://www.blitzer.de/karte/", image: "icons/blitzerdemap.png", isRadio: false },
+                    { id: "chargefinder", name: "ChargeFinder", url: "https://chargefinder.com", image: "icons/chargefinder.png", isRadio: false },
+                    { id: "chargemap", name: "Chargemap", url: "https://chargemap.com", image: "icons/chargemap.png", isRadio: false },
+                    { id: "googlemaps", name: "Google Maps", url: "https://www.google.com/maps", image: "icons/googlemaps.png", isRadio: false },
+                    { id: "teslacar", name: "Tesla Charger Map", url: "https://www.tesla.com/de_de/findus", image: "icons/tesla.png", isRadio: false }
                 ]
             },
             {
@@ -960,8 +937,8 @@
                 title: "Gaming",
                 shortTitle: "Gaming",
                 apps: [
-                    { name: "GeForce NOW", url: "https://play.geforcenow.com", image: "icons/geforcenow.png", isRadio: false },
-                    { name: "Xbox", url: "https://www.xbox.com/play", image: "icons/xbox.png", isRadio: false }
+                    { id: "geforcenow", name: "GeForce NOW", url: "https://play.geforcenow.com", image: "icons/geforcenow.png", isRadio: false },
+                    { id: "xbox", name: "Xbox", url: "https://www.xbox.com/play", image: "icons/xbox.png", isRadio: false }
                 ]
             },
             {
@@ -972,152 +949,149 @@
                     {
                         title: "I Love Music Familie",
                         apps: [
-                            { name: "I Love Radio", url: "https://play.ilovemusic.de/ilm_iloveradio/", image: "icons/iloveradio.png", isRadio: true, genre: "charts" },
-                            { name: "I Love 2 Dance", url: "https://play.ilovemusic.de/ilm_ilove2dance/", image: "icons/ilove2dance.png", isRadio: true, genre: "dance" },
-                            { name: "I Love 2000+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2000throwbacks/", image: "icons/ilove2000throwbacks.png", isRadio: true, genre: "throwback" },
-                            { name: "I Love 2010+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2010throwbacks/", image: "icons/ilove2010throwbacks.png", isRadio: true, genre: "throwback" },
-                            { name: "I Love Bass (by HBZ)", url: "https://play.ilovemusic.de/ilm_ilovebass/", image: "icons/ilovebass.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Biggest Pop Hits", url: "https://play.ilovemusic.de/ilm_ilovenewpop/", image: "icons/ilovebiggestpophits.png", isRadio: true, genre: "charts" },
-                            { name: "I Love Büffelradio", url: "https://play.ilovemusic.de/ilm-buffelradio/mp3-192/", image: "icons/ilovebuffelradio.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Chillhop", url: "https://play.ilovemusic.de/ilm_ilovechillhop/", image: "icons/ilovechillhop.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Chillout Beats", url: "https://play.ilovemusic.de/ilm-ichillout_beats/", image: "icons/ilovechilloutbeats.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Dance 2026", url: "https://play.ilovemusic.de/ilm_dance-2023-jahrescharts/", image: "icons/ilovedance2026.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Dance History", url: "https://play.ilovemusic.de/ilm_ilovedancehistory/", image: "icons/ilovedancehistory.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Deutschrap Beste", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapbeste/", image: "icons/ilovedeutschrapbeste.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Deutschrap First!", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapfirst/", image: "icons/ilovedeutschrapfirst.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Greatest Hits", url: "https://play.ilovemusic.de/ilm_ilovegreatesthits/", image: "icons/ilovegreatesthits.png", isRadio: true, genre: "charts" },
-                            { name: "I Love Hardstyle", url: "https://play.ilovemusic.de/ilm_ilovehardstyle/", image: "icons/ilovehardstyle.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Hip Hop", url: "https://play.ilovemusic.de/ilm_ilovehiphop/", image: "icons/ilovehiphop.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Hip Hop 2026", url: "https://play.ilovemusic.de/ilm_hiphop-2023-jahrescharts/", image: "icons/ilovehiphop2026.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovehiphophistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Hit-Quiz", url: "https://play.ilovemusic.de/ilm-ihit-quiz/", image: "icons/ilovehitquiz.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Hits 2026", url: "https://play.ilovemusic.de/ilm_hits-2023-jahrescharts/", image: "icons/ilovehits2026.png", isRadio: true, genre: "charts" },
-                            { name: "I Love Hits History", url: "https://play.ilovemusic.de/ilm_ilovehitshistory/", image: "icons/ilovehitshistory.png", isRadio: true, genre: "pop" },
-                            { name: "I Love K-Pop", url: "https://play.ilovemusic.de/ilm-ilovekpop/", image: "icons/ilovekpop.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Mainstage", url: "https://play.ilovemusic.de/ilm_ilovemainstagemadness/", image: "icons/ilovemainstage.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Malle", url: "https://play.ilovemusic.de/ilm_ilovemalle/", image: "icons/ilovemalle.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Mashup", url: "https://play.ilovemusic.de/ilm_ilovemashup/", image: "icons/ilovemashup.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Music & Chill", url: "https://play.ilovemusic.de/ilm_ilovemusicandchill/", image: "icons/ilovemusicandchill.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Party Hard", url: "https://play.ilovemusic.de/ilm_ilovepartyhard/", image: "icons/ilovepartyhard.png", isRadio: true, genre: "dance" },
-                            { name: "I Love Rock Radio", url: "https://play.ilovemusic.de/ilm_iloveradiorock/", image: "icons/iloverock.png", isRadio: true, genre: "rock" },
-                            { name: "I Love Sugar Radio", url: "https://play.ilovemusic.de/ilm_ilovesugarradio/", image: "icons/ilovesugarradio.png", isRadio: true, genre: "dance" },
-                            { name: "I Love The 90s", url: "https://play.ilovemusic.de/ilm_ilovethe90s/", image: "icons/ilovethe90s.png", isRadio: true, genre: "throwback" },
-                            { name: "I Love The Beach", url: "https://play.ilovemusic.de/ilm_ilovethebeach/", image: "icons/ilovethebeach.png", isRadio: true, genre: "pop" },
-                            { name: "I Love The Summer", url: "https://play.ilovemusic.de/ilm-ilovethesummer/mp3-192/", image: "icons/ilovethesummer.png", isRadio: true, genre: "pop" },
-                            { name: "I Love The Sun", url: "https://play.ilovemusic.de/ilm_ilovethesun/", image: "icons/ilovethesun.png", isRadio: true, genre: "pop" },
-                            { name: "I Love Tomorrowland", url: "https://play.ilovemusic.de/ilm-itomorrowland_one_world_radio_germany/", image: "icons/ilovetomorrowland.png", isRadio: true, genre: "dance" }
+                            { id: "iloveradio", name: "I Love Radio", url: "https://play.ilovemusic.de/ilm_iloveradio/", image: "icons/iloveradio.png", isRadio: true, genre: "charts" },
+                            { id: "ilove2dance", name: "I Love 2 Dance", url: "https://play.ilovemusic.de/ilm_ilove2dance/", image: "icons/ilove2dance.png", isRadio: true, genre: "dance" },
+                            { id: "ilove2000throwbacks", name: "I Love 2000+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2000throwbacks/", image: "icons/ilove2000throwbacks.png", isRadio: true, genre: "throwback" },
+                            { id: "ilove2010throwbacks", name: "I Love 2010+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2010throwbacks/", image: "icons/ilove2010throwbacks.png", isRadio: true, genre: "throwback" },
+                            { id: "ilovebass", name: "I Love Bass (by HBZ)", url: "https://play.ilovemusic.de/ilm_ilovebass/", image: "icons/ilovebass.png", isRadio: true, genre: "dance" },
+                            { id: "ilovebiggestpophits", name: "I Love Biggest Pop Hits", url: "https://play.ilovemusic.de/ilm_ilovenewpop/", image: "icons/ilovebiggestpophits.png", isRadio: true, genre: "charts" },
+                            { id: "ilovebuffelradio", name: "I Love Büffelradio", url: "https://play.ilovemusic.de/ilm-buffelradio/mp3-192/", image: "icons/ilovebuffelradio.png", isRadio: true, genre: "dance" },
+                            { id: "ilovechillhop", name: "I Love Chillhop", url: "https://play.ilovemusic.de/ilm_ilovechillhop/", image: "icons/ilovechillhop.png", isRadio: true, genre: "pop" },
+                            { id: "ilovechilloutbeats", name: "I Love Chillout Beats", url: "https://play.ilovemusic.de/ilm-ichillout_beats/", image: "icons/ilovechilloutbeats.png", isRadio: true, genre: "pop" },
+                            { id: "ilovedance2026", name: "I Love Dance 2026", url: "https://play.ilovemusic.de/ilm_dance-2023-jahrescharts/", image: "icons/ilovedance2026.png", isRadio: true, genre: "dance" },
+                            { id: "ilovedancehistory", name: "I Love Dance History", url: "https://play.ilovemusic.de/ilm_ilovedancehistory/", image: "icons/ilovedancehistory.png", isRadio: true, genre: "dance" },
+                            { id: "ilovedeutschrapbeste", name: "I Love Deutschrap Beste", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapbeste/", image: "icons/ilovedeutschrapbeste.png", isRadio: true, genre: "hiphop" },
+                            { id: "ilovedeutschrapfirst", name: "I Love Deutschrap First!", url: "https://play.ilovemusic.de/ilm_ilovedeutschrapfirst/", image: "icons/ilovedeutschrapfirst.png", isRadio: true, genre: "hiphop" },
+                            { id: "ilovegreatesthits", name: "I Love Greatest Hits", url: "https://play.ilovemusic.de/ilm_ilovegreatesthits/", image: "icons/ilovegreatesthits.png", isRadio: true, genre: "charts" },
+                            { id: "ilovehardstyle", name: "I Love Hardstyle", url: "https://play.ilovemusic.de/ilm_ilovehardstyle/", image: "icons/ilovehardstyle.png", isRadio: true, genre: "dance" },
+                            { id: "ilovehiphop", name: "I Love Hip Hop", url: "https://play.ilovemusic.de/ilm_ilovehiphop/", image: "icons/ilovehiphop.png", isRadio: true, genre: "hiphop" },
+                            { id: "ilovehiphop2026", name: "I Love Hip Hop 2026", url: "https://play.ilovemusic.de/ilm_hiphop-2023-jahrescharts/", image: "icons/ilovehiphop2026.png", isRadio: true, genre: "hiphop" },
+                            { id: "ilovehiphophistory", name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovehiphophistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" },
+                            { id: "ilovehitquiz", name: "I Love Hit-Quiz", url: "https://play.ilovemusic.de/ilm-ihit-quiz/", image: "icons/ilovehitquiz.png", isRadio: true, genre: "pop" },
+                            { id: "ilovehits2026", name: "I Love Hits 2026", url: "https://play.ilovemusic.de/ilm_hits-2023-jahrescharts/", image: "icons/ilovehits2026.png", isRadio: true, genre: "charts" },
+                            { id: "ilovehitshistory", name: "I Love Hits History", url: "https://play.ilovemusic.de/ilm_ilovehitshistory/", image: "icons/ilovehitshistory.png", isRadio: true, genre: "pop" },
+                            { id: "ilovekpop", name: "I Love K-Pop", url: "https://play.ilovemusic.de/ilm-ilovekpop/", image: "icons/ilovekpop.png", isRadio: true, genre: "pop" },
+                            { id: "ilovemainstage", name: "I Love Mainstage", url: "https://play.ilovemusic.de/ilm_ilovemainstagemadness/", image: "icons/ilovemainstage.png", isRadio: true, genre: "dance" },
+                            { id: "ilovemalle", name: "I Love Malle", url: "https://play.ilovemusic.de/ilm_ilovemalle/", image: "icons/ilovemalle.png", isRadio: true, genre: "dance" },
+                            { id: "ilovemashup", name: "I Love Mashup", url: "https://play.ilovemusic.de/ilm_ilovemashup/", image: "icons/ilovemashup.png", isRadio: true, genre: "dance" },
+                            { id: "ilovemusicandchill", name: "I Love Music & Chill", url: "https://play.ilovemusic.de/ilm_ilovemusicandchill/", image: "icons/ilovemusicandchill.png", isRadio: true, genre: "pop" },
+                            { id: "ilovepartyhard", name: "I Love Party Hard", url: "https://play.ilovemusic.de/ilm_ilovepartyhard/", image: "icons/ilovepartyhard.png", isRadio: true, genre: "dance" },
+                            { id: "iloverock", name: "I Love Rock Radio", url: "https://play.ilovemusic.de/ilm_iloveradiorock/", image: "icons/iloverock.png", isRadio: true, genre: "rock" },
+                            { id: "ilovesugarradio", name: "I Love Sugar Radio", url: "https://play.ilovemusic.de/ilm_ilovesugarradio/", image: "icons/ilovesugarradio.png", isRadio: true, genre: "dance" },
+                            { id: "ilovethe90s", name: "I Love The 90s", url: "https://play.ilovemusic.de/ilm_ilovethe90s/", image: "icons/ilovethe90s.png", isRadio: true, genre: "throwback" },
+                            { id: "ilovethebeach", name: "I Love The Beach", url: "https://play.ilovemusic.de/ilm_ilovethebeach/", image: "icons/ilovethebeach.png", isRadio: true, genre: "pop" },
+                            { id: "ilovethesummer", name: "I Love The Summer", url: "https://play.ilovemusic.de/ilm-ilovethesummer/mp3-192/", image: "icons/ilovethesummer.png", isRadio: true, genre: "pop" },
+                            { id: "ilovethesun", name: "I Love The Sun", url: "https://play.ilovemusic.de/ilm_ilovethesun/", image: "icons/ilovethesun.png", isRadio: true, genre: "pop" },
+                            { id: "ilovetomorrowland", name: "I Love Tomorrowland", url: "https://play.ilovemusic.de/ilm-itomorrowland_one_world_radio_germany/", image: "icons/ilovetomorrowland.png", isRadio: true, genre: "dance" }
                         ]
                     },
                     {
                         title: "Absolut Radio Familie",
                         apps: [
-                            { name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true, genre: "charts" },
-                            { name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/absolutgermany.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/absoluttop2000er.png", isRadio: true, genre: "throwback" },
-                            { name: "Absolut Relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/absolutrelax.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut Bella", url: "https://absolut-bella.live-sm.absolutradio.de/absolut-bella/stream/mp3", image: "icons/absolutbella.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut Classics", url: "https://absolut-oldieclassics.live-sm.absolutradio.de/absolut-oldieclassics/stream/mp3", image: "icons/absolutclassics.png", isRadio: true, genre: "throwback" },
-                            { name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/absolutcoffee.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/absolutlovesongs.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/absolut80iger.png", isRadio: true, genre: "throwback" },
-                            { name: "Absolut Top Clubnight", url: "https://absolut-topclubnight.live-sm.absolutradio.de/absolut-topclubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true, genre: "dance" },
-                            { name: "Absolut musicXL", url: "https://absolut-musicxl.live-sm.absolutradio.de/absolut-musicxl/stream/mp3", image: "icons/absolutmusicxl.png", isRadio: true, genre: "pop" },
-                            { name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/absolutrock.png", isRadio: true, genre: "rock" },
-                            { name: "Absolut Radio AI", url: "https://absolut-radioai.live-sm.absolutradio.de/absolut-radioai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true, genre: "dance" },
-                            { name: "Absolut Christmas Time", url: "https://absolut-christmastime.live-sm.absolutradio.de/absolut-christmastime/stream/mp3", image: "icons/absolutxmas.png", isRadio: true, genre: "pop" }
+                            { id: "absoluthot", name: "Absolut Hot", url: "https://absolut-hot.live-sm.absolutradio.de/absolut-hot/stream/mp3", image: "icons/absoluthot.png", isRadio: true, genre: "charts" },
+                            { id: "absolutgermany", name: "Absolut Germany", url: "https://absolut-germany.live-sm.absolutradio.de/absolut-germany/stream/mp3", image: "icons/absolutgermany.png", isRadio: true, genre: "pop" },
+                            { id: "absoluttop2000er", name: "Absolut Top 2000er", url: "https://absolut-top2000er.live-sm.absolutradio.de/absolut-top2000er/stream/mp3", image: "icons/absoluttop2000er.png", isRadio: true, genre: "throwback" },
+                            { id: "absolutrelax", name: "Absolut Relax", url: "https://absolut-relax.live-sm.absolutradio.de/absolut-relax/stream/mp3", image: "icons/absolutrelax.png", isRadio: true, genre: "pop" },
+                            { id: "absolutbella", name: "Absolut Bella", url: "https://absolut-bella.live-sm.absolutradio.de/absolut-bella/stream/mp3", image: "icons/absolutbella.png", isRadio: true, genre: "pop" },
+                            { id: "absolutclassics", name: "Absolut Classics", url: "https://absolut-oldieclassics.live-sm.absolutradio.de/absolut-oldieclassics/stream/mp3", image: "icons/absolutclassics.png", isRadio: true, genre: "throwback" },
+                            { id: "absolutcoffee", name: "Absolut Coffeemusic", url: "https://absolut-coffeemusic.live-sm.absolutradio.de/absolut-coffeemusic/stream/mp3", image: "icons/absolutcoffee.png", isRadio: true, genre: "pop" },
+                            { id: "absolutlovesongs", name: "Absolut Lovesongs", url: "https://absolut-lovesongs.live-sm.absolutradio.de/absolut-lovesongs/stream/mp3", image: "icons/absolutlovesongs.png", isRadio: true, genre: "pop" },
+                            { id: "absolut80iger", name: "Absolut 80er", url: "https://absolut-80er.live-sm.absolutradio.de/absolut-80er/stream/mp3", image: "icons/absolut80iger.png", isRadio: true, genre: "throwback" },
+                            { id: "absoluttopclubnight", name: "Absolut Top Clubnight", url: "https://absolut-topclubnight.live-sm.absolutradio.de/absolut-topclubnight/stream/mp3", image: "icons/absoluttopclubnight.png", isRadio: true, genre: "dance" },
+                            { id: "absolutmusicxl", name: "Absolut musicXL", url: "https://absolut-musicxl.live-sm.absolutradio.de/absolut-musicxl/stream/mp3", image: "icons/absolutmusicxl.png", isRadio: true, genre: "pop" },
+                            { id: "absolutrock", name: "Absolut Rock", url: "https://absolut-rock.live-sm.absolutradio.de/absolut-rock/stream/mp3", image: "icons/absolutrock.png", isRadio: true, genre: "rock" },
+                            { id: "absolutradioai", name: "Absolut Radio AI", url: "https://absolut-radioai.live-sm.absolutradio.de/absolut-radioai/stream/mp3", image: "icons/absolutradioai.png", isRadio: true, genre: "dance" },
+                            { id: "absolutxmas", name: "Absolut Christmas Time", url: "https://absolut-christmastime.live-sm.absolutradio.de/absolut-christmastime/stream/mp3", image: "icons/absolutxmas.png", isRadio: true, genre: "pop" }
                         ]
                     },
                     {
                         title: "90s90s Radio Familie",
                         apps: [
-                            { name: "90s90s Radio", url: "https://streams.90s90s.de/90s90s/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true, genre: "throwback" },
-                            { name: "90s90s Dance", url: "https://streams.90s90s.de/dance/mp3-128/stream.mp3", image: "icons/90s90seurodance.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s In The Mix", url: "https://streams.90s90s.de/inthemix/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s Rock", url: "https://streams.90s90s.de/rock/mp3-128/stream.mp3", image: "icons/90s90srock.png", isRadio: true, genre: "rock" },
-                            { name: "90s90s Hip-Hop", url: "https://streams.90s90s.de/hiphop/mp3-128/stream.mp3", image: "icons/90s90shiphop.png", isRadio: true, genre: "hiphop" },
-                            { name: "90s90s Deutsch-HipHop", url: "https://streams.90s90s.de/hiphopdeutsch/mp3-128/stream.mp3", image: "icons/90s90shiphopdeutsch.png", isRadio: true, genre: "hiphop" },
-                            { name: "90s90s Techno", url: "https://streams.90s90s.de/techno/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s Trance", url: "https://streams.90s90s.de/trance/mp3-128/stream.mp3", image: "icons/90s90strance.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s Boygroups", url: "https://streams.90s90s.de/boygroup/mp3-128/stream.mp3", image: "icons/90s90sboygroups.png", isRadio: true, genre: "throwback" },
-                            { name: "90s90s Sommerhits", url: "https://streams.90s90s.de/90s90s-sommerhits/mp3-128/stream.mp3", image: "icons/90s90ssommerhits.png", isRadio: true, genre: "throwback" },
-                            { name: "90s90s In The Mix Spezial", url: "https://streams.90s90s.de/inthemix-spezial/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s Radiorave", url: "https://streams.90s90s.de/radiorave/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s Chillout", url: "https://streams.90s90s.de/chillout/mp3-128/stream.mp3", image: "icons/90s90schillout.png", isRadio: true, genre: "pop" },
-                            { name: "90s90s Love Songs", url: "https://streams.90s90s.de/love/mp3-128/stream.mp3", image: "icons/90s90slovesongs.png", isRadio: true, genre: "throwback" },
-                            { name: "90s90s Soul&R&B", url: "https://streams.90s90s.de/rnb/mp3-128/stream.mp3", image: "icons/90s90srnb.png", isRadio: true, genre: "hiphop" },
-                            { name: "90s90s Hessen", url: "https://streams.90s90s.de/hessen/mp3-128/stream.mp3", image: "icons/90s90shessen.png", isRadio: true, genre: "lokal" },
-                            { name: "90s90s Sachsen", url: "https://streams.90s90s.de/sachsen/mp3-128/stream.mp3", image: "icons/90s90ssachsen.png", isRadio: true, genre: "lokal" },
-                            { name: "90s90s Clubhits", url: "https://streams.90s90s.de/clubhits/mp3-128/stream.mp3", image: "icons/90s90sclubhits.png", isRadio: true, genre: "dance" },
-                            { name: "90s90s House", url: "https://streams.90s90s.de/house/mp3-128/stream.mp3", image: "icons/90s90shouse.png", isRadio: true, genre: "dance" }
+                            { id: "s90s90s", name: "90s90s Radio", url: "https://streams.90s90s.de/90s90s/mp3-128/stream.mp3", image: "icons/90s90s90s00s.png", isRadio: true, genre: "throwback" },
+                            { id: "s90sdance", name: "90s90s Dance", url: "https://streams.90s90s.de/dance/mp3-128/stream.mp3", image: "icons/90s90seurodance.png", isRadio: true, genre: "dance" },
+                            { id: "s90sinthemix", name: "90s90s In The Mix", url: "https://streams.90s90s.de/inthemix/mp3-128/stream.mp3", image: "icons/90s90sinthemix.png", isRadio: true, genre: "dance" },
+                            { id: "s90srock", name: "90s90s Rock", url: "https://streams.90s90s.de/rock/mp3-128/stream.mp3", image: "icons/90s90srock.png", isRadio: true, genre: "rock" },
+                            { id: "s90shiphop", name: "90s90s Hip-Hop", url: "https://streams.90s90s.de/hiphop/mp3-128/stream.mp3", image: "icons/90s90shiphop.png", isRadio: true, genre: "hiphop" },
+                            { id: "s90shiphopdeutsch", name: "90s90s Deutsch-HipHop", url: "https://streams.90s90s.de/hiphopdeutsch/mp3-128/stream.mp3", image: "icons/90s90shiphopdeutsch.png", isRadio: true, genre: "hiphop" },
+                            { id: "s90stechno", name: "90s90s Techno", url: "https://streams.90s90s.de/techno/mp3-128/stream.mp3", image: "icons/90s90stechno.png", isRadio: true, genre: "dance" },
+                            { id: "s90strance", name: "90s90s Trance", url: "https://streams.90s90s.de/trance/mp3-128/stream.mp3", image: "icons/90s90strance.png", isRadio: true, genre: "dance" },
+                            { id: "s90sboygroups", name: "90s90s Boygroups", url: "https://streams.90s90s.de/boygroup/mp3-128/stream.mp3", image: "icons/90s90sboygroups.png", isRadio: true, genre: "throwback" },
+                            { id: "s90ssommerhits", name: "90s90s Sommerhits", url: "https://streams.90s90s.de/90s90s-sommerhits/mp3-128/stream.mp3", image: "icons/90s90ssommerhits.png", isRadio: true, genre: "throwback" },
+                            { id: "s90schillout", name: "90s90s Chillout", url: "https://streams.90s90s.de/chillout/mp3-128/stream.mp3", image: "icons/90s90schillout.png", isRadio: true, genre: "pop" },
+                            { id: "s90slovesongs", name: "90s90s Love Songs", url: "https://streams.90s90s.de/love/mp3-128/stream.mp3", image: "icons/90s90slovesongs.png", isRadio: true, genre: "throwback" },
+                            { id: "s90srnb", name: "90s90s Soul&R&B", url: "https://streams.90s90s.de/rnb/mp3-128/stream.mp3", image: "icons/90s90srnb.png", isRadio: true, genre: "hiphop" },
+                            { id: "s90shessen", name: "90s90s Hessen", url: "https://streams.90s90s.de/hessen/mp3-128/stream.mp3", image: "icons/90s90shessen.png", isRadio: true, genre: "lokal" },
+                            { id: "s90ssachsen", name: "90s90s Sachsen", url: "https://streams.90s90s.de/sachsen/mp3-128/stream.mp3", image: "icons/90s90ssachsen.png", isRadio: true, genre: "lokal" },
+                            { id: "s90sclubhits", name: "90s90s Clubhits", url: "https://streams.90s90s.de/clubhits/mp3-128/stream.mp3", image: "icons/90s90sclubhits.png", isRadio: true, genre: "dance" },
+                            { id: "s90shouse", name: "90s90s House", url: "https://streams.90s90s.de/house/mp3-128/stream.mp3", image: "icons/90s90shouse.png", isRadio: true, genre: "dance" }
                         ]
                     },
                     {
                         title: "bigFM Radio Familie",
                         apps: [
-                            { name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true, genre: "charts" },
-                            { name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Hessen", url: "https://stream.bigfm.de/hessen/mp3-128/private", image: "icons/bigfmhessen.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Saarland", url: "https://stream.bigfm.de/saarland/mp3-128/private", image: "icons/bigfmsaarland.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Berlin", url: "https://stream.bigfm.de/berlin/mp3-128/private", image: "icons/bigfmberlin.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Hamburg", url: "https://stream.bigfm.de/hamburg/mp3-128/private", image: "icons/bigfmhamburg.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true, genre: "lokal" },
-                            { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "charts" },
-                            { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM EDM & Progressive", url: "https://stream.bigfm.de/edm/mp3-128/private", image: "icons/bigfmedm.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Hip-Hop Radio", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM US Rap & Hip-Hop", url: "https://stream.bigfm.de/usrap/mp3-128/private", image: "icons/bigfmusrap.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Oldschool Rap & Hip-Hop", url: "https://stream.bigfm.de/oldschooldeutschrap/mp3-128/private", image: "icons/bigfmoldschoolrap.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Oldschool Deutschrap", url: "https://stream.bigfm.de/oldschoolrap/mp3-128/private", image: "icons/bigfmoldschooldeutschrap.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Deutschrap Rasiert", url: "https://stream.bigfm.de/deutschrap/mp3-128/private", image: "icons/bigfmdeutschrap.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Deutschrap rasiert brandneu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapbrandneu.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Apache 207", url: "https://stream.bigfm.de/apache/mp3-128/private", image: "icons/bigfmapache.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM RnB", url: "https://stream.bigfm.de/rnb/mp3-128/private", image: "icons/bigfmrnb.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Throwback", url: "https://stream.bigfm.de/throwback/mp3-128/private", image: "icons/bigfmthrowback.png", isRadio: true, genre: "throwback" },
-                            { name: "bigFM 2000er", url: "https://stream.bigfm.de/2000er/mp3-128/private", image: "icons/bigfm2000er.png", isRadio: true, genre: "throwback" },
-                            { name: "bigFM 2010er", url: "https://stream.bigfm.de/2010er/mp3-128/private", image: "icons/bigfm2010er.png", isRadio: true, genre: "throwback" },
-                            { name: "bigFM Party", url: "https://stream.bigfm.de/party/mp3-128/private", image: "icons/bigfmparty.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Groovenight - HipHop DJ Mix", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM Turn UP", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Mashup", url: "https://stream.bigfm.de/mashup/mp3-128/private", image: "icons/bigfmmashup.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM World Beats", url: "https://stream.bigfm.de/worldbeats/mp3-128/private", image: "icons/bigfmworldbeats.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Latin Beats", url: "https://stream.bigfm.de/latinbeats/mp3-128/private", image: "icons/bigfmlatin.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Balkan", url: "https://stream.bigfm.de/balkan/mp3-128/private", image: "icons/bigfmbalkan.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM MUZYKA", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM Afrobeats", url: "https://stream.bigfm.de/afrobeats/mp3-128/private", image: "icons/bigfmafrobeats.png", isRadio: true, genre: "hiphop" },
-                            { name: "bigFM SES", url: "https://stream.bigfm.de/ses/mp3-128/private", image: "icons/bigfmses.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM Rock", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true, genre: "rock" },
-                            { name: "bigFM Sunset Lounge", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmsunsetlounge.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM LoFi Focus", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmlofi.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM Sports & Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true, genre: "dance" },
-                            { name: "bigFM Tomorrowland One World Radio", url: "https://stream.bigfm.de/tomorrowland/mp3-128/private", image: "icons/bigfmtomorrowland.png", isRadio: true, genre: "dance" },
-                            { name: "bigGPT", url: "https://stream.bigfm.de/biggpt/mp3-128/private", image: "icons/biggpt.png", isRadio: true, genre: "pop" },
-                            { name: "bigFM Xmas", url: "https://stream.bigfm.de/xmas/mp3-128/private", image: "icons/bigfmxmas.png", isRadio: true, genre: "pop" }
+                            { id: "bigfm", name: "bigFM", url: "https://stream.bigfm.de/deutschland/mp3-128/private", image: "icons/bigfm.png", isRadio: true, genre: "charts" },
+                            { id: "bigfmbw", name: "bigFM Baden-Württemberg", url: "https://stream.bigfm.de/bw/mp3-128/private", image: "icons/bigfmbw.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmnrw", name: "bigFM Nordrhein-Westfalen", url: "https://stream.bigfm.de/nrw/mp3-128/private", image: "icons/bigfmnrw.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmrlp", name: "bigFM Rheinland-Pfalz", url: "https://stream.bigfm.de/rlp/mp3-128/private", image: "icons/bigfmrlp.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmhessen", name: "bigFM Hessen", url: "https://stream.bigfm.de/hessen/mp3-128/private", image: "icons/bigfmhessen.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmsaarland", name: "bigFM Saarland", url: "https://stream.bigfm.de/saarland/mp3-128/private", image: "icons/bigfmsaarland.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmberlin", name: "bigFM Berlin", url: "https://stream.bigfm.de/berlin/mp3-128/private", image: "icons/bigfmberlin.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmhamburg", name: "bigFM Hamburg", url: "https://stream.bigfm.de/hamburg/mp3-128/private", image: "icons/bigfmhamburg.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmbremen", name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmniedersachsen", name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmbayern", name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true, genre: "lokal" },
+                            { id: "bigfmcharts", name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "charts" },
+                            { id: "bigfmjustmusic", name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true, genre: "pop" },
+                            { id: "bigfmdance", name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmhousebeats", name: "bigFM House Beats", url: "https://stream.bigfm.de/house/mp3-128/private", image: "icons/bigfmhousebeats.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmedm", name: "bigFM EDM & Progressive", url: "https://stream.bigfm.de/edm/mp3-128/private", image: "icons/bigfmedm.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmhiphop", name: "bigFM Hip-Hop Radio", url: "https://stream.bigfm.de/hiphop/mp3-128/private", image: "icons/bigfmhiphop.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmusrap", name: "bigFM US Rap & Hip-Hop", url: "https://stream.bigfm.de/usrap/mp3-128/private", image: "icons/bigfmusrap.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmoldschoolrap", name: "bigFM Oldschool Rap & Hip-Hop", url: "https://stream.bigfm.de/oldschooldeutschrap/mp3-128/private", image: "icons/bigfmoldschoolrap.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmoldschooldeutschrap", name: "bigFM Oldschool Deutschrap", url: "https://stream.bigfm.de/oldschoolrap/mp3-128/private", image: "icons/bigfmoldschooldeutschrap.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmdeutschrap", name: "bigFM Deutschrap Rasiert", url: "https://stream.bigfm.de/deutschrap/mp3-128/private", image: "icons/bigfmdeutschrap.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmdeutschrapbrandneu", name: "bigFM Deutschrap rasiert brandneu", url: "https://stream.bigfm.de/deutschrapbrandneu/mp3-128/private", image: "icons/bigfmdeutschrapbrandneu.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmapache", name: "bigFM Apache 207", url: "https://stream.bigfm.de/apache/mp3-128/private", image: "icons/bigfmapache.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmrnb", name: "bigFM RnB", url: "https://stream.bigfm.de/rnb/mp3-128/private", image: "icons/bigfmrnb.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmthrowback", name: "bigFM Throwback", url: "https://stream.bigfm.de/throwback/mp3-128/private", image: "icons/bigfmthrowback.png", isRadio: true, genre: "throwback" },
+                            { id: "bigfm2000er", name: "bigFM 2000er", url: "https://stream.bigfm.de/2000er/mp3-128/private", image: "icons/bigfm2000er.png", isRadio: true, genre: "throwback" },
+                            { id: "bigfm2010er", name: "bigFM 2010er", url: "https://stream.bigfm.de/2010er/mp3-128/private", image: "icons/bigfm2010er.png", isRadio: true, genre: "throwback" },
+                            { id: "bigfmparty", name: "bigFM Party", url: "https://stream.bigfm.de/party/mp3-128/private", image: "icons/bigfmparty.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmgroovenight", name: "bigFM Groovenight", url: "https://stream.bigfm.de/groovenight/mp3-128/private", image: "icons/bigfmgroovenight.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmturnup", name: "bigFM Turn UP", url: "https://stream.bigfm.de/turnup/mp3-128/private", image: "icons/bigfmturnup.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmmashup", name: "bigFM Mashup", url: "https://stream.bigfm.de/mashup/mp3-128/private", image: "icons/bigfmmashup.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmworldbeats", name: "bigFM World Beats", url: "https://stream.bigfm.de/worldbeats/mp3-128/private", image: "icons/bigfmworldbeats.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmlatin", name: "bigFM Latin Beats", url: "https://stream.bigfm.de/latinbeats/mp3-128/private", image: "icons/bigfmlatin.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmbalkan", name: "bigFM Balkan", url: "https://stream.bigfm.de/balkan/mp3-128/private", image: "icons/bigfmbalkan.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmuzyka", name: "bigFM MUZYKA", url: "https://stream.bigfm.de/muzyka/mp3-128/private", image: "icons/bigfmuzyka.png", isRadio: true, genre: "pop" },
+                            { id: "bigfmafrobeats", name: "bigFM Afrobeats", url: "https://stream.bigfm.de/afrobeats/mp3-128/private", image: "icons/bigfmafrobeats.png", isRadio: true, genre: "hiphop" },
+                            { id: "bigfmses", name: "bigFM SES", url: "https://stream.bigfm.de/ses/mp3-128/private", image: "icons/bigfmses.png", isRadio: true, genre: "pop" },
+                            { id: "bigfmrock", name: "bigFM Rock", url: "https://stream.bigfm.de/rockfm/mp3-128/private", image: "icons/bigfmrock.png", isRadio: true, genre: "rock" },
+                            { id: "bigfmsunsetlounge", name: "bigFM Sunset Lounge", url: "https://stream.bigfm.de/lofi/mp3-128/private", image: "icons/bigfmsunsetlounge.png", isRadio: true, genre: "pop" },
+                            { id: "bigfmworkout", name: "bigFM Sports & Workout", url: "https://stream.bigfm.de/workout/mp3-128/private", image: "icons/bigfmworkout.png", isRadio: true, genre: "dance" },
+                            { id: "bigfmtomorrowland", name: "bigFM Tomorrowland", url: "https://stream.bigfm.de/tomorrowland/mp3-128/private", image: "icons/bigfmtomorrowland.png", isRadio: true, genre: "dance" },
+                            { id: "biggpt", name: "bigGPT", url: "https://stream.bigfm.de/biggpt/mp3-128/private", image: "icons/biggpt.png", isRadio: true, genre: "pop" },
+                            { id: "bigfmxmas", name: "bigFM Xmas", url: "https://stream.bigfm.de/xmas/mp3-128/private", image: "icons/bigfmxmas.png", isRadio: true, genre: "pop" }
                         ]
                     },
                     {
                         title: "ARD / WDR Programme",
                         apps: [
-                            { name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true, genre: "charts" },
-                            { name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true, genre: "pop" },
-                            { name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true, genre: "lokal" },
-                            { name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true, genre: "lokal" },
-                            { name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true, genre: "throwback" },
-                            { name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true, genre: "lokal" }
+                            { id: "wdr1live", name: "1LIVE", url: "https://wdr-1live-live.icecast.wdr.de/wdr/1live/live/mp3/128/stream.mp3", image: "icons/1live.png", isRadio: true, genre: "charts" },
+                            { id: "wdr1livediggi", name: "1LIVE Diggi", url: "https://wdr-1live-diggi.icecast.wdr.de/wdr/1live/diggi/mp3/128/stream.mp3", image: "icons/1livediggi.png", isRadio: true, genre: "pop" },
+                            { id: "wdr2", name: "WDR 2 (Rhein Ruhr)", url: "https://wdr-wdr2-rheinruhr.icecast.wdr.de/wdr/wdr2/rheinruhr/mp3/128/stream.mp3", image: "icons/wdr2.png", isRadio: true, genre: "lokal" },
+                            { id: "wdr3", name: "WDR 3", url: "https://wdr-wdr3-live.icecast.wdr.de/wdr/wdr3/live/mp3/128/stream.mp3", image: "icons/wdr3.png", isRadio: true, genre: "lokal" },
+                            { id: "wdr4", name: "WDR 4", url: "https://wdr-wdr4-live.icecast.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", image: "icons/wdr4.png", isRadio: true, genre: "throwback" },
+                            { id: "wdr5", name: "WDR 5", url: "https://wdr-wdr5-live.icecast.wdr.de/wdr/wdr5/live/mp3/128/stream.mp3", image: "icons/wdr5.png", isRadio: true, genre: "lokal" }
                         ]
                     },
                     {
                         title: "NRW-Lokalsender (Unna & Co.)",
                         apps: [
-                            { name: "Antenne Unna", url: "https://antenneunna--di--nacs-ais-lgc--07--cdn.cast.addradio.de/antenneunna/live/mp3/high", image: "icons/antenneunna.png", isRadio: true, genre: "lokal" },
-                            { name: "Radio 91.2 (Dortmund)", url: "https://radio912--di--nacs-ais-lgc--0c--cdn.cast.addradio.de/radio912/live/mp3/high", image: "icons/radio912.png", isRadio: true, genre: "lokal" },
-                            { name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true, genre: "lokal" },
-                            { name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true, genre: "lokal" }
+                            { id: "antenneunna", name: "Antenne Unna", url: "https://antenneunna--di--nacs-ais-lgc--07--cdn.cast.addradio.de/antenneunna/live/mp3/high", image: "icons/antenneunna.png", isRadio: true, genre: "lokal" },
+                            { id: "radio912", name: "Radio 91.2 (Dortmund)", url: "https://radio912--di--nacs-ais-lgc--0c--cdn.cast.addradio.de/radio912/live/mp3/high", image: "icons/radio912.png", isRadio: true, genre: "lokal" },
+                            { id: "radiovest", name: "Radio Vest", url: "https://stream.lokalradio.nrw/444zd4j", image: "icons/radiovest.png", isRadio: true, genre: "lokal" },
+                            { id: "hamm", name: "Radio Hamm (Lippewelle)", url: "https://stream.lokalradio.nrw/445424j", image: "icons/hamm.png", isRadio: true, genre: "lokal" }
                         ]
                     }
                 ]
@@ -1133,8 +1107,10 @@
         let categoryIds = ['all', 'streaming', 'musik', 'navigation', 'radio'];
 
         let favorites = JSON.parse(localStorage.getItem('tesla_dashboard_favs') || '[]');
+        let recentStations = JSON.parse(localStorage.getItem('tesla_dashboard_recents') || '[]');
 
         const globalAudio = document.getElementById('globalAudioStream');
+        let currentPlayingId = '';
         let currentPlayingUrl = '';
         let currentStationName = '';
         let currentStationImage = '';
@@ -1166,7 +1142,7 @@
         let isLongPress = false;
         let pointerDownTime = 0;
 
-        function handlePointerDown(element, url, event) {
+        function handlePointerDown(element, uniqueId, url, event) {
             if (event.pointerType === 'mouse' && event.button !== 0) return;
             
             isLongPress = false;
@@ -1199,14 +1175,14 @@
             }, 750);
         }
 
-        function handlePointerUp(element, url, isRadio, name, image, event) {
+        function handlePointerUp(element, uniqueId, url, isRadio, name, image, event) {
             clearTimeout(pressTimer);
             clearTimeout(holdStartTimer);
             element.classList.remove('is-holding');
             removeBorderSvg(event.currentTarget);
             
             if (!isLongPress && (Date.now() - pointerDownTime < 700)) {
-                handleItemClick(url, isRadio, name, image);
+                handleItemClick(uniqueId, url, isRadio, name, image);
             }
         }
 
@@ -1258,18 +1234,33 @@
             return favorites.includes(appUrl);
         }
 
-        function handleItemClick(url, isRadio, name, image) {
+        function handleItemClick(uniqueId, url, isRadio, name, image) {
             if (isRadio) {
-                playRadioStream(url, name, image);
+                playRadioStream({ id: uniqueId, name: name, url: url, image: image, isRadio: true });
             } else {
                 window.open(url, '_top');
             }
         }
 
-        function playRadioStream(url, name, image) {
-            if (currentPlayingUrl === url && !globalAudio.paused) {
+        function addRecentStation(stationObj) {
+            recentStations = recentStations.filter(s => s.id !== stationObj.id);
+            recentStations.unshift(stationObj);
+            if (recentStations.length > 6) {
+                recentStations.pop();
+            }
+            localStorage.setItem('tesla_dashboard_recents', JSON.stringify(recentStations));
+        }
+
+        function playRadioStream(stationObj) {
+            let uniqueId = stationObj.id; // Einheitliche Sender-ID (z.B. "iloveradio")
+            let url = stationObj.url;
+            let name = stationObj.name;
+            let image = stationObj.image;
+
+            if (currentPlayingId === stationObj.id && !globalAudio.paused) {
                 globalAudio.pause();
                 globalAudio.src = "";
+                currentPlayingId = '';
                 currentPlayingUrl = '';
                 document.title = "Tesla Apps Dashboard";
                 stopMetadataPolling();
@@ -1277,9 +1268,12 @@
                 globalAudio.pause();
                 globalAudio.currentTime = 0;
                 
+                currentPlayingId = uniqueId;
                 currentPlayingUrl = url;
                 currentStationName = name;
                 currentStationImage = image;
+
+                addRecentStation(stationObj);
 
                 document.title = name;
                 globalAudio.src = url;
@@ -1292,6 +1286,7 @@
                 }).catch(e => {
                     globalAudio.pause();
                     globalAudio.src = "";
+                    currentPlayingId = '';
                     currentPlayingUrl = '';
                     document.title = "Tesla Apps Dashboard";
                     stopMetadataPolling();
@@ -1299,6 +1294,7 @@
                 });
             }
             updatePlayingState();
+            renderDashboard(); 
         }
 
         function updateMediaSession(title, artist, artworkUrl) {
@@ -1374,8 +1370,8 @@
             });
 
             const radioIconBtn = document.getElementById('radioSymbolBtn');
-            if (currentPlayingUrl && !globalAudio.paused) {
-                document.querySelectorAll(`[data-url="${CSS.escape(currentPlayingUrl)}"]`).forEach(el => {
+            if (currentPlayingId && !globalAudio.paused) {
+                document.querySelectorAll(`[data-instance-id="${CSS.escape(currentPlayingId)}"]`).forEach(el => {
                     el.classList.add('playing');
                 });
                 radioIconBtn.classList.add('playing-radio');
@@ -1490,7 +1486,7 @@
                             <div class="app-list">
                     `;
                     favAppsList.forEach(app => {
-                        let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                        let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                         let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                         let isFav = isFavorite(app.url);
                         let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
@@ -1499,9 +1495,9 @@
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         favHTML += `
-                            <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                 onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                            <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                 onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                 onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                  onpointercancel="handlePointerCancel(this)"
                                  onpointerleave="handlePointerCancel(this)">
                                 <div class="app-list-icon">
@@ -1536,7 +1532,7 @@
                             <div class="app-list">
                     `;
                     targetApps.forEach(app => {
-                        let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                        let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                         let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                         let isFav = isFavorite(app.url);
                         let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
@@ -1545,9 +1541,9 @@
                             : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                         sectionHTML += `
-                            <div class="${isPlayingClass}" data-url="${app.url}" 
-                                 onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                 onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                            <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                 onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                 onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                  onpointercancel="handlePointerCancel(this)"
                                  onpointerleave="handlePointerCancel(this)">
                                 <div class="app-list-icon">
@@ -1584,7 +1580,7 @@
                                 <div class="app-list">
                         `;
                         grouped[key].forEach(app => {
-                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-list-item playing' : 'app-list-item';
                             let isFav = isFavorite(app.url);
                             let favClass = isFav ? 'list-fav-btn is-fav' : 'list-fav-btn';
@@ -1593,9 +1589,9 @@
                                 : `<span class="placeholder" style="display:none; font-size:16px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                     onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                      onpointercancel="handlePointerCancel(this)"
                                      onpointerleave="handlePointerCancel(this)">
                                     <div class="app-list-icon">
@@ -1615,6 +1611,41 @@
 
             } else {
                 azSidebar.style.display = 'none';
+
+                if (activeCategory === 'radio' && recentStations.length > 0 && !selectedLetter && searchQuery === '' && activeGenre === 'all') {
+                    let recentHTML = `
+                        <div class="category-section is-category">
+                            <h2 class="category-title">⏱ Zuletzt gehört</h2>
+                            <div class="app-grid">
+                    `;
+                    recentStations.forEach(app => {
+                        let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
+                        let isPlayingClass = isPlaying ? ' app-item playing' : 'app-item';
+                        let isFav = isFavorite(app.url);
+                        let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
+                        let iconContent = app.image 
+                            ? `<img src="${app.image}" alt="${app.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>` 
+                            : `<span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>`;
+
+                        recentHTML += `
+                            <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                 onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                 onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', true, '${app.name}', '${app.image}', event)"
+                                 onpointercancel="handlePointerCancel(this)"
+                                 onpointerleave="handlePointerCancel(this)">
+                                <div class="app-icon">
+                                    ${iconContent}
+                                    <div class="live-badge">LIVE</div>
+                                    <div class="radio-state-overlay">${stopSvgHTML}</div>
+                                    <span class="${favClass}">★</span>
+                                </div>
+                                <span class="app-name">${app.name}</span>
+                            </div>
+                        `;
+                    });
+                    recentHTML += `</div></div>`;
+                    container.innerHTML += recentHTML;
+                }
 
                 targetCategories.forEach(category => {
                     let allCatApps = [];
@@ -1645,7 +1676,7 @@
                                 <div class="app-grid">
                         `;
                         catFavs.forEach(app => {
-                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                             let isFav = isFavorite(app.url);
                             let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
@@ -1654,9 +1685,9 @@
                                 : `<span class="placeholder" style="display:none; font-size:28px;">${app.name[0]}</span>`;
 
                             favSectionHTML += `
-                                <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                     onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                      onpointercancel="handlePointerCancel(this)"
                                      onpointerleave="handlePointerCancel(this)">
                                     <div class="app-icon">
@@ -1696,7 +1727,7 @@
                             sectionHTML += `<div class="app-grid">`;
 
                             filteredSubApps.forEach(app => {
-                                let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                                let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                                 let isFav = isFavorite(app.url);
                                 let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                                 let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
@@ -1705,9 +1736,9 @@
                                     : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
 
                                 sectionHTML += `
-                                    <div class="${isPlayingClass}" data-url="${app.url}" 
-                                         onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                         onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                    <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                         onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                         onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                          onpointercancel="handlePointerCancel(this)"
                                          onpointerleave="handlePointerCancel(this)">
                                         <div class="app-icon">
@@ -1746,7 +1777,7 @@
                         `;
 
                         filteredApps.forEach(app => {
-                            let isPlaying = (currentPlayingUrl === app.url && !globalAudio.paused);
+                            let isPlaying = (currentPlayingId === app.id && !globalAudio.paused);
                             let isFav = isFavorite(app.url);
                             let isPlayingClass = isPlaying && app.isRadio ? ' app-item playing' : 'app-item';
                             let favClass = isFav ? 'fav-btn is-fav' : 'fav-btn';
@@ -1755,9 +1786,9 @@
                                 : `<span class="placeholder" style="font-size:28px;">${app.name[0]}</span>`;
 
                             sectionHTML += `
-                                <div class="${isPlayingClass}" data-url="${app.url}" 
-                                     onpointerdown="handlePointerDown(this, '${app.url}', event)" 
-                                     onpointerup="handlePointerUp(this, '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
+                                <div class="${isPlayingClass}" data-url="${app.url}" data-instance-id="${app.id}" 
+                                     onpointerdown="handlePointerDown(this, '${app.id}', '${app.url}', event)" 
+                                     onpointerup="handlePointerUp(this, '${app.id}', '${app.url}', ${app.isRadio}, '${app.name}', '${app.image}', event)"
                                      onpointercancel="handlePointerCancel(this)"
                                      onpointerleave="handlePointerCancel(this)">
                                     <div class="app-icon">
@@ -1839,9 +1870,9 @@
 
             renderDashboard();
 
-            if (catId === 'radio' && currentPlayingUrl) {
+            if (catId === 'radio' && currentPlayingId) {
                 setTimeout(() => {
-                    const activeElement = document.querySelector(`[data-url="${CSS.escape(currentPlayingUrl)}"]`);
+                    const activeElement = document.querySelector(`[data-instance-id="${CSS.escape(currentPlayingId)}"]`);
                     if (activeElement) {
                         activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
