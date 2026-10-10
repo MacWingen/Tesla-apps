@@ -433,7 +433,7 @@
             color: var(--text-color);
         }
 
-        .app-item .live-badge, .app-list-item .live-badge {
+        .app-item .live-badge {
             position: absolute;
             top: 6px;
             right: 6px;
@@ -446,6 +446,24 @@
             letter-spacing: 0.5px;
             display: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 25;
+            pointer-events: none;
+        }
+
+        /* Kleines Live-Badge für die Listenansicht oben rechts */
+        .app-list-item .live-badge {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background-color: #e11d48;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
+            padding: 1px 3px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+            display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             z-index: 25;
             pointer-events: none;
         }
@@ -605,10 +623,10 @@
             transform: scale(1.15);
         }
 
-        /* A-Z Sidebar - Clean & Transparent */
+        /* A-Z Sidebar - Nochmals tiefer gesetzt (top: 220px) damit sie perfekt unter der Linie sitzt */
         .az-sidebar {
             position: sticky;
-            top: 75px;
+            top: 220px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
