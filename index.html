@@ -129,12 +129,15 @@
             background: transparent;
             border: none;
             color: var(--section-color);
-            width: 32px;
-            height: 32px;
+            width: auto;
+            height: 42px;
+            padding: 2px 8px;
             border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 2px;
             cursor: pointer;
             transition: all 0.2s ease;
             flex-shrink: 0;
@@ -156,6 +159,52 @@
             background-color: #3b82f6;
             border-radius: 50%;
             box-shadow: 0 0 6px #3b82f6;
+        }
+
+        /* Verfeinerter, eleganter Wetter-Button in der Topbar */
+        .top-weather-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 4px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+        }
+
+        .top-weather-btn:hover {
+            background-color: var(--hover-bg);
+            border-color: var(--tile-border);
+        }
+
+        .top-weather-icon-wrapper {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #38bdf8;
+        }
+
+        .top-weather-icon-wrapper svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .top-weather-temp {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--text-color);
+            line-height: 1;
         }
 
         #searchInput {
@@ -450,7 +499,6 @@
             pointer-events: none;
         }
 
-        /* Kleines Live-Badge für die Listenansicht oben rechts */
         .app-list-item .live-badge {
             position: absolute;
             top: 3px;
@@ -623,10 +671,10 @@
             transform: scale(1.15);
         }
 
-        /* A-Z Sidebar - Exakt auf Höhe der Oberkante des ersten Listeneintrags (ABRP / 1LIVE) angepasst */
+        /* A-Z Sidebar */
         .az-sidebar {
             position: sticky;
-            top: 158px; /* Exakter Startpunkt für Standard-Ansicht (Apps) auf Mauszeiger-Höhe */
+            top: 158px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -642,7 +690,6 @@
             transition: top 0.2s ease;
         }
 
-        /* Wenn die Radio-Ansicht mit Genre-Leiste aktiv ist, wandert die Sidebar exakt um diese Zeile nach unten */
         .az-sidebar.has-genre-bar {
             top: 202px;
         }
@@ -673,7 +720,7 @@
             color: var(--text-color);
         }
 
-        /* Modal / Changelog Popup */
+        /* Modal / Changelog / Weather Popup mit fester Geometrie gegen Kaugummi-Effekt */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -699,16 +746,20 @@
         .modal-content {
             background-color: var(--tile-bg);
             border: 1px solid var(--tile-border);
-            border-radius: 16px;
+            border-radius: 20px;
             width: 90%;
             max-width: 440px;
-            padding: 24px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            min-height: 480px;
+            max-height: 85vh;
+            padding: 22px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: space-between;
+            gap: 12px;
             transform: scale(0.95);
             transition: transform 0.25s ease;
+            box-sizing: border-box;
         }
 
         .modal-overlay.active .modal-content {
@@ -720,17 +771,18 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--tile-border);
-            padding-bottom: 12px;
+            padding-bottom: 10px;
+            flex-shrink: 0;
         }
 
         .modal-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-color);
             margin: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .modal-close-btn {
@@ -751,13 +803,12 @@
         .modal-body {
             font-size: 13px;
             color: var(--name-color);
-            line-height: 1.5;
+            line-height: 1.4;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            max-height: 60vh;
+            gap: 10px;
+            flex: 1;
             overflow-y: auto;
-            scrollbar-width: thin;
         }
 
         .modal-section h4 {
@@ -776,15 +827,228 @@
             height: 1px;
             background-color: var(--tile-border);
             width: 100%;
+            flex-shrink: 0;
         }
 
         .modal-footer {
             border-top: 1px solid var(--tile-border);
-            padding-top: 12px;
+            padding-top: 8px;
             font-size: 11px;
             color: var(--section-color);
             text-align: center;
             opacity: 0.8;
+            flex-shrink: 0;
+        }
+
+        /* Wetter Widget Details & Zentrierte, cleane Wetterwarnung */
+        .weather-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 4px;
+            min-height: 32px;
+        }
+
+        .weather-location-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+        }
+
+        .weather-search-inline {
+            display: none;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .weather-search-inline.active {
+            display: flex;
+        }
+
+        .weather-input-mini {
+            background: var(--bg-color);
+            border: 1px solid var(--tile-border);
+            color: var(--text-color);
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            outline: none;
+            width: 120px;
+        }
+
+        .weather-btn-mini {
+            background: var(--hover-bg);
+            border: 1px solid var(--tile-border);
+            color: var(--text-color);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Zentriertes, flaches Design für die Wetterwarnung */
+        .weather-warning-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 2px 4px;
+            font-size: 12px;
+            color: var(--section-color);
+            text-align: center;
+        }
+
+        .weather-warning-row svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .weather-warning-row span {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .weather-warning-row.has-warning span {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .weather-current-seamless {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 4px;
+        }
+
+        .weather-current-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .weather-current-info h5 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0 0 2px 0;
+        }
+
+        .weather-current-info p {
+            font-size: 12px;
+            color: var(--section-color);
+            margin: 0;
+        }
+
+        .weather-temp-large {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text-color);
+            letter-spacing: -1px;
+        }
+
+        /* Vergrößerte Detail-Leiste ohne trennenden Strich */
+        .weather-details-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 4px;
+            font-size: 14px;
+            color: var(--section-color);
+        }
+
+        .weather-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .weather-detail-item svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .weather-detail-item span {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .weather-forecast-seamless {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .weather-forecast-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 13px;
+        }
+
+        .weather-forecast-row:last-child {
+            border-bottom: none;
+        }
+
+        .weather-forecast-row .day-name {
+            font-weight: 500;
+            color: var(--text-color);
+            width: 60px;
+        }
+
+        .weather-forecast-row .day-desc {
+            flex: 1;
+            color: var(--section-color);
+            padding-left: 10px;
+            font-size: 12px;
+        }
+
+        .weather-forecast-row .day-temp {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .weather-icon-svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .weather-current-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            stroke-width: 1.8;
+            stroke: #38bdf8;
+            fill: none;
         }
     </style>
 </head>
@@ -800,6 +1064,18 @@
 
         <div class="bar-divider"></div>
 
+        <!-- Neu gestalteter, harmonischer Top-Weather Button -->
+        <button class="top-weather-btn" onclick="toggleWeatherModal(true)" title="Wetter & 7-Tage-Vorhersage">
+            <div class="top-weather-icon-wrapper" id="topBarWeatherIconContainer">
+                <svg id="topBarWeatherIcon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m12.72-12.72-1.41 1.41"/>
+                </svg>
+            </div>
+            <span class="top-weather-temp" id="topBarTemp">--°</span>
+        </button>
+
+        <div class="bar-divider"></div>
+
         <button class="bar-icon-btn" id="searchToggleBtn" title="Suchen" onclick="toggleSearch(event)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </button>
@@ -807,24 +1083,24 @@
 
         <div class="bar-divider"></div>
 
-        <button class="bar-icon-btn" title="Ansicht umschalten" onclick="toggleView()" id="viewToggleBtn">
+        <button class="bar-icon-btn" title="Ansicht umschalten" onclick="toggleView()" id="viewToggleBtn" style="flex-direction: row; gap: 6px; height: 32px;">
             <svg id="viewIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </button>
 
         <div class="bar-divider"></div>
 
         <div class="nav-arrows" style="display: flex; gap: 2px;">
-            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie / Zurück">
+            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie / Zurück" style="flex-direction: row; gap: 6px; height: 32px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
             </button>
-            <button class="bar-icon-btn" onclick="navigateCategory(1)" title="Nächste Kategorie">
+            <button class="bar-icon-btn" onclick="navigateCategory(1)" title="Nächste Kategorie" style="flex-direction: row; gap: 6px; height: 32px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
             </button>
         </div>
 
         <div class="bar-divider"></div>
 
-        <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio">
+        <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio" style="flex-direction: row; gap: 6px; height: 32px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
                 <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/>
@@ -864,11 +1140,11 @@
     </div>
 
     <!-- Changelog & Info Modal -->
-    <div class="modal-overlay" id="changelogModal" onclick="handleModalClick(event)">
+    <div class="modal-overlay" id="changelogModal" onclick="handleModalClick(event, 'changelogModal')">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">
-                    <img src="icons/hedgehog.png" alt="" style="width: 44px; height: 44px; object-fit: contain;">
+                    <img src="icons/hedgehog.png" alt="" style="width: 40px; height: 40px; object-fit: contain;">
                     Tesla Apps Dashboard
                 </h3>
                 <button class="modal-close-btn" onclick="toggleChangelog(false)">&times;</button>
@@ -880,6 +1156,7 @@
                         <li><strong>Webradio & Streams:</strong> Über 100+ Sender mit Live-Anzeige und Kachel-Stopp.</li>
                         <li><strong>Zuletzt gehört:</strong> Merkt sich deine zuletzt gespielten Radiosender.</li>
                         <li><strong>Favoriten:</strong> Kachel ca. 0,7 Sek. gedrückt halten, um sie zu favorisieren (★).</li>
+                        <li><strong>Wetter-Widget:</strong> Werbefreie 7-Tage-Vorhersage per Ortssuche.</li>
                     </ul>
                 </div>
 
@@ -891,12 +1168,31 @@
                         <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.0</span>
                     </div>
                     <ul>
-                        <li><strong>v1.0 Final:</strong> Stabiles Fundament, korrigierte Stream-Pfade (*Absolut Top Clubnight* & *AI*), gerätespezifischer LocalStorage und synchronisierte Multi-Kachel-Anzeige.</li>
+                        <li><strong>v1.0 Final:</strong> Stabiles Fundament, korrigierte Stream-Pfade, gerätespezifischer LocalStorage und ortsgenaues Open-Source-Wetter.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
                 Tesla Apps Dashboard v1.0 &copy; 2026 McWingen
+            </div>
+        </div>
+    </div>
+
+    <!-- Wetter Modal -->
+    <div class="modal-overlay" id="weatherModal" onclick="handleModalClick(event, 'weatherModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #38bdf8;"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                    Wetter & 7-Tage-Vorhersage
+                </h3>
+                <button class="modal-close-btn" onclick="toggleWeatherModal(false)">&times;</button>
+            </div>
+            <div class="modal-body" id="weatherModalBody">
+                <div style="text-align: center; color: var(--section-color); padding: 40px;">Lade Wetterdaten...</div>
+            </div>
+            <div class="modal-footer">
+                Werbefrei via Open-Meteo &copy; 2026
             </div>
         </div>
     </div>
@@ -1430,11 +1726,236 @@
             }
         }
 
-        function handleModalClick(event) {
-            const modalContent = document.querySelector('.modal-content');
-            if (!modalContent.contains(event.target)) {
-                toggleChangelog(false);
+        function toggleWeatherModal(show) {
+            const modal = document.getElementById('weatherModal');
+            if (show) {
+                modal.classList.add('active');
+                let savedCity = localStorage.getItem('tesla_dashboard_city') || 'Lünen';
+                fetchWeatherForCity(savedCity);
+            } else {
+                modal.classList.remove('active');
             }
+        }
+
+        function handleModalClick(event, modalId) {
+            const modalContent = document.querySelector(`#${modalId} .modal-content`);
+            if (!modalContent.contains(event.target)) {
+                if (modalId === 'changelogModal') toggleChangelog(false);
+                if (modalId === 'weatherModal') toggleWeatherModal(false);
+            }
+        }
+
+        function toggleWeatherSearch() {
+            const searchRow = document.getElementById('weatherSearchInline');
+            if (searchRow) {
+                searchRow.classList.toggle('active');
+                if (searchRow.classList.contains('active')) {
+                    document.getElementById('cityInputModal').focus();
+                }
+            }
+        }
+
+        function loadWeatherByModalInput() {
+            let city = document.getElementById('cityInputModal').value.trim();
+            if (!city) return;
+            localStorage.setItem('tesla_dashboard_city', city);
+            fetchWeatherForCity(city);
+        }
+
+        // Exakte Wetter-Icons nach WMO-Code
+        function getWeatherIconSvg(code, isLarge = false) {
+            let cls = isLarge ? "weather-current-icon" : "weather-icon-svg";
+            if (code === 0) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5m0 15V22M4.93 4.93l1.77 1.77m10.6 10.6 1.77 1.77M2 12h2.5m15 0H22M6.7 17.3l1.77-1.77m10.6-10.6 1.77-1.77"/></svg>`;
+            }
+            if (code === 1 || code === 2) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M13 16h1a3 3 0 0 0 0-6h-.15m-4.85 6H5a3 3 0 0 1-.88-5.88m4.94-3.52a4 4 0 0 1 7.8 1.4M12 2.5v2"/></svg>`;
+            }
+            if (code === 3) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M19 16.5H6.5a4.5 4.5 0 0 1-.5-8.98 6 6 0 0 1 11.5 2.48h1.5a3 3 0 0 1 0 6.5Z"/></svg>`;
+            }
+            if (code === 45 || code === 48) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M9.5 9h-4a1.5 1.5 0 1 1 0-3h7a2.5 2.5 0 1 0-2.5-2.5V5M3 13h15.5a2.5 2.5 0 1 1 0 5H17M3 17h10"/></svg>`;
+            }
+            if ((code >= 51 && code <= 65) || (code >= 80 && code <= 82)) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M19 13.5H6.5a4.5 4.5 0 0 1-.5-8.98 6 6 0 0 1 11.5 2.48h1.5a3 3 0 0 1 0 6.5M8 17l-1 3m5-3-1 3m5-3-1 3"/></svg>`;
+            }
+            if (code >= 71 && code <= 75) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M19 13.5H6.5a4.5 4.5 0 0 1-.5-8.98 6 6 0 0 1 11.5 2.48h1.5a3 3 0 0 1 0 6.5M10 16l-1 2m5-2 1 2m-6-6-2 1m10-1-2 1"/></svg>`;
+            }
+            if (code >= 95) {
+                return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M19 13.5H6.5a4.5 4.5 0 0 1-.5-8.98 6 6 0 0 1 11.5 2.48h1.5a3 3 0 0 1 0 6.5M11 15l-2 4h4l-2 3"/></svg>`;
+            }
+            return `<svg class="${cls}" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`;
+        }
+
+        function getWeatherDescription(code) {
+            const weatherCodes = {
+                0: "Klar & sonnig",
+                1: "Überwiegend klar",
+                2: "Teilweise bewölkt",
+                3: "Bedeckt",
+                45: "Windig / Nebel",
+                48: "Reifnebel",
+                51: "Leichter Nieselregen",
+                53: "Mäßiger Nieselregen",
+                55: "Dicker Nieselregen",
+                61: "Leichter Regen",
+                63: "Mäßiger Regen",
+                65: "Starker Regen",
+                71: "Leichter Schneefall",
+                73: "Mäßiger Schneefall",
+                75: "Starker Schneefall",
+                80: "Leichte Regenschauer",
+                81: "Mäßige Regenschauer",
+                82: "Heftige Regenschauer",
+                95: "Gewitter"
+            };
+            return weatherCodes[code] || "Wechselhaft";
+        }
+
+        function formatDayName(dateString) {
+            let date = new Date(dateString);
+            let today = new Date();
+            if (date.toDateString() === today.toDateString()) return "Heute";
+            let days = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+            return days[date.getDay()];
+        }
+
+        function updateTopBarWeather(code, temp) {
+            let svgMarkup = getWeatherIconSvg(code, false);
+            document.getElementById('topBarWeatherIcon').outerHTML = `<svg id="topBarWeatherIcon" viewBox="0 0 24 24">${svgMarkup.match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1]}</svg>`;
+            document.getElementById('topBarTemp').innerText = `${Math.round(temp)}°`;
+        }
+
+        function fetchWeatherForCity(cityName, retry = true) {
+            const container = document.getElementById('weatherModalBody');
+            container.innerHTML = `<div style="text-align: center; color: var(--section-color); padding: 40px;">Lade Wetter für ${cityName}...</div>`;
+
+            fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=de&format=json`)
+                .then(res => res.json())
+                .then(geoData => {
+                    if (!geoData.results || geoData.results.length === 0) {
+                        if (retry && cityName !== 'Lünen') {
+                            fetchWeatherForCity('Lünen', false);
+                            return;
+                        }
+                        container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 40px;">Ort "${cityName}" nicht gefunden.</div>`;
+                        return;
+                    }
+
+                    let location = geoData.results[0];
+                    let lat = location.latitude;
+                    let lon = location.longitude;
+                    let foundName = location.name;
+                    let admin1 = location.admin1 ? `, ${location.admin1}` : '';
+
+                    let weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`;
+
+                    return fetch(weatherUrl)
+                        .then(res => res.json())
+                        .then(weatherData => {
+                            let currentTemp = Math.round(weatherData.current.temperature_2m);
+                            let currentHumidity = weatherData.current.relative_humidity_2m;
+                            let currentWind = Math.round(weatherData.current.wind_speed_10m);
+                            let currentGusts = weatherData.current.wind_gusts_10m || 0;
+                            let currentWeatherCode = weatherData.current.weather_code;
+                            let currentWeatherText = getWeatherDescription(currentWeatherCode);
+                            let currentIconSvg = getWeatherIconSvg(currentWeatherCode, true);
+                            let rainProb = weatherData.daily.precipitation_probability_max ? weatherData.daily.precipitation_probability_max[0] : 0;
+
+                            updateTopBarWeather(currentWeatherCode, currentTemp);
+
+                            // Zentrierte, cleane Wetterwarnung
+                            let warningHtml = `
+                                <div class="weather-warning-row">
+                                    <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                                    <span>Wetterwarnung: Keine</span>
+                                </div>
+                            `;
+                            
+                            if (currentGusts >= 60 || currentWeatherCode >= 95) {
+                                let warningText = currentGusts >= 75 ? "Schwere Sturmböen (Stufe 3)" : "Sturmböen (Stufe 2)";
+                                warningHtml = `
+                                    <div class="weather-warning-row has-warning">
+                                        <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                                        <span>Wetterwarnung: ${warningText} (${Math.round(currentGusts)} km/h)</span>
+                                    </div>
+                                `;
+                            }
+
+                            let html = `
+                                <div class="weather-top-row">
+                                    <button class="weather-location-display" onclick="toggleWeatherSearch()" title="Ort ändern">
+                                        📍 ${foundName}${admin1} ▾
+                                    </button>
+                                    <div class="weather-search-inline" id="weatherSearchInline">
+                                        <input type="text" id="cityInputModal" class="weather-input-mini" placeholder="Ort eingeben..." onkeydown="if(event.key==='Enter') loadWeatherByModalInput()">
+                                        <button class="weather-btn-mini" onclick="loadWeatherByModalInput()"> OK </button>
+                                    </div>
+                                </div>
+
+                                ${warningHtml}
+
+                                <div class="weather-current-seamless" style="margin-top: 4px;">
+                                    <div class="weather-current-left">
+                                        ${currentIconSvg}
+                                        <div class="weather-current-info">
+                                            <h5>${currentWeatherText}</h5>
+                                            <p>Gefühlt wie ${currentTemp}°C</p>
+                                        </div>
+                                    </div>
+                                    <div class="weather-temp-large">${currentTemp}°</div>
+                                </div>
+
+                                <div class="weather-details-bar">
+                                    <div class="weather-detail-item" title="Luftfeuchtigkeit">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                        <span>${currentHumidity}%</span>
+                                    </div>
+                                    <div class="weather-detail-item" title="Windgeschwindigkeit">
+                                        <svg viewBox="0 0 24 24"><path d="M9.5 9h-4a1.5 1.5 0 1 1 0-3h7a2.5 2.5 0 1 0-2.5-2.5V5M3 13h15.5a2.5 2.5 0 1 1 0 5H17M3 17h10"/></svg>
+                                        <span>${currentWind} km/h</span>
+                                    </div>
+                                    <div class="weather-detail-item" title="Regenwahrscheinlichkeit">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/><path d="M8 13l2 4m4-4l2 4"/></svg>
+                                        <span>${rainProb}%</span>
+                                    </div>
+                                </div>
+
+                                <div class="weather-forecast-seamless">
+                            `;
+
+                            let daily = weatherData.daily;
+                            for (let i = 0; i < 7 && i < daily.time.length; i++) {
+                                let dayName = formatDayName(daily.time[i]);
+                                let maxT = Math.round(daily.temperature_2m_max[i]);
+                                let minT = Math.round(daily.temperature_2m_min[i]);
+                                let code = daily.weather_code[i];
+                                let desc = getWeatherDescription(code);
+                                let dayIconSvg = getWeatherIconSvg(code, false);
+
+                                html += `
+                                    <div class="weather-forecast-row">
+                                        <span class="day-name">${dayName}</span>
+                                        ${dayIconSvg}
+                                        <span class="day-desc">${desc}</span>
+                                        <span class="day-temp">${minT}° / ${maxT}°</span>
+                                    </div>
+                                `;
+                            }
+
+                            html += `</div>`;
+                            container.innerHTML = html;
+                        });
+                })
+                .catch(err => {
+                    if (retry) {
+                        setTimeout(() => fetchWeatherForCity(cityName, false), 500);
+                    } else {
+                        container.innerHTML = `<div style="text-align: center; color: #ef4444; padding: 40px;">Fehler beim Laden der Wetterdaten.</div>`;
+                    }
+                });
         }
 
         function checkVersion() {
@@ -1951,6 +2472,22 @@
             searchQuery = document.getElementById('searchInput').value;
             renderDashboard();
         }
+
+        let initialCity = localStorage.getItem('tesla_dashboard_city') || 'Lünen';
+        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(initialCity)}&count=1&language=de&format=json`)
+            .then(res => res.json())
+            .then(geo => {
+                if (geo.results && geo.results.length > 0) {
+                    let l = geo.results[0];
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${l.latitude}&longitude=${l.longitude}&current=temperature_2m,weather_code&timezone=auto`)
+                        .then(r => r.json())
+                        .then(d => {
+                            if (d.current) {
+                                updateTopBarWeather(d.current.weather_code, d.current.temperature_2m);
+                            }
+                        }).catch(e=>{});
+                }
+            }).catch(e=>{});
 
         renderDashboard();
         checkVersion();
