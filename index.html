@@ -285,7 +285,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            width: fit-content;
+            width: 100%;
             cursor: pointer;
             transition: color 0.15s ease;
         }
@@ -300,7 +300,7 @@
             border-bottom: 1px solid var(--tile-border);
             padding-bottom: 5px;
             display: inline-block;
-            width: fit-content;
+            width: 100%;
         }
 
         .category-title.has-arrow::after {
@@ -323,7 +323,7 @@
             color: var(--text-color);
         }
 
-        /* Responsive Fluid Grid View */
+        /* Responsive Fluid Grid View - Dynamisch und fließend skaliert */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
@@ -886,7 +886,7 @@
                         <span style="background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 11px; color: var(--text-color);">v1.0</span>
                     </div>
                     <ul>
-                        <li><strong>v1.0:</strong> Finale Release-Version mit korrekten Stream-Zuweisungen für Oldschool Rap und Oldschool Deutschrap.</li>
+                        <li><strong>v1.0:</strong> Finale Release-Version mit fließendem, stabilem Grid-Verhalten beim Vergrößern und Verkleinern des Browserfensters.</li>
                     </ul>
                 </div>
             </div>
