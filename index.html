@@ -357,6 +357,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: opacity 0.2s ease;
         }
 
         .app-icon span.placeholder {
@@ -365,6 +366,7 @@
             color: var(--text-color);
         }
 
+        /* Live Badge - Liegt über dem Overlay und strahlt in voller Helligkeit */
         .live-badge {
             position: absolute;
             top: 8px;
@@ -378,14 +380,39 @@
             letter-spacing: 0.5px;
             display: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            z-index: 10;
+            z-index: 25;
         }
 
         .app-item.playing .live-badge, .app-list-item.playing .live-badge {
             display: block;
         }
 
-        /* Transparenter Stern unten links */
+        /* Dynamisches Play/Stopp Center Overlay (unter dem Live-Badge & Stern) */
+        .radio-state-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .app-item.playing .radio-state-overlay, .app-list-item.playing .radio-state-overlay {
+            opacity: 1;
+        }
+
+        .radio-state-icon {
+            color: #ffffff;
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        /* Transparenter Stern unten links - Liegt ebenfalls über dem Overlay */
         .fav-btn {
             position: absolute;
             bottom: 6px;
@@ -399,7 +426,7 @@
             justify-content: center;
             cursor: default;
             pointer-events: none;
-            z-index: 15;
+            z-index: 25;
             color: rgba(255, 255, 255, 0.4);
             font-size: 18px;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
@@ -746,24 +773,23 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2.1</span>
-                    <h4>Was ist neu in v1.2.1:</h4>
+                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2.4</span>
+                    <h4>Was ist neu in v1.2.4:</h4>
                     <ul>
-                        <li><strong>URL-Korrektur:</strong> Korrekte Stream-Adresse für "I Love Hip Hop History" hinterlegt (behebt das gleichzeitige Aufleuchten mit Dance History).</li>
-                        <li><strong>Optimiertes Touch-Verhalten:</strong> Butterweiches Scrollen im Tesla-Browser dank `touch-action: manipulation`.</li>
-                        <li><strong>Hybride Streaming-Links:</strong> Große Anbieter direkt, kleinere Mediatheken via YouTube-Redirect für den Kinomodus.</li>
+                        <li><strong>Helles Live-Badge:</strong> Das rote "LIVE"-Badge und der Favoriten-Stern werden nun nicht mehr vom Stopp-Overlay abgedunkelt, sondern strahlen in voller Helligkeit.</li>
+                        <li><strong>Automatischer Jump:</strong> Direktes Hinspringen zum aktiven Sender beim Klick auf das Radio-Symbol.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.2.1 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.2.4 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.2.1 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2.4 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream"></audio>
@@ -841,7 +867,7 @@
                             { name: "I Love 2010+ Throwbacks", url: "https://play.ilovemusic.de/ilm_ilove2010throwbacks/", image: "icons/ilove2010throwbacks.png", isRadio: true, genre: "throwback" },
                             { name: "I Love Bass (by HBZ)", url: "https://play.ilovemusic.de/ilm_ilovebass/", image: "icons/ilovebass.png", isRadio: true, genre: "dance" },
                             { name: "I Love Biggest Pop Hits", url: "https://play.ilovemusic.de/ilm_ilovenewpop/", image: "icons/ilovebiggestpophits.png", isRadio: true, genre: "charts" },
-                            { name: "I Love Büffelradio", url: "https://play.ilovemusic.de/ilm-buffelradio/mp3-192/", image: "icons/ilovebuffelradio.png", isRadio: true, genre: "pop" },
+                            { name: "I Love Büffelradio", url: "https://play.ilovemusic.de/ilm-buffelradio/mp3-192/", image: "icons/ilovebuffelradio.png", isRadio: true, genre: "dance" },
                             { name: "I Love Chillhop", url: "https://play.ilovemusic.de/ilm_ilovechillhop/", image: "icons/ilovechillhop.png", isRadio: true, genre: "pop" },
                             { name: "I Love Chillout Beats", url: "https://play.ilovemusic.de/ilm-ichillout_beats/", image: "icons/ilovechilloutbeats.png", isRadio: true, genre: "pop" },
                             { name: "I Love Dance 2026", url: "https://play.ilovemusic.de/ilm_dance-2023-jahrescharts/", image: "icons/ilovedance2026.png", isRadio: true, genre: "dance" },
@@ -852,7 +878,7 @@
                             { name: "I Love Hardstyle", url: "https://play.ilovemusic.de/ilm_ilovehardstyle/", image: "icons/ilovehardstyle.png", isRadio: true, genre: "dance" },
                             { name: "I Love Hip Hop", url: "https://play.ilovemusic.de/ilm_ilovehiphop/", image: "icons/ilovehiphop.png", isRadio: true, genre: "hiphop" },
                             { name: "I Love Hip Hop 2026", url: "https://play.ilovemusic.de/ilm_hiphop-2023-jahrescharts/", image: "icons/ilovehiphop2026.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovehiphophistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" }, /* Hier korrigiert */
+                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovehiphophistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" },
                             { name: "I Love Hit-Quiz", url: "https://play.ilovemusic.de/ilm-ihit-quiz/", image: "icons/ilovehitquiz.png", isRadio: true, genre: "pop" },
                             { name: "I Love Hits 2026", url: "https://play.ilovemusic.de/ilm_hits-2023-jahrescharts/", image: "icons/ilovehits2026.png", isRadio: true, genre: "charts" },
                             { name: "I Love Hits History", url: "https://play.ilovemusic.de/ilm_ilovehitshistory/", image: "icons/ilovehitshistory.png", isRadio: true, genre: "pop" },
@@ -1234,6 +1260,8 @@
                 return activeCategory === cat.id;
             });
 
+            const stopSvgHTML = `<svg class="radio-state-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
+
             if (currentView === 'list') {
                 azSidebar.style.display = 'flex';
                 
@@ -1297,6 +1325,7 @@
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                    ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                 </div>
                                 <span class="app-list-name">${app.name}</span>
                                 <span class="${favClass}">★</span>
@@ -1344,6 +1373,7 @@
                                 <div class="app-list-icon">
                                     ${iconContent}
                                     ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                    ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                 </div>
                                 <span class="app-list-name">${app.name}</span>
                                 <span class="${favClass}">★</span>
@@ -1393,6 +1423,7 @@
                                     <div class="app-list-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                     </div>
                                     <span class="app-list-name">${app.name}</span>
                                     <span class="${favClass}">★</span>
@@ -1455,6 +1486,7 @@
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                         <span class="${favClass}">★</span>
                                     </div>
                                     <span class="app-name">${app.name}</span>
@@ -1507,6 +1539,7 @@
                                         <div class="app-icon">
                                             ${iconContent}
                                             ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                            ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                             <span class="${favClass}">★</span>
                                         </div>
                                         <span class="app-name">${app.name}</span>
@@ -1558,6 +1591,7 @@
                                     <div class="app-icon">
                                         ${iconContent}
                                         ${app.isRadio ? '<div class="live-badge">LIVE</div>' : ''}
+                                        ${app.isRadio ? `<div class="radio-state-overlay">${stopSvgHTML}</div>` : ''}
                                         <span class="${favClass}">★</span>
                                     </div>
                                     <span class="app-name">${app.name}</span>
@@ -1632,7 +1666,17 @@
             }
 
             renderDashboard();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (catId === 'radio' && currentPlayingUrl) {
+                setTimeout(() => {
+                    const activeElement = document.querySelector(`[data-url="${CSS.escape(currentPlayingUrl)}"]`);
+                    if (activeElement) {
+                        activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 50);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         function filterGenre(genreId, btnElement) {
