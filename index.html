@@ -57,7 +57,7 @@
             max-width: 900px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             margin-bottom: 24px;
             padding-bottom: 12px;
             position: sticky;
@@ -720,7 +720,7 @@
             color: var(--text-color);
         }
 
-        /* Modal / Changelog / Weather Popup mit fester Geometrie gegen Kaugummi-Effekt */
+        /* Modal / Wetter Popup ohne feste Mindesthöhe */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -749,14 +749,12 @@
             border-radius: 20px;
             width: 90%;
             max-width: 440px;
-            min-height: 480px;
             max-height: 85vh;
-            padding: 22px;
+            padding: 20px 22px;
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             transform: scale(0.95);
             transition: transform 0.25s ease;
             box-sizing: border-box;
@@ -771,7 +769,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid var(--tile-border);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
             flex-shrink: 0;
         }
 
@@ -806,9 +804,8 @@
             line-height: 1.4;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            flex: 1;
-            overflow-y: auto;
+            gap: 8px;
+            overflow-y: visible;
         }
 
         .modal-section h4 {
@@ -832,7 +829,7 @@
 
         .modal-footer {
             border-top: 1px solid var(--tile-border);
-            padding-top: 8px;
+            padding-top: 6px;
             font-size: 11px;
             color: var(--section-color);
             text-align: center;
@@ -840,13 +837,13 @@
             flex-shrink: 0;
         }
 
-        /* Wetter Widget Details & Zentrierte, markante aktuelle Temperatur in der Mitte */
+        /* Wetter Widget Details */
         .weather-top-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 2px 4px;
-            min-height: 32px;
+            min-height: 28px;
         }
 
         .weather-location-display {
@@ -895,17 +892,16 @@
             cursor: pointer;
         }
 
-        /* Zentriertes, flaches Design für die Wetterwarnung (unten positioniert) */
         .weather-warning-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 4px 4px 2px 4px;
+            padding: 2px 4px 0 4px;
             font-size: 12px;
             color: var(--section-color);
             text-align: center;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .weather-warning-row svg {
@@ -929,20 +925,19 @@
             font-weight: 600;
         }
 
-        /* Aktuelles Wetter: Exakt in der Mitte platziert, größer & markanter */
         .weather-current-centered {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 12px 4px;
-            gap: 4px;
+            padding: 6px 4px;
+            gap: 2px;
         }
 
         .weather-current-centered .weather-current-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             stroke-width: 1.8;
             stroke: #38bdf8;
             fill: none;
@@ -950,7 +945,7 @@
         }
 
         .weather-temp-giant {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: 700;
             color: var(--text-color);
             letter-spacing: -1.5px;
@@ -958,24 +953,23 @@
         }
 
         .weather-current-centered h5 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-color);
-            margin: 4px 0 0 0;
+            margin: 2px 0 0 0;
         }
 
         .weather-current-centered p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--section-color);
             margin: 0;
         }
 
-        /* Detail-Leiste */
         .weather-details-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 4px;
+            padding: 4px 4px;
             font-size: 14px;
             color: var(--section-color);
         }
@@ -983,12 +977,12 @@
         .weather-detail-item {
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 6px;
         }
 
         .weather-detail-item svg {
-            width: 17px;
-            height: 17px;
+            width: 16px;
+            height: 16px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -1000,23 +994,22 @@
         .weather-detail-item span {
             font-weight: 600;
             color: var(--text-color);
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .weather-forecast-seamless {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
-        /* Feste Spaltenaufteilung für sauberen, gleichmäßigen Look ohne Lücken */
         .weather-forecast-row {
             display: grid;
-            grid-template-columns: 55px 55px 22px 1fr 75px;
+            grid-template-columns: 50px 50px 20px 1fr 70px;
             align-items: center;
-            padding: 5px 4px;
+            padding: 4px 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .weather-forecast-row:last-child {
@@ -1032,13 +1025,13 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--section-color);
         }
 
         .weather-forecast-row .day-rain svg {
-            width: 12px;
-            height: 12px;
+            width: 11px;
+            height: 11px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -1055,8 +1048,8 @@
 
         .weather-forecast-row .day-desc {
             color: var(--section-color);
-            padding-left: 10px;
-            font-size: 12px;
+            padding-left: 8px;
+            font-size: 11px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1069,8 +1062,8 @@
         }
 
         .weather-icon-svg {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             flex-shrink: 0;
             fill: none;
             stroke: currentColor;
@@ -1080,8 +1073,8 @@
         }
 
         .weather-current-icon {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             flex-shrink: 0;
             stroke-width: 1.8;
             stroke: #38bdf8;
@@ -1101,7 +1094,6 @@
 
         <div class="bar-divider"></div>
 
-        <!-- Neu gestalteter, harmonischer Top-Weather Button -->
         <button class="top-weather-btn" onclick="toggleWeatherModal(true)" title="Wetter & 7-Tage-Vorhersage">
             <div class="top-weather-icon-wrapper" id="topBarWeatherIconContainer">
                 <svg id="topBarWeatherIcon" viewBox="0 0 24 24">
@@ -1126,17 +1118,6 @@
 
         <div class="bar-divider"></div>
 
-        <div class="nav-arrows" style="display: flex; gap: 2px;">
-            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie / Zurück" style="flex-direction: row; gap: 6px; height: 32px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <button class="bar-icon-btn" onclick="navigateCategory(1)" title="Nächste Kategorie" style="flex-direction: row; gap: 6px; height: 32px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-        </div>
-
-        <div class="bar-divider"></div>
-
         <button class="bar-icon-btn" id="radioSymbolBtn" onclick="filterCategory('radio', this)" title="Webradio" style="flex-direction: row; gap: 6px; height: 32px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
@@ -1146,6 +1127,17 @@
                 <path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/>
             </svg>
         </button>
+
+        <div class="bar-divider"></div>
+
+        <div class="nav-arrows" style="display: flex; gap: 2px;">
+            <button class="bar-icon-btn" onclick="navigateCategory(-1)" title="Vorherige Kategorie / Zurück" style="flex-direction: row; gap: 6px; height: 32px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button class="bar-icon-btn" onclick="navigateCategory(1)" title="Nächste Kategorie" style="flex-direction: row; gap: 6px; height: 32px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
 
         <div class="bar-divider"></div>
 
@@ -1799,7 +1791,6 @@
             fetchWeatherForCity(city);
         }
 
-        // Exakte Wetter-Icons nach WMO-Code
         function getWeatherIconSvg(code, isLarge = false) {
             let cls = isLarge ? "weather-current-icon" : "weather-icon-svg";
             if (code === 0) {
@@ -1962,7 +1953,6 @@
 
                             html += `</div>`;
 
-                            // Wetterwarnung unten katapultiert
                             let warningHtml = `
                                 <div class="weather-warning-row">
                                     <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
