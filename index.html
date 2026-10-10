@@ -840,7 +840,7 @@
             flex-shrink: 0;
         }
 
-        /* Wetter Widget Details & Zentrierte, cleane Wetterwarnung */
+        /* Wetter Widget Details & Zentrierte, markante aktuelle Temperatur in der Mitte */
         .weather-top-row {
             display: flex;
             align-items: center;
@@ -895,16 +895,17 @@
             cursor: pointer;
         }
 
-        /* Zentriertes, flaches Design für die Wetterwarnung */
+        /* Zentriertes, flaches Design für die Wetterwarnung (unten positioniert) */
         .weather-warning-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 2px 4px;
+            padding: 4px 4px 2px 4px;
             font-size: 12px;
             color: var(--section-color);
             text-align: center;
+            margin-top: 4px;
         }
 
         .weather-warning-row svg {
@@ -928,40 +929,48 @@
             font-weight: 600;
         }
 
-        .weather-current-seamless {
+        /* Aktuelles Wetter: Exakt in der Mitte platziert, größer & markanter */
+        .weather-current-centered {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 2px 4px;
+            justify-content: center;
+            text-align: center;
+            padding: 12px 4px;
+            gap: 4px;
         }
 
-        .weather-current-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+        .weather-current-centered .weather-current-icon {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.8;
+            stroke: #38bdf8;
+            fill: none;
+            margin-bottom: 2px;
         }
 
-        .weather-current-info h5 {
+        .weather-temp-giant {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text-color);
+            letter-spacing: -1.5px;
+            line-height: 1;
+        }
+
+        .weather-current-centered h5 {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-color);
-            margin: 0 0 2px 0;
+            margin: 4px 0 0 0;
         }
 
-        .weather-current-info p {
+        .weather-current-centered p {
             font-size: 12px;
             color: var(--section-color);
             margin: 0;
         }
 
-        .weather-temp-large {
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--text-color);
-            letter-spacing: -1px;
-        }
-
-        /* Vergrößerte Detail-Leiste ohne trennenden Strich */
+        /* Detail-Leiste */
         .weather-details-bar {
             display: flex;
             align-items: center;
@@ -1000,10 +1009,11 @@
             gap: 6px;
         }
 
+        /* Feste Spaltenaufteilung für sauberen, gleichmäßigen Look ohne Lücken */
         .weather-forecast-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 55px 55px 22px 1fr 75px;
             align-items: center;
-            justify-content: space-between;
             padding: 5px 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             font-size: 13px;
@@ -1016,19 +1026,46 @@
         .weather-forecast-row .day-name {
             font-weight: 500;
             color: var(--text-color);
-            width: 60px;
+        }
+
+        .weather-forecast-row .day-rain {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+            color: var(--section-color);
+        }
+
+        .weather-forecast-row .day-rain svg {
+            width: 12px;
+            height: 12px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .weather-forecast-row .day-icon-col {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .weather-forecast-row .day-desc {
-            flex: 1;
             color: var(--section-color);
             padding-left: 10px;
             font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .weather-forecast-row .day-temp {
             font-weight: 600;
             color: var(--text-color);
+            text-align: right;
         }
 
         .weather-icon-svg {
@@ -1866,24 +1903,6 @@
 
                             updateTopBarWeather(currentWeatherCode, currentTemp);
 
-                            // Zentrierte, cleane Wetterwarnung
-                            let warningHtml = `
-                                <div class="weather-warning-row">
-                                    <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-                                    <span>Wetterwarnung: Keine</span>
-                                </div>
-                            `;
-                            
-                            if (currentGusts >= 60 || currentWeatherCode >= 95) {
-                                let warningText = currentGusts >= 75 ? "Schwere Sturmböen (Stufe 3)" : "Sturmböen (Stufe 2)";
-                                warningHtml = `
-                                    <div class="weather-warning-row has-warning">
-                                        <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-                                        <span>Wetterwarnung: ${warningText} (${Math.round(currentGusts)} km/h)</span>
-                                    </div>
-                                `;
-                            }
-
                             let html = `
                                 <div class="weather-top-row">
                                     <button class="weather-location-display" onclick="toggleWeatherSearch()" title="Ort ändern">
@@ -1895,17 +1914,11 @@
                                     </div>
                                 </div>
 
-                                ${warningHtml}
-
-                                <div class="weather-current-seamless" style="margin-top: 4px;">
-                                    <div class="weather-current-left">
-                                        ${currentIconSvg}
-                                        <div class="weather-current-info">
-                                            <h5>${currentWeatherText}</h5>
-                                            <p>Gefühlt wie ${currentTemp}°C</p>
-                                        </div>
-                                    </div>
-                                    <div class="weather-temp-large">${currentTemp}°</div>
+                                <div class="weather-current-centered">
+                                    ${currentIconSvg}
+                                    <div class="weather-temp-giant">${currentTemp}°</div>
+                                    <h5>${currentWeatherText}</h5>
+                                    <p>Gefühlt wie ${currentTemp}°C</p>
                                 </div>
 
                                 <div class="weather-details-bar">
@@ -1934,11 +1947,13 @@
                                 let code = daily.weather_code[i];
                                 let desc = getWeatherDescription(code);
                                 let dayIconSvg = getWeatherIconSvg(code, false);
+                                let dayRain = daily.precipitation_probability_max ? (daily.precipitation_probability_max[i] ?? 0) : 0;
 
                                 html += `
                                     <div class="weather-forecast-row">
                                         <span class="day-name">${dayName}</span>
-                                        ${dayIconSvg}
+                                        <span class="day-rain"><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>${dayRain}%</span>
+                                        <div class="day-icon-col">${dayIconSvg}</div>
                                         <span class="day-desc">${desc}</span>
                                         <span class="day-temp">${minT}° / ${maxT}°</span>
                                     </div>
@@ -1946,6 +1961,26 @@
                             }
 
                             html += `</div>`;
+
+                            // Wetterwarnung unten katapultiert
+                            let warningHtml = `
+                                <div class="weather-warning-row">
+                                    <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                                    <span>Wetterwarnung: Keine</span>
+                                </div>
+                            `;
+                            
+                            if (currentGusts >= 60 || currentWeatherCode >= 95) {
+                                let warningText = currentGusts >= 75 ? "Schwere Sturmböen (Stufe 3)" : "Sturmböen (Stufe 2)";
+                                warningHtml = `
+                                    <div class="weather-warning-row has-warning">
+                                        <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                                        <span>Wetterwarnung: ${warningText} (${Math.round(currentGusts)} km/h)</span>
+                                    </div>
+                                `;
+                            }
+
+                            html += warningHtml;
                             container.innerHTML = html;
                         });
                 })
