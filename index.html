@@ -48,6 +48,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         /* Top Bar */
@@ -67,6 +68,7 @@
             padding-top: 10px;
             overflow-x: auto;
             scrollbar-width: none;
+            touch-action: pan-x;
         }
 
         .top-bar::-webkit-scrollbar {
@@ -201,6 +203,7 @@
             overflow-x: auto;
             scrollbar-width: none;
             padding-bottom: 4px;
+            touch-action: pan-x;
         }
 
         .genre-filter-container::-webkit-scrollbar {
@@ -327,6 +330,7 @@
             transition: transform 0.15s ease;
             width: 100%;
             position: relative;
+            touch-action: manipulation;
         }
 
         .app-item:active {
@@ -451,6 +455,7 @@
             width: 100%;
             box-sizing: border-box;
             position: relative;
+            touch-action: manipulation;
         }
 
         .app-list-item:active, .app-list-item:hover {
@@ -510,6 +515,7 @@
             gap: 5px;
             z-index: 200;
             user-select: none;
+            touch-action: pan-y;
         }
 
         .az-sidebar a {
@@ -740,31 +746,24 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2</span>
-                    <h4>Was ist neu in v1.2:</h4>
+                    <span style="display: inline-block; background-color: var(--hover-bg); padding: 2px 8px; border-radius: 6px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Version 1.2.1</span>
+                    <h4>Was ist neu in v1.2.1:</h4>
                     <ul>
-                        <li><strong>KiKa Integration:</strong> Kinder-Mediathek unter Streaming & TV hinzugefügt (ideal für Ladepauken mit Kids).</li>
-                        <li><strong>Blitzer.de Map Integration:</strong> Neue App unter Navigation & Auto hinzugefügt.</li>
-                        <li>Logo im Infofenster auf 52px vergrößert.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 style="margin-top: 8px;">Version 1.0:</h4>
-                    <ul>
-                        <li>Initiales Release des Dashboards.</li>
-                        <li>Streaming, Webradio mit Metadaten, A-Z Filter und Favoriten-System.</li>
+                        <li><strong>URL-Korrektur:</strong> Korrekte Stream-Adresse für "I Love Hip Hop History" hinterlegt (behebt das gleichzeitige Aufleuchten mit Dance History).</li>
+                        <li><strong>Optimiertes Touch-Verhalten:</strong> Butterweiches Scrollen im Tesla-Browser dank `touch-action: manipulation`.</li>
+                        <li><strong>Hybride Streaming-Links:</strong> Große Anbieter direkt, kleinere Mediatheken via YouTube-Redirect für den Kinomodus.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.2.1 &copy; 2026 McWingen
             </div>
         </div>
     </div>
 
     <!-- Fußzeile -->
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.2 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.2.1 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream"></audio>
@@ -776,23 +775,23 @@
                 title: "Streaming & TV",
                 shortTitle: "Streaming",
                 apps: [
-                    { name: "Apple TV", url: "https://www.youtube.com/redirect?q=https://tv.apple.com/de", image: "icons/appletv.png", isRadio: false },
+                    { name: "Apple TV", url: "https://tv.apple.com/de", image: "icons/appletv.png", isRadio: false },
+                    { name: "Disney+", url: "https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
+                    { name: "HBO Max", url: "https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
+                    { name: "Netflix", url: "https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
+                    { name: "Paramount+", url: "https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
+                    { name: "Prime Video", url: "https://www.amazon.de/primevideo", image: "icons/amazonprime.png", isRadio: false },
+                    { name: "YouTube", url: "https://www.youtube.com", image: "icons/youtube.png", isRadio: false },
                     { name: "ARD Mediathek", url: "https://www.youtube.com/redirect?q=https://www.ardmediathek.de", image: "icons/ard.png", isRadio: false },
                     { name: "DAZN", url: "https://www.youtube.com/redirect?q=https://www.dazn.com/de-DE", image: "icons/dazn.png", isRadio: false },
-                    { name: "Disney+", url: "https://www.youtube.com/redirect?q=https://www.disneyplus.com/de-de", image: "icons/disneyplus.png", isRadio: false },
-                    { name: "HBO Max", url: "https://www.youtube.com/redirect?q=https://www.hbomax.com/de/de", image: "icons/hbomax.png", isRadio: false },
                     { name: "Joyn", url: "https://www.youtube.com/redirect?q=https://www.joyn.de", image: "icons/joyn.png", isRadio: false },
                     { name: "KiKa", url: "https://www.youtube.com/redirect?q=https://www.kika.de/videos/kindervideos-videos-fuer-kinder-100", image: "icons/kika.png", isRadio: false },
                     { name: "MagentaTV", url: "https://www.youtube.com/redirect?q=https://www.magenta.tv", image: "icons/magentatv.png", isRadio: false },
-                    { name: "Netflix", url: "https://www.youtube.com/redirect?q=https://www.netflix.com", image: "icons/netflix.png", isRadio: false },
-                    { name: "Paramount+", url: "https://www.youtube.com/redirect?q=https://www.paramountplus.com", image: "icons/paramountplus.png", isRadio: false },
-                    { name: "Prime Video", url: "https://www.youtube.com/redirect?q=https://www.amazon.de/primevideo", image: "icons/amazonprime.png", isRadio: false },
                     { name: "RTL+", url: "https://www.youtube.com/redirect?q=https://plus.rtl.de", image: "icons/rtlplus.png", isRadio: false },
                     { name: "TikTok", url: "https://www.youtube.com/redirect?q=https://www.tiktok.com", image: "icons/tiktok.png", isRadio: false },
                     { name: "Twitch", url: "https://www.youtube.com/redirect?q=https://www.twitch.tv", image: "icons/twitch.png", isRadio: false },
                     { name: "Waipu.TV", url: "https://www.youtube.com/redirect?q=https://app.waipu.tv/tv", image: "icons/waiputv.png", isRadio: false },
                     { name: "WOW", url: "https://www.youtube.com/redirect?q=https://www.wowtv.de", image: "icons/wow.png", isRadio: false },
-                    { name: "YouTube", url: "https://www.youtube.com/redirect?q=https://www.youtube.com", image: "icons/youtube.png", isRadio: false },
                     { name: "ZDFmediathek", url: "https://www.youtube.com/redirect?q=https://www.zdf.de", image: "icons/zdf.png", isRadio: false }
                 ]
             },
@@ -853,7 +852,7 @@
                             { name: "I Love Hardstyle", url: "https://play.ilovemusic.de/ilm_ilovehardstyle/", image: "icons/ilovehardstyle.png", isRadio: true, genre: "dance" },
                             { name: "I Love Hip Hop", url: "https://play.ilovemusic.de/ilm_ilovehiphop/", image: "icons/ilovehiphop.png", isRadio: true, genre: "hiphop" },
                             { name: "I Love Hip Hop 2026", url: "https://play.ilovemusic.de/ilm_hiphop-2023-jahrescharts/", image: "icons/ilovehiphop2026.png", isRadio: true, genre: "hiphop" },
-                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovedancehistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" },
+                            { name: "I Love Hip Hop History", url: "https://play.ilovemusic.de/ilm_ilovehiphophistory/", image: "icons/ilovehiphophistory.png", isRadio: true, genre: "hiphop" }, /* Hier korrigiert */
                             { name: "I Love Hit-Quiz", url: "https://play.ilovemusic.de/ilm-ihit-quiz/", image: "icons/ilovehitquiz.png", isRadio: true, genre: "pop" },
                             { name: "I Love Hits 2026", url: "https://play.ilovemusic.de/ilm_hits-2023-jahrescharts/", image: "icons/ilovehits2026.png", isRadio: true, genre: "charts" },
                             { name: "I Love Hits History", url: "https://play.ilovemusic.de/ilm_ilovehitshistory/", image: "icons/ilovehitshistory.png", isRadio: true, genre: "pop" },
@@ -929,7 +928,6 @@
                             { name: "bigFM Bremen", url: "https://stream.bigfm.de/bremen/mp3-128/private", image: "icons/bigfmbremen.png", isRadio: true, genre: "lokal" },
                             { name: "bigFM Niedersachsen", url: "https://stream.bigfm.de/niedersachsen/mp3-128/private", image: "icons/bigfmniedersachsen.png", isRadio: true, genre: "lokal" },
                             { name: "bigFM Bayern", url: "https://stream.bigfm.de/bayern/mp3-128/private", image: "icons/bigfmbayern.png", isRadio: true, genre: "lokal" },
-                            
                             { name: "bigFM Charts", url: "https://stream.bigfm.de/charts/mp3-128/private", image: "icons/bigfmcharts.png", isRadio: true, genre: "charts" },
                             { name: "bigFM Just Music", url: "https://stream.bigfm.de/justmusic/mp3-128/private", image: "icons/bigfmjustmusic.png", isRadio: true, genre: "pop" },
                             { name: "bigFM Dance Radio", url: "https://stream.bigfm.de/dance/mp3-128/private", image: "icons/bigfmdance.png", isRadio: true, genre: "dance" },
@@ -1067,7 +1065,7 @@
             if (isRadio) {
                 playRadioStream(url, name, image);
             } else {
-                window.location.href = url;
+                window.open(url, '_top');
             }
         }
 
