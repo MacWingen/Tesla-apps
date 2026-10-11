@@ -1239,16 +1239,17 @@
 
                 <div class="modal-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <h4 style="margin: 0;">Release v1.1.0</h4>
-                        <span style="background-color: var(--hover-bg); padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 10px; color: var(--text-color);">v1.1.0</span>
+                        <h4 style="margin: 0;">Release v1.1.1</h4>
+                        <span style="background-color: var(--hover-bg); padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 10px; color: var(--text-color);">v1.1.1</span>
                     </div>
                     <ul>
-                        <li><strong>v1.1.0:</strong> Eilmeldungen-Button standardmäßig dezent grau; leuchtet automatisch rot auf, sobald neue Eilmeldungen eintreffen.</li>
+                        <li><strong>v1.1.1:</strong> Universeller MediaSession-Support für alle 100+ Radiosender mit automatischer Logo-Übertragung und Live-Titel im Tesla-Player.</li>
+                        <li><strong>v1.1.0:</strong> Eilmeldungen-Button dezent grau; leuchtet bei neuen Eilmeldungen rot auf.</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                Tesla Apps Dashboard v1.1.0 &copy; 2026 McWingen
+                Tesla Apps Dashboard v1.1.1 &copy; 2026 McWingen
             </div>
         </div>
     </div>
@@ -1289,13 +1290,13 @@
     </div>
 
     <footer style="margin-top: 40px; margin-bottom: 20px; font-size: 11px; color: var(--section-color); text-align: center; opacity: 0.7;">
-        Tesla Apps Dashboard v1.1.0 &copy; 2026 McWingen
+        Tesla Apps Dashboard v1.1.1 &copy; 2026 McWingen
     </footer>
 
     <audio id="globalAudioStream" preload="none"></audio>
 
     <script>
-        const CURRENT_VERSION = 'v1.1.0';
+        const CURRENT_VERSION = 'v1.1.1';
 
         const categories = [
             {
@@ -1654,6 +1655,34 @@
             }
         }
 
+        // --- UNIVERSELLE MEDIA-SESSION (FÜR ALLE 100+ SENDER AUTOMATISCH) ---
+        function updateMediaSessionWithLiveInfo(stationName, trackTitle, artworkUrl) {
+            if ('mediaSession' in navigator) {
+                let artworks = [];
+                if (artworkUrl) {
+                    let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
+                    artworks = [
+                        { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '128x128', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '256x256', type: 'image/png' },
+                        { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/png' }
+                    ];
+                }
+
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: trackTitle ? trackTitle : stationName,
+                    artist: stationName,
+                    album: "Live Webradio",
+                    artwork: artworks
+                });
+
+                try {
+                    navigator.mediaSession.setActionHandler('play', function() { globalAudio.play(); });
+                    navigator.mediaSession.setActionHandler('pause', function() { globalAudio.pause(); });
+                } catch(err) {}
+            }
+        }
+
         function playRadioStream(stationObj) {
             let uniqueId = stationObj.id;
             let url = stationObj.url;
@@ -1667,6 +1696,10 @@
                 currentPlayingUrl = '';
                 document.title = "Tesla Apps Dashboard";
                 stopMetadataPolling();
+                
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = null;
+                }
             } else {
                 globalAudio.pause();
                 globalAudio.currentTime = 0;
@@ -1679,7 +1712,7 @@
                 document.title = name;
                 globalAudio.src = url;
                 
-                updateMediaSession(name, "Live Webradio", image);
+                updateMediaSessionWithLiveInfo(name, "Live-Stream gestartet", image);
 
                 globalAudio.play().then(() => {
                     startMetadataPolling(url);
@@ -1696,32 +1729,6 @@
             }
             updatePlayingState();
             renderDashboard(); 
-        }
-
-        function updateMediaSession(title, artist, artworkUrl) {
-            if ('mediaSession' in navigator) {
-                let artworks = [];
-                if (artworkUrl) {
-                    let absoluteArtworkUrl = new URL(artworkUrl, window.location.href).href;
-                    artworks = [
-                        { src: absoluteArtworkUrl, sizes: '96x96', type: 'image/png' },
-                        { src: absoluteArtworkUrl, sizes: '128x128', type: 'image/png' },
-                        { src: absoluteArtworkUrl, sizes: '512x512', type: 'image/png' }
-                    ];
-                }
-
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: title,
-                    artist: "Live Webradio",
-                    album: "Tesla Apps Dashboard",
-                    artwork: artworks
-                });
-
-                try {
-                    navigator.mediaSession.setActionHandler('play', function() { globalAudio.play(); });
-                    navigator.mediaSession.setActionHandler('pause', function() { globalAudio.pause(); });
-                } catch(err) {}
-            }
         }
 
         function startMetadataPolling(streamUrl) {
@@ -1758,7 +1765,7 @@
                         let station = data.elements[0];
                         if (station && station.currentTitle) {
                             document.title = `${station.currentTitle} – ${currentStationName}`;
-                            updateMediaSession(station.currentTitle, currentStationName, currentStationImage);
+                            updateMediaSessionWithLiveInfo(currentStationName, station.currentTitle, currentStationImage);
                         }
                     }
                 })
@@ -1821,7 +1828,6 @@
                 modal.classList.add('active');
                 fetchWeltNews();
                 
-                // Wenn das Modal geöffnet wird, setzen wir den letzten gelesenen Zeitpunkt auf jetzt
                 localStorage.setItem('tesla_dashboard_last_read_news', new Date().toISOString());
                 const newsBtn = document.getElementById('newsBtn');
                 if (newsBtn) newsBtn.classList.remove('has-new-news');
@@ -1837,7 +1843,6 @@
             }
         }
 
-        // WELT Eilmeldungen & Prüfung auf neue Artikel für den Button-Status
         function fetchWeltNews() {
             const container = document.getElementById('newsModalBody');
             container.innerHTML = `<div style="text-align: center; color: var(--section-color); padding: 20px;">Lade Eilmeldungen...</div>`;
@@ -1857,7 +1862,6 @@
                             items = data.items.slice(0, 5);
                         }
 
-                        // Prüfen ob die neueste Nachricht neuer ist als der letzte Lese-Zeitpunkt
                         if (items.length > 0 && items[0].pubDate) {
                             let latestPubTime = new Date(items[0].pubDate).getTime();
                             let lastReadTimeStr = localStorage.getItem('tesla_dashboard_last_read_news');
@@ -1907,7 +1911,6 @@
                 });
         }
 
-        // Beim Start im Hintergrund einmal den News-Status prüfen, damit der Button direkt korrekt gefärbt ist
         function checkBackgroundNews() {
             const rssUrl = encodeURIComponent('https://www.welt.de/?service=Rss');
             fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
